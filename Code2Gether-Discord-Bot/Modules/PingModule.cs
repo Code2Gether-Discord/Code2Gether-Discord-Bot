@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Modules
 {
-    class PingModule : ModuleBase<SocketCommandContext>
+    public class PingModule : ModuleBase<SocketCommandContext>
     {
         [Command("ping")]
         [Alias("pong")]
-        [Summary("Replies with Socket Latency")]
         public async Task PingAsync()
         {
             var embed = new EmbedBuilder()
+                .WithColor(58,2,153)
                 .WithTitle("Pong!")
                 .WithDescription($"Socket Latency: {Context.Client.Latency}ms")
+                .WithAuthor(Context.Message.Author)
                 .Build();
             await ReplyAsync(embed: embed);
         }

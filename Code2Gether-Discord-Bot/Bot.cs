@@ -38,7 +38,18 @@ namespace Code2Gether_Discord_Bot
         {
             try
             {
-                await _commands.AddModuleAsync(Assembly.GetEntryAssembly().GetType(), _services);
+                var result = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+                if (result.Count() == 0) throw new Exception("No commands were detected");
+                // Some nice logging
+                result.ToList().ForEach(x =>
+                {
+                    string o = $"Loaded module: {x.Name} with commands: ";
+                    x.Commands.ToList().ForEach(c =>
+                    {
+                        o += $"{c.Name}; ";
+                    });
+                    _logger.Log(LogSeverity.Info, o);
+                });
             }
             catch (Exception e)
             {
@@ -52,7 +63,10 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         public async Task RunAsync()
         {
-            _client = new DiscordSocketClient(new DiscordSocketConfig());
+            _client = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                // Additional config goes here
+            });
             _commands = new CommandService();
             _services = new ServiceCollection()
                 .AddSingleton(_client)
@@ -90,7 +104,8 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private async Task LoggerHandler(LogMessage arg)
         {
-            _logger.Log(arg.Severity, arg.Message);
+            if (arg.Message.Length > 0)
+                _logger.Log(arg.Severity, arg.Message);
         }
 
         /// <summary>

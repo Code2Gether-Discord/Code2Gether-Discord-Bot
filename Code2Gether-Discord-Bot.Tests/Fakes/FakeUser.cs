@@ -35,17 +35,17 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public string GetAvatarUrl(ImageFormat format = ImageFormat.Auto, ushort size = 128)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string GetDefaultAvatarUrl()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public Task<IDMChannel> GetOrCreateDMChannelAsync(RequestOptions options = null)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

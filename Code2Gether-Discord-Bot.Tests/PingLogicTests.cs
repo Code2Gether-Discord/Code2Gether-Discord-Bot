@@ -12,11 +12,35 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var client = new FakeDiscordClient();
-            var guild = new FakeGuild();
-            var user = new FakeUser();
-            var messageChannel = new FakeMessageChannel();
-            var message = new FakeUserMessage();
+            var user = new FakeUser()
+            {
+                Username = "UnitTest",
+                DiscriminatorValue = 1234,
+                Id = 123456789123456789
+            };
+
+            var client = new FakeDiscordClient()
+            {
+                FakeApplication = new FakeApplication()
+                {
+                    Owner = user
+                }
+            };
+
+            var guild = new FakeGuild()
+            {
+
+            };
+
+            var messageChannel = new FakeMessageChannel()
+            {
+
+            };
+
+            var message = new FakeUserMessage()
+            {
+                Author = user
+            };
 
             _logic = BusinessLogicFactory.PingLogic(new FakeCommandContext()
             {

@@ -9,6 +9,10 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
     internal class FakeDiscordClient : IDiscordClient
     {
+        public IReadOnlyCollection<IGuild> Guilds { get; set; }
+
+        public IApplication FakeApplication { get; set; }
+
         public ConnectionState ConnectionState { get; set; }
 
         public ISelfUser CurrentUser { get; set; }
@@ -27,7 +31,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public Task<IApplication> GetApplicationInfoAsync(RequestOptions options = null)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(FakeApplication);
         }
 
         public Task<IChannel> GetChannelAsync(ulong id, CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)
@@ -57,7 +61,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public Task<IReadOnlyCollection<IGuild>> GetGuildsAsync(CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Guilds);
         }
 
         public Task<IInvite> GetInviteAsync(string inviteId, RequestOptions options = null)

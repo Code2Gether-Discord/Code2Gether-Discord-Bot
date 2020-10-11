@@ -1,23 +1,18 @@
-﻿using System;
+﻿using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Models;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
 
-using Code2Gether_Discord_Bot.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Code2Gether_Discord_Bot
 {
-    public interface IBot
-    {
-        Task RunAsync();
-        Task RegisterCommandsAsync();
-    }
-
     public class Bot : IBot
     {
         private ILogger _logger;
@@ -114,7 +109,8 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private async Task ReadyHandler()
         {
-
+            // Set bot status
+            _client.SetGameAsync("");
         }
 
         /// <summary>

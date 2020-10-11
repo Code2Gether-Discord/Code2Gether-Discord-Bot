@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Discord;
-using Discord.WebSocket;
-using Discord.Commands;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Models;
+using Code2Gether_Discord_Bot.Library.Models;
 
 namespace Code2Gether_Discord_Bot
 {
@@ -14,8 +10,8 @@ namespace Code2Gether_Discord_Bot
     {
         static void Main(string[] args)
         {
-            ILogger logger = Factory.GetLogger();
-            IBot bot = Factory.GetBot();
+            ILogger logger = UtilityFactory.GetLogger();
+            IBot bot = UtilityFactory.GetBot();
 
             while (true)
             {

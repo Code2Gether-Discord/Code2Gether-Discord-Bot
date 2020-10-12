@@ -15,7 +15,7 @@ namespace Code2Gether_Discord_Bot.Static
             {
                 config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile.FullName));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 GenerateNewConfig(config);
             }

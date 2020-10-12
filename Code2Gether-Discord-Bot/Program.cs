@@ -13,16 +13,13 @@ namespace Code2Gether_Discord_Bot
             ILogger logger = UtilityFactory.GetLogger();
             IBot bot = UtilityFactory.GetBot();
 
-            while (true)
+            try
             {
-                try
-                {
-                    bot.RunAsync().GetAwaiter().GetResult();
-                }
-                catch (Exception e)
-                {
-                    logger.Log(LogSeverity.Critical, $"Main process terminated! Exception: {e.Message}");
-                }
+                bot.RunAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogSeverity.Critical, $"Main process terminated! Exception: {e.Message}");
             }
         }
     }

@@ -16,15 +16,15 @@ namespace Code2Gether_Discord_Bot
     public class Bot : IBot
     {
         private ILogger _logger;
+        private IConfig _config;
         private DiscordSocketClient _client;
         private CommandService _commands;
         private IServiceProvider _services;
 
-        private readonly string _prefix = Environment.GetEnvironmentVariable("prefix");
-
-        public Bot(ILogger logger)
+        public Bot(ILogger logger, IConfig config)
         {
             _logger = logger;
+            _config = config;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private async Task InitialStartupJobs()
         {
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
+            await _client.LoginAsync(TokenType.Bot, _config.DiscordToken);
             await _client.StartAsync();
         }
 
@@ -115,7 +115,7 @@ namespace Code2Gether_Discord_Bot
         private Task ReadyHandler()
         {
             // Set bot status
-            string status = $"{_prefix}help";
+            string status = $"{_config.Prefix}help";
             return _client.SetGameAsync(status);
         }
 
@@ -168,7 +168,7 @@ namespace Code2Gether_Discord_Bot
 
             // If msg has this bot's prefix
             int argPos = 0;
-            if (!(msg.HasStringPrefix(_prefix.ToLower(), ref argPos) || msg.HasStringPrefix(_prefix.ToUpper(), ref argPos))) return;
+            if (!(msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos) || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos))) return;
 
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (result.Error.HasValue) _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");

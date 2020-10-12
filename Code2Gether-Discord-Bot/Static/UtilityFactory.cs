@@ -10,6 +10,7 @@ namespace Code2Gether_Discord_Bot.Static
     public static class UtilityFactory
     {
         public static ILogger GetLogger() => new Logger();
-        public static IBot GetBot() => new Bot(GetLogger());
+        public static IBot GetBot() => new Bot(GetLogger(), GetConfig());
+        public static IConfig GetConfig() => ConfigProvider.GetConfig();
     }
 }

@@ -53,7 +53,7 @@ namespace Code2Gether_Discord_Bot.Tests
         }
 
         [Test]
-        public void InstantiateTest() =>
+        public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
 
         [Test]

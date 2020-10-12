@@ -9,11 +9,11 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
     internal class FakeMessageChannel : IMessageChannel
     {
-        public string Name => throw new NotImplementedException();
+        public string Name { get; set; }
 
-        public DateTimeOffset CreatedAt => throw new NotImplementedException();
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public ulong Id => throw new NotImplementedException();
+        public ulong Id { get; set; }
 
         public Task DeleteMessageAsync(ulong messageId, RequestOptions options = null)
         {

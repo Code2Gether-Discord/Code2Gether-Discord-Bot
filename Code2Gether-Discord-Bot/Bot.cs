@@ -1,5 +1,6 @@
 ﻿using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Models;
+using Code2Gether_Discord_Bot.Static;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -36,6 +37,7 @@ namespace Code2Gether_Discord_Bot
             try
             {
                 var result = await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+                ModuleDetailRepository.Modules = result;
                 if (result.Count() == 0) throw new Exception("No commands were detected");
                 // Some nice logging
                 result.ToList().ForEach(x =>
@@ -101,9 +103,13 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private Task LoggerHandler(LogMessage arg)
         {
-            if (arg.Message.Length > 0)
+            if (arg.Message != null)
             {
                 _logger.Log(arg.Severity, arg.Message);
+            }
+            else if (arg.Exception != null)
+            {
+                _logger.Log(arg.Severity, "Discord Log Event", arg.Exception);
             }
             return Task.CompletedTask;
         }
@@ -168,7 +174,10 @@ namespace Code2Gether_Discord_Bot
 
             // If msg has this bot's prefix
             int argPos = 0;
-            if (!(msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos) || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos))) return;
+            if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos)    // If mention the bot in msg
+                || msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos)    // Or lowercase prefix
+                || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos)))  // Or uppercase prefix
+                return; // Ignore msg if none of the previous conditions are met
 
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (result.Error.HasValue) _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");

@@ -1,6 +1,7 @@
 ﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord.Commands;
+using System;
 
 namespace Code2Gether_Discord_Bot.Static
 {
@@ -15,5 +16,8 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic InfoLogic(ICommandContext context) =>
             new InfoLogic(UtilityFactory.GetLogger(), context);
+
+        public static IBusinessLogic HelpLogic(ICommandContext context) =>
+            new HelpLogic(UtilityFactory.GetLogger(), context, UtilityFactory.GetConfig().Prefix);
     }
 }

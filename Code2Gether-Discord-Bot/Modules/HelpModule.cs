@@ -4,17 +4,16 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Modules
 {
-    public class InfoModule : ModuleBase<SocketCommandContext>
+    public class HelpModule : ModuleBase<SocketCommandContext>
     {
         /// <summary>
         /// Replies with a wealth of information regarding the bot's environment such as:
         ///     Author, Library version, Runtime, Uptime, Heap Size, Guilds, Channels, and Users
         /// </summary>
         /// <returns></returns>
-        [Command("info")]
-        [Alias("about", "whoami", "owner", "uptime", "library", "author", "stats")]
-        [Summary("Replies with a wealth of information regarding the bot's environment")]
-        public async Task InfoAsync() =>
-             await ReplyAsync(embed: BusinessLogicFactory.InfoLogic(Context).Execute());
+        [Command("help")]
+        [Summary("Returns this!")]
+        public async Task HelpAsync() =>
+             await ReplyAsync(embed: BusinessLogicFactory.HelpLogic(Context).Execute());
     }
 }

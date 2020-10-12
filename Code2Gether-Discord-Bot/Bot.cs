@@ -20,6 +20,8 @@ namespace Code2Gether_Discord_Bot
         private CommandService _commands;
         private IServiceProvider _services;
 
+        private readonly string _prefix = Environment.GetEnvironmentVariable("prefix");
+
         public Bot(ILogger logger)
         {
             _logger = logger;
@@ -97,20 +99,24 @@ namespace Code2Gether_Discord_Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task LoggerHandler(LogMessage arg)
+        private Task LoggerHandler(LogMessage arg)
         {
             if (arg.Message.Length > 0)
+            {
                 _logger.Log(arg.Severity, arg.Message);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// When the bot first comes online
         /// </summary>
         /// <returns></returns>
-        private async Task ReadyHandler()
+        private Task ReadyHandler()
         {
             // Set bot status
-            _client.SetGameAsync("");
+            string status = $"{_prefix}help";
+            return _client.SetGameAsync(status);
         }
 
         /// <summary>
@@ -118,9 +124,9 @@ namespace Code2Gether_Discord_Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task JoinedGuildHandler(SocketGuild arg)
+        private Task JoinedGuildHandler(SocketGuild arg)
         {
-
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -128,9 +134,9 @@ namespace Code2Gether_Discord_Bot
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task UserJoinedHandler(SocketGuildUser arg)
+        private Task UserJoinedHandler(SocketGuildUser arg)
         {
-
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -161,9 +167,8 @@ namespace Code2Gether_Discord_Bot
             if (msg.Author.IsWebhook) return;
 
             // If msg has this bot's prefix
-            var prefix = Environment.GetEnvironmentVariable("prefix");
             int argPos = 0;
-            if (!(msg.HasStringPrefix(prefix.ToLower(), ref argPos) || msg.HasStringPrefix(prefix.ToUpper(), ref argPos))) return;
+            if (!(msg.HasStringPrefix(_prefix.ToLower(), ref argPos) || msg.HasStringPrefix(_prefix.ToUpper(), ref argPos))) return;
 
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (result.Error.HasValue) _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");

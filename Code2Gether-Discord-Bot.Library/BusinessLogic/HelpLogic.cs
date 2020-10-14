@@ -2,6 +2,8 @@
 using Discord;
 using Discord.Commands;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Code2Gether_Discord_Bot.Static
 {
@@ -9,12 +11,14 @@ namespace Code2Gether_Discord_Bot.Static
     {
         private ILogger _logger;
         private ICommandContext _context;
+        private IEnumerable<ModuleInfo> _modules;
         private string _prefix;
 
-        public HelpLogic(ILogger logger, ICommandContext context, string prefix)
+        public HelpLogic(ILogger logger, ICommandContext context, IEnumerable<ModuleInfo> modules, string prefix)
         {
             _logger = logger;
             _context = context;
+            _modules = modules;
             _prefix = prefix;
         }
 
@@ -34,7 +38,7 @@ namespace Code2Gether_Discord_Bot.Static
         private string GetCommandText()
         {
             string commandText = "";
-            foreach (var module in ModuleDetailRepository.Modules)
+            foreach (var module in _modules)
             {
                 foreach (var command in module.Commands)
                 {

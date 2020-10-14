@@ -18,6 +18,6 @@ namespace Code2Gether_Discord_Bot.Static
             new InfoLogic(UtilityFactory.GetLogger(), context);
 
         public static IBusinessLogic HelpLogic(ICommandContext context) =>
-            new HelpLogic(UtilityFactory.GetLogger(), context, UtilityFactory.GetConfig().Prefix);
+            new HelpLogic(UtilityFactory.GetLogger(), context, ModuleDetailRepository.Modules, UtilityFactory.GetConfig().Prefix);
     }
 }

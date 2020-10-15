@@ -21,7 +21,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public Embed Execute()
         {
-            _logger.LogCommandUse(_context, GetType());
+            _logger.LogCommandUse(_context);
             var app = _context.Client.GetApplicationInfoAsync().Result;
             var guilds = _context.Client.GetGuildsAsync().Result;
 

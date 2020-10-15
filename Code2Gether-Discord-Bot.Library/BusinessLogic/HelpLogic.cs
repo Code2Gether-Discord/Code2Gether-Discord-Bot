@@ -24,7 +24,7 @@ namespace Code2Gether_Discord_Bot.Static
 
         public Embed Execute()
         {
-            _logger.LogCommandUse(_context, GetType());
+            _logger.LogCommandUse(_context);
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Help")

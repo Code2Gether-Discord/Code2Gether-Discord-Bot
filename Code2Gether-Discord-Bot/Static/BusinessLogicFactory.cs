@@ -11,13 +11,13 @@ namespace Code2Gether_Discord_Bot.Static
     /// </summary>
     public static class BusinessLogicFactory
     {
-        public static IBusinessLogic PingLogic(ICommandContext context, int latency) =>
-            new PingLogic(UtilityFactory.GetLogger(), context, latency);
+        public static IBusinessLogic PingLogic(Type classContext, ICommandContext context, int latency) =>
+            new PingLogic(UtilityFactory.GetLogger(classContext), context, latency);
 
-        public static IBusinessLogic InfoLogic(ICommandContext context) =>
-            new InfoLogic(UtilityFactory.GetLogger(), context);
+        public static IBusinessLogic InfoLogic(Type classContext, ICommandContext context) =>
+            new InfoLogic(UtilityFactory.GetLogger(classContext), context);
 
-        public static IBusinessLogic HelpLogic(ICommandContext context) =>
-            new HelpLogic(UtilityFactory.GetLogger(), context, ModuleDetailRepository.Modules, UtilityFactory.GetConfig().Prefix);
+        public static IBusinessLogic HelpLogic(Type classContext, ICommandContext context) =>
+            new HelpLogic(UtilityFactory.GetLogger(classContext), context, ModuleDetailRepository.Modules, UtilityFactory.GetConfig().Prefix);
     }
 }

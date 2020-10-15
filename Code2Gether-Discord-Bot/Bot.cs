@@ -116,13 +116,18 @@ namespace Code2Gether_Discord_Bot
 
         /// <summary>
         /// When the bot first comes online
+        /// Debug: Won't set status
         /// </summary>
         /// <returns></returns>
         private Task ReadyHandler()
         {
-            // Set bot status
-            string status = $"{_config.Prefix}help";
-            return _client.SetGameAsync(status);
+            if (!_config.Debug)
+            {
+                // Set bot status
+                string status = $"{_config.Prefix}help";
+                return _client.SetGameAsync(status);
+            }
+            else return Task.CompletedTask;
         }
 
         /// <summary>
@@ -178,7 +183,6 @@ namespace Code2Gether_Discord_Bot
                 || msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos)    // Or lowercase prefix
                 || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos)))  // Or uppercase prefix
                 return; // Ignore msg if none of the previous conditions are met
-
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (result.Error.HasValue) _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");
             #endregion

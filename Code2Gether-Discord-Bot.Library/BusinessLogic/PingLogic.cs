@@ -15,7 +15,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             _logger = logger;
             _context = context;
-
             _latency = latency;
         }
 

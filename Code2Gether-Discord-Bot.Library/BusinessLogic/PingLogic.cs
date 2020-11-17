@@ -8,8 +8,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     {
         ILogger _logger;
         ICommandContext _context;
-
-        int _latency;
+        int _latency;   // Latency must be passed in since it's a client function
 
         public PingLogic(ILogger logger, ICommandContext context, int latency)
         {

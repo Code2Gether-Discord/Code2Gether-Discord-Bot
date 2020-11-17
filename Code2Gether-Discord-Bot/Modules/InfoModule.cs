@@ -11,10 +11,11 @@ namespace Code2Gether_Discord_Bot.Modules
         ///     Author, Library version, Runtime, Uptime, Heap Size, Guilds, Channels, and Users
         /// </summary>
         /// <returns></returns>
-        [Command("info")]
+        [Command("info",
+            RunMode = RunMode.Async)]
         [Alias("about", "whoami", "owner", "uptime", "library", "author", "stats")]
         [Summary("Replies with a wealth of information regarding the bot's environment")]
         public async Task InfoAsync() =>
-             await ReplyAsync(embed: BusinessLogicFactory.InfoLogic(Context).Execute());
+             await ReplyAsync(embed: BusinessLogicFactory.InfoLogic(GetType(),Context).Execute());
     }
 }

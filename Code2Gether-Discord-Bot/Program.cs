@@ -10,7 +10,7 @@ namespace Code2Gether_Discord_Bot
     {
         static void Main(string[] args)
         {
-            ILogger logger = UtilityFactory.GetLogger();
+            ILogger logger = UtilityFactory.GetLogger(typeof(Program));
             IBot bot = UtilityFactory.GetBot();
 
             try

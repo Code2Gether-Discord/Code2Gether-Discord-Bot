@@ -11,9 +11,10 @@ namespace Code2Gether_Discord_Bot.Modules
         ///     Author, Library version, Runtime, Uptime, Heap Size, Guilds, Channels, and Users
         /// </summary>
         /// <returns></returns>
-        [Command("help")]
+        [Command("help",
+            RunMode = RunMode.Async)]
         [Summary("Returns this!")]
         public async Task HelpAsync() =>
-             await ReplyAsync(embed: BusinessLogicFactory.HelpLogic(Context).Execute());
+             await ReplyAsync(embed: BusinessLogicFactory.HelpLogic(GetType(), Context).Execute());
     }
 }

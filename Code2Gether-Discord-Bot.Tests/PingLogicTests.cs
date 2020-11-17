@@ -42,7 +42,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _logic = BusinessLogicFactory.PingLogic(new FakeCommandContext()
+            _logic = BusinessLogicFactory.PingLogic(GetType(), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,

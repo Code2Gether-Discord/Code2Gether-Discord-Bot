@@ -10,7 +10,8 @@ namespace Code2Gether_Discord_Bot.Static
         private static FileInfo configFile = new FileInfo("config.json");
         public static IConfig GetConfig()
         {
-            IConfig config = new Config("c!", "PLACEHOLDER"); ;
+            // Default value
+            IConfig config = new Config("c!", "PLACEHOLDER", true);
             try
             {
                 config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile.FullName));

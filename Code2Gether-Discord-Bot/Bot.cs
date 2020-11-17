@@ -158,7 +158,7 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private async Task MessageReceivedHandler(SocketMessage arg)
         {
-            // Parse incomming message
+            // Parse incoming message
             SocketUserMessage msg = null;
             SocketCommandContext context = null;
             try
@@ -170,10 +170,10 @@ namespace Code2Gether_Discord_Bot
             }
             catch (Exception e)
             {
-                _logger.Log(LogSeverity.Error, $"Failed to parse incomming message", e);
+                _logger.Log(LogSeverity.Error, $"Failed to parse incoming message", e);
             }
 
-            // Don't respond to bots or system msgs
+            // Don't respond to bots or system messages
             if (msg.Author.IsBot) return;
             if (msg.Author.IsWebhook) return;
 
@@ -183,8 +183,11 @@ namespace Code2Gether_Discord_Bot
                 || msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos)    // Or lowercase prefix
                 || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos)))  // Or uppercase prefix
                 return; // Ignore msg if none of the previous conditions are met
+            
             var result = await _commands.ExecuteAsync(context, argPos, _services);
-            if (result.Error.HasValue) _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");
+            
+            if (result.Error.HasValue)
+                _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");
             #endregion
         }
     }

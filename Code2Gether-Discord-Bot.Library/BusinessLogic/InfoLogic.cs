@@ -37,7 +37,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .AddField("Heap Size", $"{GetHeapSize()}MiB")
                 .AddField("Guilds", $"{guilds.Count}")
                 .AddField("Channels", $"{guilds.Sum(g => g.GetChannelsAsync().Result.Count)}")
-                .AddField("Users", $"{guilds.Sum(g => g.GetUsersAsync().Result.Count)}")
                 .Build();
             return embed;
         }

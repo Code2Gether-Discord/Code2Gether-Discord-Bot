@@ -29,7 +29,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 return new EmbedBuilder()
                     .WithColor(Color.Purple)
                     .WithTitle($"Made Channel: {newChannelObj.Name}")
-                    .WithDescription($"Successfully made new channel: {_newChannelName}")
+                    .WithDescription($"Successfully made new channel: <#{newChannelObj.Id}>")
                     .WithAuthor(_context.Message.Author)
                     .Build();
             }

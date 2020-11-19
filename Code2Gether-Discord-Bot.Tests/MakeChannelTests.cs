@@ -53,7 +53,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 User = user,
                 Message = message,
                 Channel = messageChannel
-            });
+            }, "unit-test");
         }
 
         [Test]

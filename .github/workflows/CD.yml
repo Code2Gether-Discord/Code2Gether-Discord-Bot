@@ -3,8 +3,15 @@ name: CD
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Manual Deployment'
+      configuration:
+        description: 'Build Configuration'
+        required: true
+        default: 'Release'
+      output:
+        description: 'Output directory'
+        required: false
+        default: 'artifacts'
+
 
 jobs:
   build:
@@ -18,9 +25,9 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Deploy - Publish
-      run: dotnet publish -c Release -o artifacts
+      run: dotnet publish -c github.event.inputs.configuration -o github.event.inputs.output
     - name: Deploy - Upload Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
           path: 
-            "artifacts/*"
+            github.event.inputs.output

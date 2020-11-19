@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
@@ -27,6 +28,11 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             try
             {
+                if (!_context.Guild.GetCurrentUserAsync().Result.GuildPermissions.ManageMessages)
+                {
+                    throw new Exception("Missing ManageMessages permission for Message Latency");
+                }
+
                 var temporaryMessage = _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437").Result;
 
                 embed = new EmbedBuilder()
@@ -41,7 +47,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
             catch (Exception e)
             {
-                _logger.Log(LogSeverity.Error, $"Failed to ping with Message Latency: {e.Message}");
+                _logger.Log(LogSeverity.Error, e);
 
                 embed = new EmbedBuilder()
                     .WithColor(Color.Purple)

@@ -1,8 +1,8 @@
-﻿using Code2Gether_Discord_Bot.Static;
+﻿using System.Threading.Tasks;
+using Code2Gether_Discord_Bot.Static;
 using Discord.Commands;
-using System.Threading.Tasks;
 
-namespace Code2Gether_Discord_Bot.Modules
+namespace Code2Gether_Discord_Bot.Modules.UserModules
 {
     public class InfoModule : ModuleBase<SocketCommandContext>
     {

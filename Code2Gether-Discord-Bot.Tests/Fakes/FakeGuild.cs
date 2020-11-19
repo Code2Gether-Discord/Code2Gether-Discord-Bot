@@ -128,11 +128,12 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public Task<ITextChannel> CreateTextChannelAsync(string name, Action<TextChannelProperties> func = null, RequestOptions options = null)
         {
-            var rng = new Random(DateTime.Now.Millisecond);
-            return Task.Run(() =>
-            {
-                _guildChannels.TryAdd((ulong) rng.Next(0, int.MaxValue));
-            });
+            throw new NotImplementedException();
+            //var rng = new Random(DateTime.Now.Millisecond);
+            //return Task.Run(() =>
+            //{
+            //    _guildChannels.TryAdd((ulong) rng.Next(0, int.MaxValue));
+            //});
         }
 
         public Task<IVoiceChannel> CreateVoiceChannelAsync(string name, Action<VoiceChannelProperties> func = null, RequestOptions options = null)

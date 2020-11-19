@@ -23,7 +23,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public void Log(LogSeverity level, string message, Exception exception) =>
             Log(level, $"{message} | Exception: {exception.Message}{Environment.NewLine}{exception.StackTrace}");
 
-        public void LogCommandUse(ICommandContext context)
+        public void Log(ICommandContext context)
         {
             Log(LogSeverity.Info, $"Executed by {context.Message.Author} on {context.Guild} #{context.Channel}");
         }

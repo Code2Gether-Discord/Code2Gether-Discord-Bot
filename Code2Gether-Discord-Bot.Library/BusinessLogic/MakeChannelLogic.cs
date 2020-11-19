@@ -22,7 +22,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public Embed Execute()
         {
-            _logger.LogCommandUse(_context);
+            _logger.Log(_context);
 
             if (MakeNewTextChannel(_newChannelName, out IChannel newChannelObj))
             {

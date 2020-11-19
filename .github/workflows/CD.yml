@@ -14,7 +14,7 @@ on:
 
 
 jobs:
-  build:
+  deployment:
 
     runs-on: ubuntu-latest
 
@@ -25,9 +25,9 @@ jobs:
       with:
         dotnet-version: 3.1.301
     - name: Deploy - Publish
-      run: dotnet publish -c github.event.inputs.configuration -o github.event.inputs.output
+      run: dotnet publish -c ${{ github.event.inputs.configuration }} -o ${{ github.event.inputs.output }}
     - name: Deploy - Upload Artifact
       uses: actions/upload-artifact@v2.2.1
       with:
           path: 
-            github.event.inputs.output
+            ${{ github.event.inputs.output }}

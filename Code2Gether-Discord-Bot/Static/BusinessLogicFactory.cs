@@ -14,6 +14,9 @@ namespace Code2Gether_Discord_Bot.Static
         public static IBusinessLogic PingLogic(Type classContext, ICommandContext context, int latency) =>
             new PingLogic(UtilityFactory.GetLogger(classContext), context, latency);
 
+        public static IBusinessLogic MakeChannelLogic(Type classContext, ICommandContext context) =>
+            new MakeChannelLogic(UtilityFactory.GetLogger(classContext), context);
+
         public static IBusinessLogic InfoLogic(Type classContext, ICommandContext context) =>
             new InfoLogic(UtilityFactory.GetLogger(classContext), context);
 

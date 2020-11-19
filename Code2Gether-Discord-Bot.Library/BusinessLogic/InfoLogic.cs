@@ -22,9 +22,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         public Embed Execute()
         {
             _logger.LogCommandUse(_context);
+
             var app = _context.Client.GetApplicationInfoAsync().Result;
             var guilds = _context.Client.GetGuildsAsync().Result;
-
+            
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Info")

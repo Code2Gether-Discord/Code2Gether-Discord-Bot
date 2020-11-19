@@ -24,15 +24,15 @@ namespace Code2Gether_Discord_Bot.Static
 
         public Embed Execute()
         {
-            _logger.LogCommandUse(_context);
-            var embed = new EmbedBuilder()
+            _logger.Log(_context);
+
+            return new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Help")
                 .WithDescription($"Contains information on how to access this bot's command modules")
                 .AddField("Commands", GetCommandText())
                 .WithAuthor(_context.Message.Author)
                 .Build();
-            return embed;
         }
 
         private string GetCommandText()

@@ -5,7 +5,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -28,61 +27,45 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             _logger.Log(_context);
 
-            Embed embed;
+            var response = GenerateExcuse();
 
-            try
-            {
-                if (!_context.Guild.GetCurrentUserAsync().Result.GuildPermissions.ManageMessages)
-                {
-                    throw new Exception("Missing ManageMessages permission for Message Latency");
-                }
-
-                var temporaryMessage = _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437").Result;
-
-                embed = new EmbedBuilder()
-                    .WithColor(Color.DarkBlue)
-                    .WithTitle("Greetings. My excuse today is:")
-                    .WithDescription("I just don't feel like it.")
-                    .WithAuthor(_context.Message.Author)
-                    .Build();
-
-                temporaryMessage.DeleteAsync().Wait();
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogSeverity.Error, e);
-
-                embed = new EmbedBuilder()
-                    .WithColor(Color.DarkBlue)
-                    .WithTitle("Greetings. My excuse today is:")
-                    .WithDescription("I'm not working.")
-                    .WithAuthor(_context.Message.Author)
-                    .Build();
-            }
-
-            return embed;
+            return new EmbedBuilder()
+                .WithColor(Color.DarkBlue)
+                .WithTitle("Greetings. My excuse today is:")
+                .WithDescription(response) // Excuse generation logic occurs here.
+                .WithAuthor(_context.Message.Author)
+                .Build();
         }
 
-        public async Task<string> generateExcuseAsync()
+        private string GenerateExcuse()
         {
-            // Get HTML from website
-            var response = await new HttpClient()
-                .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl");
+            try
+            {
+                // Get HTML from website
+                var response = new HttpClient()
+                    .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl")
+                    .Result;
 
-            // Encode byte array to string, remove line breaks.
-            var decodedSource = WebUtility.HtmlDecode(Encoding.UTF8.GetString(response, 0, response.Length - 1))
-                .Replace("\n", "")
-                .Replace("\r", "");
+                // Encode byte array to string, remove line breaks.
+                var decodedSource = WebUtility.HtmlDecode(Encoding.UTF8.GetString(response, 0, response.Length - 1))
+                    .Replace("\n", "")
+                    .Replace("\r", "");
 
-            // Isolate the "Excuse" by finding its prefix and suffix HTML tags
-            var prefixString = @"""+2"">";
-            var suffixString = @"</font>";
+                // Isolate the "Excuse" by finding its prefix and suffix HTML tags
+                var prefixString = @"""+2"">";
+                var suffixString = @"</font>";
 
-            var split = decodedSource
-                .Split(new string[] { prefixString, suffixString }, StringSplitOptions.None);
+                var split = decodedSource
+                    .Split(new string[] { prefixString, suffixString }, StringSplitOptions.None);
 
-            // The "excuse" should always be the fourth item in the split.
-            return split[3]; 
+                // The "excuse" should always be the fourth item in the split.
+                return split[3];
+            }
+            catch(Exception e)
+            {
+                _logger.Log(LogSeverity.Error, e.Message);
+                return "Because I'm not working";
+            }
         }
     }
 }

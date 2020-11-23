@@ -1,7 +1,7 @@
 ﻿using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
-using System;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -9,12 +9,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     {
         private ILogger _logger;
         private ICommandContext _context;
+        private IProjectRepository _projectRepository;
         private string _arguments;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, string arguments)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository string arguments)
         {
             _logger = logger;
             _context = context;
+            _projectRepository = projectRepository;
             _arguments = arguments;
         }
 
@@ -26,7 +28,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             return new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle(title)
+                .WithTitle($"Create Project: {title}")
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
@@ -34,11 +36,21 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private void CreateInactiveProject(out string title, out string description)
         {
-            bool result = false;
+            string projectName = _arguments
+                .Trim()
+                .Split(' ')[0];
 
-            title = $"Created project: {projName}";
-            description = $"Inactive project creat";
-            description += result ? "ed successfully!" : "ion failed!";
+            if (ProjectManager.DoesProjectExist(_projectRepository, projectName))
+            {
+                title = $"{projectName} already exists!";
+                description = $"Could not create new inactive project, {projectName} already exists!";
+            }
+            else
+            {
+                Project newProject = ProjectManager.CreateProject(_projectRepository, projectName);
+                title = $"New inactive project {newProject.Name} created!";
+                description = $"Successfully created inactive project {newProject.Name}!";
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Modules.UserModules
 {
-    class ExcuseModule : ModuleBase<SocketCommandContext>
+    public class ExcuseModule : ModuleBase<SocketCommandContext>
     {
         [Command("get_excuse", RunMode = RunMode.Async)]
         [Alias("getexcuse")]

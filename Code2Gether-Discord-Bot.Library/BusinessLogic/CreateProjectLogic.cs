@@ -1,4 +1,5 @@
 ﻿using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;

@@ -30,7 +30,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var response = GenerateExcuse();
 
             return new EmbedBuilder()
-                .WithColor(Color.DarkBlue)
+                .WithColor(Color.Purple)
                 .WithTitle("Greetings. My excuse today is:")
                 .WithDescription(response) // Excuse generation logic occurs here.
                 .WithAuthor(_context.Message.Author)

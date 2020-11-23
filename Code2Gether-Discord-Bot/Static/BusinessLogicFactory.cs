@@ -2,6 +2,7 @@
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord.Commands;
 using System;
+using Code2Gether_Discord_Bot.Library.Static;
 
 namespace Code2Gether_Discord_Bot.Static
 {
@@ -25,5 +26,8 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic GetHelpLogic(Type classContext, ICommandContext context) =>
             new HelpLogic(UtilityFactory.GetLogger(classContext), context, ModuleDetailRepository.Modules, UtilityFactory.GetConfig().Prefix);
+
+        public static IBusinessLogic ExcuseGeneratorLogic(Type classContext, ICommandContext context) =>
+            new ExcuseGeneratorLogic(UtilityFactory.GetLogger(classContext), context);
     }
 }

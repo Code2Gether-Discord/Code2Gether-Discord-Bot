@@ -46,7 +46,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Content = "debug!makechannel make-me"
             };
 
-            _logic = BusinessLogicFactory.MakeChannelLogic(GetType(), new FakeCommandContext()
+            _logic = BusinessLogicFactory.GetMakeChannelLogic(GetType(), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,

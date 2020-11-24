@@ -43,7 +43,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .WithAuthor(_context.Message.Author)
                     .Build();
 
-                temporaryMessage.DeleteAsync();
+                temporaryMessage.DeleteAsync().Wait();
             }
             catch (Exception e)
             {

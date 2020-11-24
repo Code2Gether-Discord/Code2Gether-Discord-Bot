@@ -37,7 +37,22 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private void ListProjects(out string title, out string description)
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder();
+
+            foreach (var project in _projectRepository.ReadAll())
+            {
+                sb.Append(project.Value
+                          + Environment.NewLine
+                          + "Current Members: ");
+                foreach (var member in project.Value.ProjectMembers)
+                {
+                    sb.Append($"{member}; ");
+                }
+                sb.Append(Environment.NewLine);
+            }
+
+            title = "List Projects";
+            description = sb.ToString();
         }
     }
 }

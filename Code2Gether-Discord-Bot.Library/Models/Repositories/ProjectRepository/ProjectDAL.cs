@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository
 {
+    /// <summary>
+    /// TODO: replace with actual database access implementation
+    /// </summary>
     public class ProjectDAL : IProjectRepository
     {
         private ConcurrentDictionary<int, Project> _projects = new ConcurrentDictionary<int, Project>();

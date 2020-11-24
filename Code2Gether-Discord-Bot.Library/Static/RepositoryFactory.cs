@@ -5,9 +5,13 @@ namespace Code2Gether_Discord_Bot.Library.Static
 {
     public static class RepositoryFactory
     {
+        // TODO: replace with actual database, and remove this
         private static IProjectRepository instance = GetProjectRepository();
 
         public static IProjectRepository GetProjectRepository() =>
             instance != null ? instance : new ProjectDAL();
+
+        //public static IProjectRepository GetProjectRepository() =>
+        //    new ProjectDAL();
     }
 }

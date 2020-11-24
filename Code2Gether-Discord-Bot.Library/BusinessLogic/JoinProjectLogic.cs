@@ -44,6 +44,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .Trim()
                 .Split(' ')[0];
 
+            _ = _projectManager.DoesProjectExist(projectName, out Project tProject);
+
             if (_projectManager.JoinProject(projectName, _context.User, out Project project))
             {
                 title = "Success";
@@ -60,6 +62,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                               + Environment.NewLine
                               + $"{project}";
             }
+
+            if (!tProject.IsActive && project.IsActive) // If project has become active from new user
+                TransitionToActiveProject();
+        }
+
+        private void TransitionToActiveProject()
+        {
+            throw new NotImplementedException();
         }
     }
 }

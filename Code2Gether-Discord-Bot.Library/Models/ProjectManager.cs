@@ -17,6 +17,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public bool DoesProjectExist(string projectName) =>
             _projectRepository.Read(projectName) != null;
 
+        public bool DoesProjectExist(string projectName, out Project project)
+        {
+            project = _projectRepository.Read(projectName);
+            return project != null;
+        }
+
         public Project CreateProject(string projectName, IUser author)
         {
             var newId = GetNextId();
@@ -37,15 +43,8 @@ namespace Code2Gether_Discord_Bot.Library.Models
             if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
 
             project.ProjectMembers.Add(user);
-
-            if (project.IsActive) TransitionInactiveToActiveProject();
-
+            
             return _projectRepository.Update(project);
-        }
-
-        private void TransitionInactiveToActiveProject()
-        {
-            throw new NotImplementedException();
         }
 
         private int GetNextId()

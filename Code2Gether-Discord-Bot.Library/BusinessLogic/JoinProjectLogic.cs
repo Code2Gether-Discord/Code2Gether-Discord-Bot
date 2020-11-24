@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
@@ -53,6 +54,9 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                               + Environment.NewLine
                               + Environment.NewLine
                               + $"{project}";
+
+                if (!tProject.IsActive && project.IsActive) // If project has become active from new user
+                    TransitionToActiveProject(project);
             }
             else
             {
@@ -62,14 +66,38 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                               + Environment.NewLine
                               + $"{project}";
             }
-
-            if (!tProject.IsActive && project.IsActive) // If project has become active from new user
-                TransitionToActiveProject();
         }
 
-        private void TransitionToActiveProject()
+        private async void TransitionToActiveProject(Project project)
         {
-            throw new NotImplementedException();
+            ulong? projCategoryId = _context.Guild
+                .GetCategoriesAsync().Result
+                .FirstOrDefault(c => c.Name
+                    .Contains("PROJECTS"))?.Id;
+
+            var channel = await _context.Guild.CreateTextChannelAsync(project.Name, p =>
+            {
+                if (projCategoryId != null)
+                    p.CategoryId = projCategoryId;
+            });
+
+            var role = await _context.Guild
+                .CreateRoleAsync($"project-{project.Name}", GuildPermissions.None, null, false, true);
+
+            foreach (var member in project.ProjectMembers)
+            {
+                await _context.Guild
+                    .GetUserAsync(member.Id).Result
+                    .AddRoleAsync(role);
+            }
+
+            await channel.SendMessageAsync(embed: new EmbedBuilder()
+                .WithColor(Color.Purple)
+                .WithTitle("New Active Project")
+                .WithDescription($"A new project has gained enough members to become active!"
+                    + Environment.NewLine
+                    + project)
+                .Build());
         }
     }
 }

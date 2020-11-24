@@ -34,5 +34,8 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic GetJoinProjectLogic(Type classContext, SocketCommandContext context, string arguments) =>
             new JoinProjectLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository(), arguments);
+
+        public static IBusinessLogic GetListProjectsLogic(Type classContext, SocketCommandContext context) =>
+            new ListProjectsLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository());
     }
 }

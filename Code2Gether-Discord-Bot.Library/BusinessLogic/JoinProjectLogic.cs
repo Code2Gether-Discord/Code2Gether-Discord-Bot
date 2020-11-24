@@ -13,14 +13,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     {
         private ILogger _logger;
         private ICommandContext _context;
-        private IProjectRepository _projectRepository;
+        private IProjectManager _projectManager;
         private string _arguments;
 
-        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository, string arguments)
+        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
         {
             _logger = logger;
             _context = context;
-            _projectRepository = projectRepository;
+            _projectManager = projectManager;
             _arguments = arguments;
         }
 
@@ -44,13 +44,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .Trim()
                 .Split(' ')[0];
 
-            if (ProjectManager.JoinProject(_projectRepository, projectName, _context.User))
+            if (_projectManager.JoinProject(projectName, _context.User, out Project project))
             {
                 title = "Success";
                 description = $"{_context.User} has successfully joined project **{projectName}**!"
                               + Environment.NewLine
                               + Environment.NewLine
-                              + $"{_projectRepository.Read(projectName)}";
+                              + $"{project}";
             }
             else
             {
@@ -58,7 +58,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 description = $"{_context.User} failed to join project **{projectName}**!"
                               + Environment.NewLine
                               + Environment.NewLine
-                              + $"{_projectRepository.Read(projectName)}";
+                              + $"{project}";
             }
         }
     }

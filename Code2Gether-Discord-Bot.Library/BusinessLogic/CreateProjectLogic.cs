@@ -11,14 +11,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     {
         private ILogger _logger;
         private ICommandContext _context;
-        private IProjectRepository _projectRepository;
+        private IProjectManager _projectManager;
         private string _arguments;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository, string arguments)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
         {
             _logger = logger;
             _context = context;
-            _projectRepository = projectRepository;
+            _projectManager = projectManager;
             _arguments = arguments;
         }
 
@@ -42,19 +42,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .Trim()
                 .Split(' ')[0];
 
-            if (ProjectManager.DoesProjectExist(_projectRepository, projectName))
+            if (_projectManager.DoesProjectExist(projectName))
             {
                 title = "Failed";
                 description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
             else
             {
-                Project newProject = ProjectManager.CreateProject(_projectRepository, projectName, _context.User);
+                Project newProject = _projectManager.CreateProject(projectName, _context.User);
                 title = "Success";
                 description = $"Successfully created inactive project **{newProject.Name}**!"
                               + Environment.NewLine
                               + Environment.NewLine
-                              + $"{_projectRepository.Read(projectName)}";
+                              + $"{newProject}";
             }
         }
     }

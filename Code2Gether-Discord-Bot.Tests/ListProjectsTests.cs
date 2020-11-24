@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
+using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
@@ -10,7 +12,8 @@ namespace Code2Gether_Discord_Bot.Tests
 {
     internal class ListProjectsTests
     {
-        IBusinessLogic _logic;
+        private IBusinessLogic _logic;
+        private IProjectRepository _repo;
 
         [SetUp]
         public void Setup()
@@ -45,6 +48,14 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
+            _repo = new FakeProjectRepository()
+            {
+                Projects = new Dictionary<int, Project>()
+                {
+                    {0, new Project(0, "unittest", user)},
+                }
+            };
+
             _logic = new ListProjectsLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
@@ -52,11 +63,25 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = user
-            }, new FakeProjectRepository());
+            }, _repo);
         }
 
         [Test]
         public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
+
+        [Test]
+        public void ExecutionTest()
+        {
+            _logic.Execute();
+            Assert.IsTrue(_repo.ReadAll().Count > 0);
+        }
+
+        [Test]
+        public void EmbedExecutionTest()
+        {
+            var embed = _logic.Execute();
+            Assert.IsTrue(embed.Description.Contains(_repo.Read(0).ToString()));
+        }
     }
 }

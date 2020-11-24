@@ -9,16 +9,16 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
     internal class FakeProjectRepository : IProjectRepository
     {
-        Dictionary<int, Project> _projects = new Dictionary<int, Project>();
+        public Dictionary<int, Project> Projects = new Dictionary<int, Project>();
 
         public bool Create(Project newProject)
         {
-            return _projects.TryAdd(newProject.ID, newProject);
+            return Projects.TryAdd(newProject.ID, newProject);
         }
 
         public Project Read(int id)
         {
-            if (_projects.TryGetValue(id, out Project project))
+            if (Projects.TryGetValue(id, out Project project))
                 return project;
             throw new Exception($"Failed to read project with ID {id}");
         }
@@ -30,7 +30,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public IDictionary<int, Project> ReadAll()
         {
-            return _projects;
+            return Projects;
         }
 
         public bool Update(Project newProject)
@@ -41,7 +41,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public bool Delete(int id)
         {
-            return _projects.Remove(id, out _);
+            return Projects.Remove(id, out _);
         }
     }
 }

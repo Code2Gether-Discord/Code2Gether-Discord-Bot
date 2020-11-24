@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
-    public class MakeChannelTests
+    internal class ListProjectsTests
     {
         IBusinessLogic _logic;
 
@@ -43,26 +42,21 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user,
-                Content = "debug!makechannel make-me"
+                Author = user
             };
 
-            _logic = BusinessLogicFactory.GetMakeChannelLogic(GetType(), new FakeCommandContext()
+            _logic = new ListProjectsLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
             {
+                Channel = messageChannel,
                 Client = client,
                 Guild = guild,
-                User = user,
                 Message = message,
-                Channel = messageChannel
-            }, "unit-test");
+                User = user
+            }, new FakeProjectRepository());
         }
 
         [Test]
         public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
-
-        //[Test]
-        //public void EmbedInstantiationTest() =>
-        //    Assert.IsTrue(_logic.Execute() != null);
     }
 }

@@ -9,8 +9,7 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Command("createproject",
             RunMode = RunMode.Async)]
         [Alias("create")]
-        [Summary("Creates an inactive project that other users can join."
-            + "Upon becomming active, a new text channel is created and project members gain the project's role")]
+        [Summary("Creates an inactive project that other users can join.")]
         public async Task CreateProjectAsync([Remainder] string arguments) =>
              await ReplyAsync(embed: BusinessLogicFactory.GetCreateProjectLogic(GetType(), Context, arguments).Execute());
     }

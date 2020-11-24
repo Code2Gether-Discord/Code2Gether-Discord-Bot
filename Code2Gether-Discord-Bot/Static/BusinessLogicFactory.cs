@@ -2,6 +2,7 @@
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord.Commands;
 using System;
+using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
 
 namespace Code2Gether_Discord_Bot.Static
@@ -18,9 +19,6 @@ namespace Code2Gether_Discord_Bot.Static
         public static IBusinessLogic GetMakeChannelLogic(Type classContext, ICommandContext context, string newChannelName) =>
             new MakeChannelLogic(UtilityFactory.GetLogger(classContext), context, newChannelName);
 
-        public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string arguments) =>
-            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository(), arguments);
-
         public static IBusinessLogic GetInfoLogic(Type classContext, ICommandContext context) =>
             new InfoLogic(UtilityFactory.GetLogger(classContext), context);
 
@@ -29,5 +27,12 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic ExcuseGeneratorLogic(Type classContext, ICommandContext context) =>
             new ExcuseGeneratorLogic(UtilityFactory.GetLogger(classContext), context);
+
+
+        public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string arguments) =>
+            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository(), arguments);
+
+        public static IBusinessLogic GetJoinProjectLogic(Type classContext, SocketCommandContext context, string arguments) =>
+            new JoinProjectLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository(), arguments);
     }
 }

@@ -4,9 +4,8 @@ using Discord.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Code2Gether_Discord_Bot.Library.BusinessLogic;
 
-namespace Code2Gether_Discord_Bot.Static
+namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class HelpLogic : IBusinessLogic
     {

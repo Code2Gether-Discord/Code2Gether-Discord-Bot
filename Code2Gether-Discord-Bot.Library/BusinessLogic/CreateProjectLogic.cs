@@ -6,14 +6,14 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    internal class CreateProjectLogic : IBusinessLogic
+    public class CreateProjectLogic : IBusinessLogic
     {
         private ILogger _logger;
         private ICommandContext _context;
         private IProjectRepository _projectRepository;
         private string _arguments;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository string arguments)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository, string arguments)
         {
             _logger = logger;
             _context = context;
@@ -43,14 +43,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             if (ProjectManager.DoesProjectExist(_projectRepository, projectName))
             {
-                title = $"{projectName} already exists!";
-                description = $"Could not create new inactive project, {projectName} already exists!";
+                title = $"Failed";
+                description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
             else
             {
                 Project newProject = ProjectManager.CreateProject(_projectRepository, projectName);
-                title = $"New inactive project {newProject.Name} created!";
-                description = $"Successfully created inactive project {newProject.Name}!";
+                title = $"Success";
+                description = $"Successfully created inactive project **{newProject.Name}**!";
             }
         }
     }

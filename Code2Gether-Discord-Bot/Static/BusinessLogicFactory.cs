@@ -19,7 +19,7 @@ namespace Code2Gether_Discord_Bot.Static
             new MakeChannelLogic(UtilityFactory.GetLogger(classContext), context, newChannelName);
 
         public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string arguments) =>
-            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, arguments);
+            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository(), arguments);
 
         public static IBusinessLogic GetInfoLogic(Type classContext, ICommandContext context) =>
             new InfoLogic(UtilityFactory.GetLogger(classContext), context);

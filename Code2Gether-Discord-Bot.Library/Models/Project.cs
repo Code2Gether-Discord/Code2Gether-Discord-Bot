@@ -18,9 +18,13 @@ namespace Code2Gether_Discord_Bot.Library.Models
             }
         }
 
-        public Project(string name)
+        public Project(int id, string name)
         {
+            ID = id;
             Name = name;
         }
+
+        public override string ToString() =>
+            $"ID: {ID}; Name: {Name}; Members: {ProjectMembers.Count}";
     }
 }

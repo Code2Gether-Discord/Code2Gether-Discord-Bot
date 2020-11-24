@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Code2Gether_Discord_Bot.Library.Static;
 
 
 namespace Code2Gether_Discord_Bot

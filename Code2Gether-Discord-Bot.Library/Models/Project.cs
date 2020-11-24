@@ -9,6 +9,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         [PrimaryKey, AutoIncrement]
         public int ID { get; }
         public string Name { get; }
+        public IUser Author { get; }
         public List<IUser> ProjectMembers { get; set; } = new List<IUser>();
         public bool IsActive
         {
@@ -18,13 +19,14 @@ namespace Code2Gether_Discord_Bot.Library.Models
             }
         }
 
-        public Project(int id, string name)
+        public Project(int id, string name, IUser author)
         {
             ID = id;
             Name = name;
+            Author = author;
         }
 
         public override string ToString() =>
-            $"ID: {ID}; Name: {Name}; Members: {ProjectMembers.Count}";
+            $"Project Name: {Name}; Is Active: {IsActive}; Created by: {Author}; Members: {ProjectMembers.Count}";
     }
 }

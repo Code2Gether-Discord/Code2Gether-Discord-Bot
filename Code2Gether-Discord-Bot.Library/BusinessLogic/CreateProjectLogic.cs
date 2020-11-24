@@ -1,4 +1,5 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
+﻿using System;
+using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
@@ -37,20 +38,23 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private void CreateInactiveProject(out string title, out string description)
         {
-            string projectName = _arguments
+            var projectName = _arguments
                 .Trim()
                 .Split(' ')[0];
 
             if (ProjectManager.DoesProjectExist(_projectRepository, projectName))
             {
-                title = $"Failed";
+                title = "Failed";
                 description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
             else
             {
-                Project newProject = ProjectManager.CreateProject(_projectRepository, projectName);
-                title = $"Success";
-                description = $"Successfully created inactive project **{newProject.Name}**!";
+                Project newProject = ProjectManager.CreateProject(_projectRepository, projectName, _context.User);
+                title = "Success";
+                description = $"Successfully created inactive project **{newProject.Name}**!"
+                              + Environment.NewLine
+                              + Environment.NewLine
+                              + $"{_projectRepository.Read(projectName)}";
             }
         }
     }

@@ -6,8 +6,8 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
 {
     public class ExcuseModule : ModuleBase<SocketCommandContext>
     {
-        [Command("get_excuse", RunMode = RunMode.Async)]
-        [Alias("getexcuse")]
+        [Command("getexcuse", RunMode = RunMode.Async)]
+        [Alias("excuse")]
         [Summary("Gets a random excuse.")]
         public async Task GetExcuseAsync() =>
             await ReplyAsync(embed: BusinessLogicFactory.ExcuseGeneratorLogic(GetType(), Context).Execute());

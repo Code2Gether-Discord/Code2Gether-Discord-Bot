@@ -13,7 +13,7 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Command("ping",
             RunMode = RunMode.Async)]
         [Alias("pong")]
-        [Summary("Replies with an embed containing the bot's websocket latency")]
+        [Summary("Replies with an embed containing the bot's websocket latency.")]
         public async Task PingAsync() =>
             await ReplyAsync(embed: BusinessLogicFactory.GetPingLogic(GetType(),Context, Context.Client.Latency).Execute());
     }

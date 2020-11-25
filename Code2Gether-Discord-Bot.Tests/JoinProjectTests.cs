@@ -73,10 +73,8 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public async Task ExecutionTest()
-        public void ExecutionTest()
         {
             await _logic.ExecuteAsync();
-            _logic.Execute();
             
             Assert.IsTrue(_repo.Read(0).ProjectMembers.Count > 0);
         }

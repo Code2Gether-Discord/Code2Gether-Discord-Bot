@@ -1,5 +1,4 @@
 ﻿using Discord;
-using SQLite;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

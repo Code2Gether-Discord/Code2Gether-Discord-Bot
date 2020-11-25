@@ -1,9 +1,10 @@
 ﻿using Discord;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public interface IBusinessLogic
     {
-        Embed Execute();
+        Task<Embed> ExecuteAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
+﻿using System.Threading.Tasks;
+using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
@@ -59,28 +60,28 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public async void EmbedAuthorHasValueTest()
+        public async Task EmbedAuthorHasValueTest()
         {
             var result = await _logic.ExecuteAsync();
             Assert.IsTrue(result.Author.HasValue);
         }
 
         [Test]
-        public async void EmbedColorHasValueTest()
+        public async Task EmbedColorHasValueTest()
         {
             var result = await _logic.ExecuteAsync();
             Assert.IsTrue(result.Color.HasValue);
         }
 
         [Test]
-        public async void EmbedHasTitleTest()
+        public async Task EmbedHasTitleTest()
         {
             var result = await _logic.ExecuteAsync();
             Assert.IsTrue(result.Title.Length > 0);
         }
 
         [Test]
-        public async void EmbedHasDescriptionTest()
+        public async Task EmbedHasDescriptionTest()
         {
             var result = await _logic.ExecuteAsync();
             Assert.IsTrue(result.Description.Length > 0);

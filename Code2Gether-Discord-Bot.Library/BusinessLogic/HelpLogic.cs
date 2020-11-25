@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Code2Gether_Discord_Bot.Static
+namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class HelpLogic : IBusinessLogic
     {

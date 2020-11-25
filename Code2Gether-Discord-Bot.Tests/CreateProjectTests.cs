@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
-    public class MakeChannelTests
+    internal class CreateProjectTests
     {
-        IBusinessLogic _logic;
+        private IBusinessLogic _logic;
+        private IProjectRepository _repo;
 
         [SetUp]
         public void Setup()
@@ -43,26 +45,37 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user,
-                Content = "debug!makechannel make-me"
+                Author = user
             };
 
-            _logic = BusinessLogicFactory.GetMakeChannelLogic(GetType(), new FakeCommandContext()
+            _repo = new FakeProjectRepository()
             {
+                Projects = new Dictionary<int, Project>()
+                {
+                    {0, new Project(0, "unittest", user)},
+                }
+            };
+
+            _logic = new CreateProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
+            {
+                Channel = messageChannel,
                 Client = client,
                 Guild = guild,
-                User = user,
                 Message = message,
-                Channel = messageChannel
-            }, "unit-test");
+                User = user
+            }, new FakeProjectManager(_repo), "unittest");
         }
 
         [Test]
         public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
 
-        //[Test]
-        //public void EmbedInstantiationTest() =>
-        //    Assert.IsTrue(_logic.Execute() != null);
+        [Test]
+        public void ExecutionTest()
+        {
+            _logic.Execute();
+
+            Assert.IsTrue(_repo.ReadAll().Count > 0);
+        }
     }
 }

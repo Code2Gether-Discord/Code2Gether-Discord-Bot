@@ -1,4 +1,5 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
+﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
+using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
@@ -42,7 +43,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _logic = BusinessLogicFactory.InfoLogic(GetType(), new FakeCommandContext()
+            _logic = BusinessLogicFactory.GetInfoLogic(GetType(), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,
@@ -55,22 +56,5 @@ namespace Code2Gether_Discord_Bot.Tests
         [Test]
         public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
-/*
-        [Test]
-        public void EmbedAuthorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Author.HasValue);
-
-        [Test]
-        public void EmbedColorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Color.HasValue);
-
-        [Test]
-        public void EmbedHasTitleTest() =>
-            Assert.IsTrue(_logic.Execute().Title.Length > 0);
-
-        [Test]
-        public void EmbedHasDescriptionTest() =>
-            Assert.IsTrue(_logic.Execute().Description.Length > 0);
-*/
     }
 }

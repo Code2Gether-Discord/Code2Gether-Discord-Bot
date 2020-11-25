@@ -1,4 +1,5 @@
 ﻿using Discord;
+using SQLite;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,7 +21,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 // return ProjectMembers.Count > 2;
                 return false;
             }
-        }
+            }
 
         public Project() 
         {

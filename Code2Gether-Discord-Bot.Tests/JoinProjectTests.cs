@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
@@ -71,8 +72,10 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
+        public async Task ExecutionTest()
         public void ExecutionTest()
         {
+            await _logic.ExecuteAsync();
             _logic.Execute();
             
             Assert.IsTrue(_repo.Read(0).ProjectMembers.Count > 0);

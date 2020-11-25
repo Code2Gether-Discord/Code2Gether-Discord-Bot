@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
@@ -19,7 +20,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _latency = latency;
         }
 
-        public Embed Execute()
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
@@ -28,12 +29,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             try
             {
-                if (!_context.Guild.GetCurrentUserAsync().Result.GuildPermissions.ManageMessages)
+                var selfUser = await _context.Guild.GetCurrentUserAsync();
+                if (!selfUser.GuildPermissions.ManageMessages)
                 {
                     throw new Exception("Missing ManageMessages permission for Message Latency");
                 }
 
-                var temporaryMessage = _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437").Result;
+                var temporaryMessage = await _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437");
 
                 embed = new EmbedBuilder()
                     .WithColor(Color.Purple)
@@ -43,7 +45,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .WithAuthor(_context.Message.Author)
                     .Build();
 
-                temporaryMessage.DeleteAsync();
+                await temporaryMessage.DeleteAsync();
             }
             catch (Exception e)
             {

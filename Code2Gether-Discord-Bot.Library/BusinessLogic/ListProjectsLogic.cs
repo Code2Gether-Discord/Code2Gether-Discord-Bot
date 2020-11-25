@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Discord;
@@ -21,25 +22,27 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _projectRepository = projectRepository;
         }
 
-        public Embed Execute()
+        public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
             ListProjects(out string title, out string description);
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle($"Create Project: {title}")
+                .WithTitle(title)
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private void ListProjects(out string title, out string description)
         {
             var sb = new StringBuilder();
+            var projects = _projectRepository.ReadAll();
 
-            foreach (var project in _projectRepository.ReadAll())
+            foreach (var project in projects)
             {
                 sb.Append(project.Value
                           + Environment.NewLine
@@ -51,7 +54,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(Environment.NewLine);
             }
 
-            title = "List Projects";
+            title = $"List Projects ({projects.Values.Count})";
             description = sb.ToString();
         }
     }

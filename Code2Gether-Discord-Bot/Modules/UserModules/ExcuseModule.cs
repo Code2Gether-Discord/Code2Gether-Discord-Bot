@@ -10,6 +10,6 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Alias("excuse")]
         [Summary("Gets a random excuse.")]
         public async Task GetExcuseAsync() =>
-            await ReplyAsync(embed: BusinessLogicFactory.ExcuseGeneratorLogic(GetType(), Context).Execute());
+            await ReplyAsync(embed: await BusinessLogicFactory.ExcuseGeneratorLogic(GetType(), Context).ExecuteAsync());
     }
 }

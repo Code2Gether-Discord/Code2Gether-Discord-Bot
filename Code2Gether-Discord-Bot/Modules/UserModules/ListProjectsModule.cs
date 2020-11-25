@@ -14,6 +14,6 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Alias("list")]
         [Summary("Lists all projects that users can join.")]
         public async Task ListProjectsAsync() =>
-            await ReplyAsync(embed: BusinessLogicFactory.GetListProjectsLogic(GetType(), Context).Execute());
+            await ReplyAsync(embed: await BusinessLogicFactory.GetListProjectsLogic(GetType(), Context).ExecuteAsync());
     }
 }

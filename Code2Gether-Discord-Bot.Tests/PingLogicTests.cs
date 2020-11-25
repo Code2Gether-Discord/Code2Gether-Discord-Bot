@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
@@ -58,19 +59,31 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public void EmbedAuthorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Author.HasValue);
+        public async Task EmbedAuthorHasValueTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Author.HasValue);
+        }
 
         [Test]
-        public void EmbedColorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Color.HasValue);
+        public async Task EmbedColorHasValueTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Color.HasValue);
+        }
 
         [Test]
-        public void EmbedHasTitleTest() =>
-            Assert.IsTrue(_logic.Execute().Title.Length > 0);
+        public async Task EmbedHasTitleTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Title.Length > 0);
+        }
 
         [Test]
-        public void EmbedHasDescriptionTest() =>
-            Assert.IsTrue(_logic.Execute().Description.Length > 0);
+        public async Task EmbedHasDescriptionTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Description.Length > 0);
+        }
     }
 }

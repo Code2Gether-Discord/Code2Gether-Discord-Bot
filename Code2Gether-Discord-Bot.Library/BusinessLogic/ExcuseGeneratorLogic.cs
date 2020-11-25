@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -23,28 +24,28 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
         #endregion
 
-        public Embed Execute()
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
-            var response = GenerateExcuse();
+            var response = await GenerateExcuseAsync();
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Greetings. My excuse today is:")
                 .WithDescription(response) // Excuse generation logic occurs here.
                 .WithAuthor(_context.Message.Author)
                 .Build();
+            return embed;
         }
 
-        private string GenerateExcuse()
+        private async Task<string> GenerateExcuseAsync()
         {
             try
             {
                 // Get HTML from website
-                var response = new HttpClient()
-                    .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl")
-                    .Result;
+                var response = await new HttpClient()
+                    .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl");
 
                 // Encode byte array to string, remove line breaks.
                 var decodedSource = WebUtility.HtmlDecode(Encoding.UTF8.GetString(response, 0, response.Length - 1))

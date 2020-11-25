@@ -71,9 +71,9 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public void ExecutionTest()
+        public async void ExecutionTest()
         {
-            _logic.ExecuteAsync();
+            await _logic.ExecuteAsync();
 
             Assert.IsTrue(_repo.ReadAll().Count > 0);
         }

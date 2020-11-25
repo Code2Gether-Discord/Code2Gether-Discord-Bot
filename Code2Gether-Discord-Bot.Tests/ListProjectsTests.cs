@@ -71,16 +71,16 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public void ExecutionTest()
+        public async void ExecutionTest()
         {
-            _ = _logic.ExecuteAsync().Result;
+            _ = await _logic.ExecuteAsync();
             Assert.IsTrue(_repo.ReadAll().Count > 0);
         }
 
         [Test]
-        public void EmbedExecutionTest()
+        public async void EmbedExecutionTest()
         {
-            var embed = _logic.ExecuteAsync().Result;
+            var embed = await _logic.ExecuteAsync();
             Assert.IsTrue(embed.Description.Contains(_repo.Read(0).ToString()));
         }
     }

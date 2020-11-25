@@ -59,19 +59,31 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public void EmbedAuthorHasValueTest() =>
-            Assert.IsTrue(_logic.ExecuteAsync().Result.Author.HasValue);
+        public async void EmbedAuthorHasValueTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Author.HasValue);
+        }
 
         [Test]
-        public void EmbedColorHasValueTest() =>
-            Assert.IsTrue(_logic.ExecuteAsync().Result.Color.HasValue);
+        public async void EmbedColorHasValueTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Color.HasValue);
+        }
 
         [Test]
-        public void EmbedHasTitleTest() =>
-            Assert.IsTrue(_logic.ExecuteAsync().Result.Title.Length > 0);
+        public async void EmbedHasTitleTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Title.Length > 0);
+        }
 
         [Test]
-        public void EmbedHasDescriptionTest() =>
-            Assert.IsTrue(_logic.ExecuteAsync().Result.Description.Length > 0);
+        public async void EmbedHasDescriptionTest()
+        {
+            var result = await _logic.ExecuteAsync();
+            Assert.IsTrue(result.Description.Length > 0);
+        }
     }
 }

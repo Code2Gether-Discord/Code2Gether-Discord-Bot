@@ -43,7 +43,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
 
             project.ProjectMembers.Add(user);
-            
+
             return _projectRepository.Update(project);
         }
 
@@ -53,9 +53,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
 
             try
             {
-                i = _projectRepository.ReadAll().Keys.Max();
+                i = _projectRepository.ReadAll().Keys.Max() + 1;
             }
-            catch (InvalidOperationException) {}    // No projects available yet
+            catch (InvalidOperationException) { }    // No projects available yet
 
             return i;
         }

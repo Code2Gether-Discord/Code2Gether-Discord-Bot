@@ -29,12 +29,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             try
             {
-                if (!_context.Guild.GetCurrentUserAsync().Result.GuildPermissions.ManageMessages)
+                var selfUser = await _context.Guild.GetCurrentUserAsync();
+                if (!selfUser.GuildPermissions.ManageMessages)
                 {
                     throw new Exception("Missing ManageMessages permission for Message Latency");
                 }
 
-                var temporaryMessage = _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437").Result;
+                var temporaryMessage = await _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437");
 
                 embed = new EmbedBuilder()
                     .WithColor(Color.Purple)

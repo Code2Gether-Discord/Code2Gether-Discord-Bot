@@ -24,11 +24,11 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
         #endregion
 
-        public Task<Embed> ExecuteAsync()
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
-            var response = GenerateExcuse();
+            var response = await GenerateExcuseAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -36,17 +36,16 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .WithDescription(response) // Excuse generation logic occurs here.
                 .WithAuthor(_context.Message.Author)
                 .Build();
-            return Task.FromResult(embed);
+            return embed;
         }
 
-        private string GenerateExcuse()
+        private async Task<string> GenerateExcuseAsync()
         {
             try
             {
                 // Get HTML from website
-                var response = new HttpClient()
-                    .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl")
-                    .Result;
+                var response = await new HttpClient()
+                    .GetByteArrayAsync("http://pages.cs.wisc.edu/~ballard/bofh/bofhserver.pl");
 
                 // Encode byte array to string, remove line breaks.
                 var decodedSource = WebUtility.HtmlDecode(Encoding.UTF8.GetString(response, 0, response.Length - 1))

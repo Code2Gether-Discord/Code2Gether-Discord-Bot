@@ -29,7 +29,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             return new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle($"Create Project: {title}")
+                .WithTitle(title)
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
@@ -37,6 +37,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private void ListProjects(out string title, out string description)
         {
+            int projectCount = 0;
+
             var sb = new StringBuilder();
 
             foreach (var project in _projectRepository.ReadAll())
@@ -51,7 +53,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(Environment.NewLine);
             }
 
-            title = "List Projects";
+            title = $"List Projects ({projectCount})";
             description = sb.ToString();
         }
     }

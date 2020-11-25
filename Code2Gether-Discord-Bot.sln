@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot", "Code2Gether-Discord-Bot\Code2Gether-Discord-Bot.csproj", "{D9824F19-2899-46C7-A72D-B2A1CEFE59A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot", "Code2Gether-Discord-Bot\Code2Gether-Discord-Bot.csproj", "{D9824F19-2899-46C7-A72D-B2A1CEFE59A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot.Library", "Code2Gether-Discord-Bot.Library\Code2Gether-Discord-Bot.Library.csproj", "{A9DFC356-9751-45FD-9625-5A738FB3971B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.Library", "Code2Gether-Discord-Bot.Library\Code2Gether-Discord-Bot.Library.csproj", "{A9DFC356-9751-45FD-9625-5A738FB3971B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot.Tests", "Code2Gether-Discord-Bot.Tests\Code2Gether-Discord-Bot.Tests.csproj", "{473A61A7-CBF3-40F8-A183-06C0C466523A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.Tests", "Code2Gether-Discord-Bot.Tests\Code2Gether-Discord-Bot.Tests.csproj", "{473A61A7-CBF3-40F8-A183-06C0C466523A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot.WebApi", "Code2Gether-Discord-Bot.WebApi\Code2Gether-Discord-Bot.WebApi.csproj", "{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{473A61A7-CBF3-40F8-A183-06C0C466523A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{473A61A7-CBF3-40F8-A183-06C0C466523A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{473A61A7-CBF3-40F8-A183-06C0C466523A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,11 +37,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private void ListProjects(out string title, out string description)
         {
-            int projectCount = 0;
-
             var sb = new StringBuilder();
+            var projects = _projectRepository.ReadAll();
 
-            foreach (var project in _projectRepository.ReadAll())
+            foreach (var project in projects)
             {
                 sb.Append(project.Value
                           + Environment.NewLine
@@ -53,7 +52,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(Environment.NewLine);
             }
 
-            title = $"List Projects ({projectCount})";
+            title = $"List Projects ({projects.Values.Count})";
             description = sb.ToString();
         }
     }

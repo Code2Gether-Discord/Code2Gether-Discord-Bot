@@ -16,5 +16,6 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Summary("Replies with an embed containing the bot's websocket latency")]
         public async Task PingAsync() =>
             await ReplyAsync(embed: BusinessLogicFactory.PingLogic(GetType(),Context, Context.Client.Latency).Execute());
+        // Await the Execute (should be ExecuteAsync instead) 
     }
 }

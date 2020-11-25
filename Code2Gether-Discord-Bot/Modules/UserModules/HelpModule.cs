@@ -16,5 +16,6 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Summary("Returns this!")]
         public async Task HelpAsync() =>
              await ReplyAsync(embed: BusinessLogicFactory.HelpLogic(GetType(), Context).Execute());
+        // Await the Execute (should be ExecuteAsync instead) 
     }
 }

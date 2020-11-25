@@ -23,6 +23,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
         #endregion
 
+        // Make this return Task<Embed> (even though it will execute synchronously)
+        // (Yes, I know, I wrote this code) :-)
         public Embed Execute()
         {
             _logger.Log(_context);
@@ -35,6 +37,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .WithDescription(response) // Excuse generation logic occurs here.
                 .WithAuthor(_context.Message.Author)
                 .Build();
+
+            // Return Task.FromResult
         }
 
         private string GenerateExcuse()

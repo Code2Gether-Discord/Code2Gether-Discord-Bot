@@ -19,6 +19,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _context = context;
         }
 
+        // Make this return Task<Embed> (even though it will execute synchronously)
         public Embed Execute()
         {
             _logger.Log(_context);
@@ -39,6 +40,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .AddField("Guilds", $"{guilds.Count}")
                 .AddField("Channels", $"{guilds.Sum(g => g.GetChannelsAsync().Result.Count)}")
                 .Build();
+
+            // Return Task.FromResult
         }
 
         private static string GetUptime() => (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"dd\.hh\:mm\:ss");

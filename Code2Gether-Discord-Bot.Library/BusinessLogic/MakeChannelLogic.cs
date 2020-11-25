@@ -20,6 +20,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _newChannelName = newChannelName;
         }
 
+        // Make this return Task<Embed> (even though it will execute synchronously)
         public Embed Execute()
         {
             _logger.Log(_context);
@@ -32,6 +33,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .WithDescription($"Successfully made new channel: <#{newChannelObj.Id}>")
                     .WithAuthor(_context.Message.Author)
                     .Build();
+
+                // Return as Task.FromResult instead of Embed.
             }
 
             throw new Exception($"Failed to create channel: {_newChannelName}");

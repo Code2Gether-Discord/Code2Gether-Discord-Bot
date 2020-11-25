@@ -17,5 +17,6 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Summary("Replies with a wealth of information regarding the bot's environment")]
         public async Task InfoAsync() =>
              await ReplyAsync(embed: BusinessLogicFactory.InfoLogic(GetType(), Context).Execute());
+        // Await the Execute (should be ExecuteAsync instead) 
     }
 }

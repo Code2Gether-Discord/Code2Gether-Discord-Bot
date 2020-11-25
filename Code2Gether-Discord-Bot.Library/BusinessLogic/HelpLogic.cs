@@ -22,6 +22,7 @@ namespace Code2Gether_Discord_Bot.Static
             _prefix = prefix;
         }
 
+        // Make this return Task<Embed> (even though it will execute synchronously)
         public Embed Execute()
         {
             _logger.Log(_context);
@@ -33,6 +34,8 @@ namespace Code2Gether_Discord_Bot.Static
                 .AddField("Commands", GetCommandText())
                 .WithAuthor(_context.Message.Author)
                 .Build();
+
+            // Return Task.FromResult
         }
 
         private string GetCommandText()

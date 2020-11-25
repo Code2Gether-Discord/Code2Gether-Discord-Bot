@@ -19,6 +19,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _latency = latency;
         }
 
+        // This method should be async Task<Embed>.
         public Embed Execute()
         {
             _logger.Log(_context);
@@ -28,11 +29,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             try
             {
+                // Use await instead of result
+                // Test against awaited return value.
                 if (!_context.Guild.GetCurrentUserAsync().Result.GuildPermissions.ManageMessages)
                 {
                     throw new Exception("Missing ManageMessages permission for Message Latency");
                 }
 
+                // use await here instead of Result
                 var temporaryMessage = _context.Channel.SendMessageAsync("https://tenor.com/view/loading-buffering-gif-8820437").Result;
 
                 embed = new EmbedBuilder()
@@ -43,6 +47,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .WithAuthor(_context.Message.Author)
                     .Build();
 
+                // Use await instead of Wait()
                 temporaryMessage.DeleteAsync().Wait();
             }
             catch (Exception e)

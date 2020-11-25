@@ -1,25 +1,33 @@
 ﻿using Discord;
-using SQLite;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
     public class Project
     {
-        [PrimaryKey, AutoIncrement]
-        public int ID { get; }
+        [Key]
+        public long ID { get; }
+        [Required]
         public string Name { get; }
+        [Required]
         public IUser Author { get; }
-        public List<IUser> ProjectMembers { get; set; } = new List<IUser>();
+        public IList<IUser> ProjectMembers { get; set; } = new List<IUser>();
         public bool IsActive
         {
             get
             {
-                return ProjectMembers.Count > 2;
+                // return ProjectMembers.Count > 2;
+                return false;
             }
         }
 
-        public Project(int id, string name, IUser author)
+        public Project() 
+        {
+            ProjectMembers = new List<IUser>();
+        }
+
+        public Project(long id, string name, IUser author) : this()
         {
             ID = id;
             Name = name;
@@ -27,6 +35,6 @@ namespace Code2Gether_Discord_Bot.Library.Models
         }
 
         public override string ToString() =>
-            $"Project Name: {Name}; Is Active: {IsActive}; Created by: {Author}; Members: {ProjectMembers.Count}";
+            $"Project Name: {Name}; Is Active: {IsActive}; Created by: {Author}"; // Members: {ProjectMembers.Count}";
     }
 }

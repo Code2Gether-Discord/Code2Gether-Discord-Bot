@@ -50,7 +50,7 @@ namespace Code2Gether_Discord_Bot.Tests
 
             _repo = new FakeProjectRepository()
             {
-                Projects = new Dictionary<int, Project>()
+                Projects = new Dictionary<long, Project>()
                 {
                     {0, new Project(0, "unittest", user)},
                 }

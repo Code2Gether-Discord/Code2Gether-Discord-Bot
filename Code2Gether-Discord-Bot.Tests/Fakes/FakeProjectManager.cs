@@ -50,9 +50,9 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             return _projectRepository.Update(project);
         }
 
-        private int GetNextId()
+        private long GetNextId()
         {
-            int i = 0;
+            long i = 0;
 
             try
             {

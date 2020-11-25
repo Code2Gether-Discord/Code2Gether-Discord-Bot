@@ -1,11 +1,10 @@
 using System;
+using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Code2Gether_Discord_Bot.WebApi
@@ -30,7 +29,7 @@ namespace Code2Gether_Discord_Bot.WebApi
             });
 
             // Entity Framework for SQLite.
-            services.AddEntityFrameworkSqlite();
+            services.AddDbContext<DiscordBotDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

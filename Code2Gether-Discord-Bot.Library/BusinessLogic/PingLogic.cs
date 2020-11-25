@@ -20,7 +20,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _latency = latency;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
@@ -44,7 +44,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .WithAuthor(_context.Message.Author)
                     .Build();
 
-                temporaryMessage.DeleteAsync();
+                await temporaryMessage.DeleteAsync();
             }
             catch (Exception e)
             {
@@ -58,7 +58,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .Build();
             }
 
-            return Task.FromResult(embed);
+            return embed;
         }
     }
 }

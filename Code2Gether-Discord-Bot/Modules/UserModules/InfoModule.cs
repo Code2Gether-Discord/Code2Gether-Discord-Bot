@@ -14,8 +14,8 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Command("info",
             RunMode = RunMode.Async)]
         [Alias("about", "whoami", "owner", "uptime", "library", "author", "stats")]
-        [Summary("Replies with a wealth of information regarding the bot's environment")]
+        [Summary("Replies with a wealth of information regarding the bot's environment.")]
         public async Task InfoAsync() =>
-             await ReplyAsync(embed: BusinessLogicFactory.InfoLogic(GetType(), Context).Execute());
+             await ReplyAsync(embed: BusinessLogicFactory.GetInfoLogic(GetType(), Context).Execute());
     }
 }

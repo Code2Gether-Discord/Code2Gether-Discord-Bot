@@ -14,9 +14,9 @@ namespace Code2Gether_Discord_Bot.Modules.PrivilegedModules
         /// <returns>Success or failure embed</returns>
         [Command("makechannel",
             RunMode = RunMode.Async)]
-        [Summary("Creates a new text channel")]
+        [Summary("Creates a new text channel.")]
         [RequireUserPermission(ChannelPermission.ManageChannels)]
         public async Task MakeChannelAsync([Remainder]string newChannelName = "") =>
-            await ReplyAsync(embed: BusinessLogicFactory.MakeChannelLogic(GetType(), Context, newChannelName).Execute());
+            await ReplyAsync(embed: BusinessLogicFactory.GetMakeChannelLogic(GetType(), Context, newChannelName).Execute());
     }
 }

@@ -1,3 +1,4 @@
+using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
@@ -42,7 +43,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _logic = BusinessLogicFactory.PingLogic(GetType(), new FakeCommandContext()
+            _logic = BusinessLogicFactory.GetPingLogic(GetType(), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,

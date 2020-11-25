@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
@@ -25,18 +26,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _arguments = arguments;
         }
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
             JoinProject(out string title, out string description);
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle($"Join Project: {title}")
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private void JoinProject(out string title, out string description)

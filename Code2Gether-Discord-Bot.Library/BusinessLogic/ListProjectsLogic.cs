@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Discord;
@@ -21,18 +22,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _projectRepository = projectRepository;
         }
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
             ListProjects(out string title, out string description);
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle($"Create Project: {title}")
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private void ListProjects(out string title, out string description)

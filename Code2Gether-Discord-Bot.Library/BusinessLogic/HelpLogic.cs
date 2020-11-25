@@ -4,6 +4,7 @@ using Discord.Commands;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -22,17 +23,18 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _prefix = prefix;
         }
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Help")
                 .WithDescription($"Contains information on how to access this bot's command modules")
                 .AddField("Commands", GetCommandText())
                 .WithAuthor(_context.Message.Author)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private string GetCommandText()

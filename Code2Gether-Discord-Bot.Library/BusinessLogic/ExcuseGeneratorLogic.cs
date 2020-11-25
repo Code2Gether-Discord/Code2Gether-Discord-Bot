@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -23,18 +24,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
         #endregion
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
             var response = GenerateExcuse();
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Greetings. My excuse today is:")
                 .WithDescription(response) // Excuse generation logic occurs here.
                 .WithAuthor(_context.Message.Author)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private string GenerateExcuse()

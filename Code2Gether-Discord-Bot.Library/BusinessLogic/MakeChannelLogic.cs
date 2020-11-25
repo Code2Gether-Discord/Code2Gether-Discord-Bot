@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
@@ -20,18 +21,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _newChannelName = newChannelName;
         }
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
             if (MakeNewTextChannel(_newChannelName, out IChannel newChannelObj))
             {
-                return new EmbedBuilder()
+                var embed = new EmbedBuilder()
                     .WithColor(Color.Purple)
                     .WithTitle($"Made Channel: {newChannelObj.Name}")
                     .WithDescription($"Successfully made new channel: <#{newChannelObj.Id}>")
                     .WithAuthor(_context.Message.Author)
                     .Build();
+                return Task.FromResult(embed);
             }
 
             throw new Exception($"Failed to create channel: {_newChannelName}");

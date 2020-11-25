@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
@@ -19,7 +20,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _latency = latency;
         }
 
-        public Embed Execute()
+        public Task<Embed> Execute()
         {
             _logger.Log(_context);
 
@@ -57,7 +58,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .Build();
             }
 
-            return embed;
+            return Task.FromResult(embed);
         }
     }
 }

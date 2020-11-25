@@ -73,14 +73,14 @@ namespace Code2Gether_Discord_Bot.Tests
         [Test]
         public void ExecutionTest()
         {
-            _ = _logic.Execute().Result;
+            _ = _logic.ExecuteAsync().Result;
             Assert.IsTrue(_repo.ReadAll().Count > 0);
         }
 
         [Test]
         public void EmbedExecutionTest()
         {
-            var embed = _logic.Execute().Result;
+            var embed = _logic.ExecuteAsync().Result;
             Assert.IsTrue(embed.Description.Contains(_repo.Read(0).ToString()));
         }
     }

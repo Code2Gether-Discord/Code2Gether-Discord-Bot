@@ -24,7 +24,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
         #endregion
 
-        public Task<Embed> Execute()
+        public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 

@@ -5,6 +5,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public interface IBusinessLogic
     {
-        Task<Embed> Execute();
+        Task<Embed> ExecuteAsync();
     }
 }

@@ -60,18 +60,18 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void EmbedAuthorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Result.Author.HasValue);
+            Assert.IsTrue(_logic.ExecuteAsync().Result.Author.HasValue);
 
         [Test]
         public void EmbedColorHasValueTest() =>
-            Assert.IsTrue(_logic.Execute().Result.Color.HasValue);
+            Assert.IsTrue(_logic.ExecuteAsync().Result.Color.HasValue);
 
         [Test]
         public void EmbedHasTitleTest() =>
-            Assert.IsTrue(_logic.Execute().Result.Title.Length > 0);
+            Assert.IsTrue(_logic.ExecuteAsync().Result.Title.Length > 0);
 
         [Test]
         public void EmbedHasDescriptionTest() =>
-            Assert.IsTrue(_logic.Execute().Result.Description.Length > 0);
+            Assert.IsTrue(_logic.ExecuteAsync().Result.Description.Length > 0);
     }
 }

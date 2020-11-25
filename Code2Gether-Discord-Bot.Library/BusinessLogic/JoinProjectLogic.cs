@@ -26,7 +26,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _arguments = arguments;
         }
 
-        public Task<Embed> Execute()
+        public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 

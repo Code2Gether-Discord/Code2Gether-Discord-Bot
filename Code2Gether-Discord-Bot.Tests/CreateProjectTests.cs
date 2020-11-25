@@ -73,7 +73,7 @@ namespace Code2Gether_Discord_Bot.Tests
         [Test]
         public void ExecutionTest()
         {
-            _logic.Execute();
+            _logic.ExecuteAsync();
 
             Assert.IsTrue(_repo.ReadAll().Count > 0);
         }

@@ -63,6 +63,6 @@ namespace Code2Gether_Discord_Bot.Tests
 
         //[Test]
         //public void EmbedInstantiationTest() =>
-        //    Assert.IsTrue(_logic.Execute() != null);
+        //    Assert.IsTrue(_logic.ExecuteAsync() != null);
     }
 }

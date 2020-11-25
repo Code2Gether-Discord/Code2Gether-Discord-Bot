@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
@@ -71,16 +72,16 @@ namespace Code2Gether_Discord_Bot.Tests
             Assert.IsTrue(_logic != null);
 
         [Test]
-        public void ExecutionTest()
+        public async Task ExecutionTest()
         {
-            _logic.Execute();
+            _ = await _logic.ExecuteAsync();
             Assert.IsTrue(_repo.ReadAll().Count > 0);
         }
 
         [Test]
-        public void EmbedExecutionTest()
+        public async Task EmbedExecutionTest()
         {
-            var embed = _logic.Execute();
+            var embed = await _logic.ExecuteAsync();
             Assert.IsTrue(embed.Description.Contains(_repo.Read(0).ToString()));
         }
     }

@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -19,14 +20,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _context = context;
         }
 
-        public Embed Execute()
+        public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
             var app = _context.Client.GetApplicationInfoAsync().Result;
             var guilds = _context.Client.GetGuildsAsync().Result;
             
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Info")
                 .WithDescription("Plethora of information regarding the current bot process")
@@ -39,6 +40,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .AddField("Guilds", $"{guilds.Count}")
                 .AddField("Channels", $"{guilds.Sum(g => g.GetChannelsAsync().Result.Count)}")
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private static string GetUptime() => (DateTime.Now - Process.GetCurrentProcess().StartTime).ToString(@"dd\.hh\:mm\:ss");

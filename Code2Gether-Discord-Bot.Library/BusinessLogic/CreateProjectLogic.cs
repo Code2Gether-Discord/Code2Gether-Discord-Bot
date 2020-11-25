@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
@@ -22,18 +23,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _arguments = arguments;
         }
 
-        public Embed Execute()
+        public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
             CreateInactiveProject(out string title, out string description);
 
-            return new EmbedBuilder()
+            var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle($"Create Project: {title}")
                 .WithDescription(description)
                 .WithAuthor(_context.User)
                 .Build();
+            return Task.FromResult(embed);
         }
 
         private void CreateInactiveProject(out string title, out string description)

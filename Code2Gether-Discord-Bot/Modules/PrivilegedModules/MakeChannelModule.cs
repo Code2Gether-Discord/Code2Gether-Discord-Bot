@@ -17,6 +17,6 @@ namespace Code2Gether_Discord_Bot.Modules.PrivilegedModules
         [Summary("Creates a new text channel.")]
         [RequireUserPermission(ChannelPermission.ManageChannels)]
         public async Task MakeChannelAsync([Remainder]string newChannelName = "") =>
-            await ReplyAsync(embed: BusinessLogicFactory.GetMakeChannelLogic(GetType(), Context, newChannelName).Execute());
+            await ReplyAsync(embed: await BusinessLogicFactory.GetMakeChannelLogic(GetType(), Context, newChannelName).ExecuteAsync());
     }
 }

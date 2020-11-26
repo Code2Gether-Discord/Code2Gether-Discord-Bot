@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Discord;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -9,7 +6,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
     {
         bool DoesProjectExist(string projectName);
         bool DoesProjectExist(string projectName, out Project project);
-        Project CreateProject(string projectName, IUser author);
-        bool JoinProject(string projectName, IUser user, out Project project);
+        Project CreateProject(string projectName, User author);
+        bool JoinProject(string projectName, User user, out Project project);
     }
 }

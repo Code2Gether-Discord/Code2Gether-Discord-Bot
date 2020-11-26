@@ -23,20 +23,20 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         #endregion
 
         [HttpPost]
-        public async Task AddProject(FakeModel modelToAdd)
+        public async Task AddProject(Project modelToAdd)
         {
-            await _dbContext.FakeModels.AddAsync(modelToAdd);
+            await _dbContext.Projects.AddAsync(modelToAdd);
             await _dbContext.SaveChangesAsync();
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FakeModel>> GetAll()
+        public async Task<IEnumerable<Project>> GetAll()
         {
-            return await _dbContext.FakeModels.ToArrayAsync();
+            return await _dbContext.Projects.ToArrayAsync();
         }
 
         [HttpGet("{ID}")]
-        public async Task<FakeModel> Get(string ID)
+        public async Task<Project> Get(string ID)
         {
             long longId;
 
@@ -46,7 +46,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
                 return null;
             }
             
-            return await _dbContext.FakeModels
+            return await _dbContext.Projects
                 .FirstOrDefaultAsync(x => x.ID == longId);
         }
     }

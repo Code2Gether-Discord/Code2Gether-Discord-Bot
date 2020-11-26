@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Discord;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -23,7 +22,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             return project != null;
         }
 
-        public Project CreateProject(string projectName, IUser author)
+        public Project CreateProject(string projectName, User author)
         {
             var newId = GetNextId();
             var newProject = new Project(newId, projectName, author);
@@ -35,7 +34,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             throw new Exception($"Failed to create new project: {newProject}!");
         }
 
-        public bool JoinProject(string projectName, IUser user, out Project project)
+        public bool JoinProject(string projectName, User user, out Project project)
         {
             project = _projectRepository.Read(projectName);
 

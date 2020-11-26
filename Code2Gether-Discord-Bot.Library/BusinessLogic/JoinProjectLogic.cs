@@ -49,7 +49,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             _ = _projectManager.DoesProjectExist(projectName, out Project tProject);
 
-            if (_projectManager.JoinProject(projectName, _context.User, out Project project))
+            // todo: Load user or create new one.
+            var user = new User(_context.User);
+
+            if (_projectManager.JoinProject(projectName, user, out Project project))
             {
                 title = "Success";
                 description = $"{_context.User} has successfully joined project **{projectName}**!"
@@ -89,7 +92,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             foreach (var member in project.ProjectMembers)
             {
                 await _context.Guild
-                    .GetUserAsync(member.Id).Result
+                    .GetUserAsync(member.DiscordUserInfo.Id).Result
                     .AddRoleAsync(role);
             }
 

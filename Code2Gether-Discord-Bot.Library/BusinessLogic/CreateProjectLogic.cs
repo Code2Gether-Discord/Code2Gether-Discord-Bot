@@ -51,7 +51,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
             else
             {
-                Project newProject = _projectManager.CreateProject(projectName, _context.User);
+                // todo: Load user or create new one.
+                var user = new User(_context.User);
+
+                Project newProject = _projectManager.CreateProject(projectName, user);
                 title = "Success";
                 description = $"Successfully created inactive project **{newProject.Name}**!"
                               + Environment.NewLine

@@ -19,18 +19,20 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var fakeuser = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
+            var user = new User(fakeuser);
+
             var client = new FakeDiscordClient()
             {
                 FakeApplication = new FakeApplication()
                 {
-                    Owner = user
+                    Owner = fakeuser
                 }
             };
 
@@ -46,7 +48,7 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user
+                Author = fakeuser
             };
 
             _repo = new FakeProjectRepository()
@@ -63,7 +65,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Client = client,
                 Guild = guild,
                 Message = message,
-                User = user
+                User = fakeuser
             }, new FakeProjectManager(_repo), "unittest");
         }
 

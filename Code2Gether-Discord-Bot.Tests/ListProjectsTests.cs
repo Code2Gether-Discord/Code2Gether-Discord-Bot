@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
@@ -19,18 +18,20 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var fakeUser = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
+            var user = new User(fakeUser);
+
             var client = new FakeDiscordClient()
             {
                 FakeApplication = new FakeApplication()
                 {
-                    Owner = user
+                    Owner = fakeUser
                 }
             };
 
@@ -46,7 +47,7 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user
+                Author = fakeUser
             };
 
             _repo = new FakeProjectRepository()
@@ -63,7 +64,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Client = client,
                 Guild = guild,
                 Message = message,
-                User = user
+                User = fakeUser
             }, _repo);
         }
 

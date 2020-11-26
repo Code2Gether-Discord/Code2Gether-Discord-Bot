@@ -7,13 +7,11 @@ namespace Code2Gether_Discord_Bot.Library.Models
 {
     public class Project
     {
-        #region properies
+        #region Properies
         [Key]
-        public long ID { get; }
-        [Required]
-        public string Name { get; }
-        [Required]
-        public User Author { get; }
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public User Author { get; set; }
         public IList<User> ProjectMembers { get; set; } = new List<User>();
         [NotMapped]
         public bool IsActive => ProjectMembers.Count > 2;

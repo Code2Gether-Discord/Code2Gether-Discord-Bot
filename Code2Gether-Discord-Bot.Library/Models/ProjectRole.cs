@@ -9,7 +9,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         [Key]
         public long ID { get; set; }
         [Required]
-        public long RoleName { get; set; }
+        public string RoleName { get; set; }
         // todo: role privileges
         public bool CanReadData { get; set; }
         public bool CanWriteData { get; set; }

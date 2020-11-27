@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.WebApi.Controllers
 {
+    /// <summary>
+    /// A Web API controller that manages the Users in the Code2Gether Discord Bot's Project Database.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class UsersController : Controller
@@ -24,13 +27,16 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         #endregion
 
         #region REST API Methods
-        [HttpPost]
+        /// <summary>
+        /// Create a new user.
+        /// </summary>
+        /// <param name="userToAdd">User to add to database.</param>
+        /// <returns>Action result containing details of added user.</returns>
+        [HttpPost(Name = "PostUser")]
         public async Task<ActionResult<User>> AddUserAsync(User userToAdd)
         {
-            if(userToAdd == null)
-            {
+            if (userToAdd == null)
                 return BadRequest("User is null.");
-            }
 
             // Ensures we don't replace an existing user.
             userToAdd.ID = 0;
@@ -42,79 +48,116 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                // Occurs if issue with database.
+                return Problem(ex.Message, statusCode: 500);
             }
 
-            return CreatedAtAction(actionName: "GetUser", routeValues: new { id = userToAdd.ID }, value: userToAdd);
+            var result = CreatedAtAction(actionName: "GetUser",
+                routeValues: new { ID = userToAdd.ID },
+                value: userToAdd);
+
+            return result;
         }
         #endregion
 
-        [HttpPut("{ID}")]
+        /// <summary>
+        /// Updates the user with the input ID.
+        /// </summary>
+        /// <param name="ID">ID of the user to update.</param>
+        /// <param name="userToUpdate">User info to replace the current user.</param>
+        /// <returns>No content.</returns>
+        [HttpPut("{ID}", Name = "PutUser")]
         public async Task<ActionResult<User>> UpdateUserAsync(string ID, User userToUpdate)
         {
-            long longId;
-
-            if(!long.TryParse(ID, out longId))
-            {
+            if (!long.TryParse(ID, out var longId))
                 return BadRequest("User ID must be numerical.");
-            }
 
-            var userToRemove = await _dbContext.Users.FirstOrDefaultAsync(x => x.ID == longId);
-
-            if(userToRemove == null)
+            try
             {
-                return NotFound("Unable to find user");
-            }
+                var userToRemove = await _dbContext.Users.FirstOrDefaultAsync(x => x.ID == longId);
 
-            _dbContext.Users.Remove(userToRemove);
-            
-            userToUpdate.ID = longId;
-            await _dbContext.Users.AddAsync(userToUpdate);
-            await _dbContext.SaveChangesAsync();
+                if (userToRemove == null)
+                    return NotFound("Unable to find user");
+
+                _dbContext.Users.Remove(userToRemove);
+
+                userToUpdate.ID = longId;
+                await _dbContext.Users.AddAsync(userToUpdate);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message, statusCode: 500);
+            }
 
             return NoContent();
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Get all users in the database.
+        /// </summary>
+        /// <returns>All users in the database.</returns>
+        [HttpGet(Name = "GetAllUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsersAsync()
         {
-            return await _dbContext.Users.ToArrayAsync();
+            try
+            {
+                return await _dbContext.Users.ToArrayAsync();
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message, statusCode: 500);
+            }
         }
 
+        /// <summary>
+        /// Gets a single user based on the input ID.
+        /// </summary>
+        /// <param name="ID">ID of the user to retrieve.</param>
+        /// <returns>The data for the retrieved user.</returns>
         [HttpGet("{ID}", Name = "GetUser")]
         public async Task<ActionResult<User>> GetUserAsync(string ID)
         {
-            long longId;
-
-            if (!long.TryParse(ID, out longId))
-            {
+            if (!long.TryParse(ID, out var longId))
                 return BadRequest("User ID must be numerical.");
-            }
 
-            return await _dbContext.Users
-                .FirstOrDefaultAsync(x => x.ID == longId);
+            try
+            {
+                return await _dbContext.Users
+                    .FirstOrDefaultAsync(x => x.ID == longId);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message, statusCode: 500);
+            }
         }
 
-        [HttpDelete("{ID}")]
+        /// <summary>
+        /// Deletes the user with the input ID.
+        /// </summary>
+        /// <param name="ID">The ID of the user to delete.</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{ID}", Name = "DeleteUser")]
         public async Task<ActionResult> DeleteUserAsync(string ID)
         {
-            long longId;
-
-            if (!long.TryParse(ID, out longId))
-            {
+            if (!long.TryParse(ID, out var longId))
                 return BadRequest("User ID must be numerical.");
-            }
 
-            var userToDelete = await _dbContext.Users
-                .FirstOrDefaultAsync(x => x.ID == longId);
-
-            if (userToDelete == null)
+            try
             {
-                return NotFound("Unable to find user.");
-            }
+                var userToDelete = await _dbContext.Users
+                    .FirstOrDefaultAsync(x => x.ID == longId);
 
-            _dbContext.Users.Remove(userToDelete);
-            await _dbContext.SaveChangesAsync();
+                if (userToDelete == null)
+                    return NotFound("Unable to find user.");
+
+                _dbContext.Users.Remove(userToDelete);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message, statusCode: 500);
+            }
 
             return NoContent();
         }

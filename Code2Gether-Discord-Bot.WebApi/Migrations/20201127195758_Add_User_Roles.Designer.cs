@@ -3,14 +3,16 @@ using System;
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    partial class DiscordBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201127195758_Add_User_Roles")]
+    partial class Add_User_Roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

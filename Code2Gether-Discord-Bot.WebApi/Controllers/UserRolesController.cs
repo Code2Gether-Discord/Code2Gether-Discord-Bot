@@ -8,16 +8,19 @@ using Code2Gether_Discord_Bot.WebApi.DbContexts;
 
 namespace Code2Gether_Discord_Bot.WebApi.Controllers
 {
+    /// <summary>
+    /// A Web API controller that manages the user roles in the Code2Gether Discord Bot's Project Database.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class ProjectUserProjectRolesController : ControllerBase
+    public class UserRolesController : ControllerBase
     {
         #region Fields
         private readonly DiscordBotDbContext _dbContext;
         #endregion
 
         #region Constructor
-        public ProjectUserProjectRolesController(DiscordBotDbContext context)
+        public UserRolesController(DiscordBotDbContext context)
         {
             _dbContext = context;
         }

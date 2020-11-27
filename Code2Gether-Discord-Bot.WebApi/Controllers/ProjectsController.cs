@@ -36,22 +36,13 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         public async Task<ActionResult<Project>> AddProjectAsync(Project projectToAdd)
         {
             if (projectToAdd == null)
-            {
                 return BadRequest("Project is null.");
-            }
 
             // Ensures we don't replace an existing project
             projectToAdd.ID = 0;
 
-            try
-            {
-                await _dbContext.Projects.AddAsync(projectToAdd);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message);
-            }
+            await _dbContext.Projects.AddAsync(projectToAdd);
+            await _dbContext.SaveChangesAsync();
 
             var result = CreatedAtAction(actionName: "GetProject",
                 routeValues: new { ID = projectToAdd.ID },
@@ -67,30 +58,18 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectToUpdate">Project info to replace the current project.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(string ID, Project projectToUpdate)
+        public async Task<ActionResult<Project>> GetProjectAsync(long ID, Project projectToUpdate)
         {
-            if (!long.TryParse(ID, out var longId))
-            {
-                return BadRequest("Project ID must be numerical.");
-            }
+            var projectToRemove = await _dbContext.Projects.FindAsync(ID);
 
-            try
-            {
-                var projectToRemove = await _dbContext.Projects.FirstOrDefaultAsync(x => x.ID == longId);
+            if (projectToRemove == null)
+                return NotFound("Unable to find project.");
 
-                if (projectToRemove == null)
-                    return NotFound("Unable to find project.");
+            _dbContext.Projects.Remove(projectToRemove);
 
-                _dbContext.Projects.Remove(projectToRemove);
-
-                projectToUpdate.ID = longId;
-                await _dbContext.Projects.AddAsync(projectToUpdate);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            projectToUpdate.ID = ID;
+            await _dbContext.Projects.AddAsync(projectToUpdate);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -110,20 +89,14 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the project to retrieve.</param>
         /// <returns>The data for the retrieved project.</returns>
         [HttpGet("{ID}", Name = "GetProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(string ID)
+        public async Task<ActionResult<Project>> GetProjectAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("Project ID must be numerical.");
+            var projectToReturn = await _dbContext.Projects.FindAsync(ID);
 
-            try
-            {
-                return await _dbContext.Projects
-                    .FirstOrDefaultAsync(x => x.ID == longId);
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            if (projectToReturn == null)
+                return NotFound("Could not find project.");
+
+            return projectToReturn;
         }
 
         /// <summary>
@@ -132,26 +105,15 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">THe ID of the project to delte.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{ID}", Name = "DeleteProject")]
-        public async Task<ActionResult> DeleteProjectAsync(string ID)
+        public async Task<ActionResult> DeleteProjectAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("Project ID must be numerical.");
+            var projectToDelete = await _dbContext.Projects.FindAsync(ID);
 
-            try
-            {
-                var projectToDelete = await _dbContext.Projects
-                    .FirstOrDefaultAsync(x => x.ID == longId);
+            if (projectToDelete == null)
+                return NotFound("Unable to find project.");
 
-                if (projectToDelete == null)
-                    return NotFound("Unable to find project.");
-
-                _dbContext.Projects.Remove(projectToDelete);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            _dbContext.Projects.Remove(projectToDelete);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }

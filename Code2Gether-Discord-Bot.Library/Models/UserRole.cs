@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
-    public class ProjectUserProjectRole
+    public class UserRole
     {
         #region Fields
         // Allows the Entity Framework to load a value only when its called (not immediately)

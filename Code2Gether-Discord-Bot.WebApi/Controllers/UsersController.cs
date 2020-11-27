@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Code2Gether_Discord_Bot.WebApi.Controllers
 {
     /// <summary>
-    /// A Web API controller that manages the Users in the Code2Gether Discord Bot's Project Database.
+    /// A Web API controller that manages the users in the Code2Gether Discord Bot's Project Database.
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -41,16 +41,8 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             // Ensures we don't replace an existing user.
             userToAdd.ID = 0;
 
-            try
-            {
-                await _dbContext.Users.AddAsync(userToAdd);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Occurs if issue with database.
-                return Problem(ex.Message, statusCode: 500);
-            }
+            await _dbContext.Users.AddAsync(userToAdd);
+            await _dbContext.SaveChangesAsync();
 
             var result = CreatedAtAction(actionName: "GetUser",
                 routeValues: new { ID = userToAdd.ID },
@@ -67,28 +59,18 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="userToUpdate">User info to replace the current user.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutUser")]
-        public async Task<ActionResult<User>> UpdateUserAsync(string ID, User userToUpdate)
+        public async Task<ActionResult<User>> UpdateUserAsync(long ID, User userToUpdate)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("User ID must be numerical.");
+            var userToRemove = await _dbContext.Users.FindAsync(ID);
 
-            try
-            {
-                var userToRemove = await _dbContext.Users.FirstOrDefaultAsync(x => x.ID == longId);
+            if (userToRemove == null)
+                return NotFound("Unable to find user");
 
-                if (userToRemove == null)
-                    return NotFound("Unable to find user");
+            _dbContext.Users.Remove(userToRemove);
 
-                _dbContext.Users.Remove(userToRemove);
-
-                userToUpdate.ID = longId;
-                await _dbContext.Users.AddAsync(userToUpdate);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            userToUpdate.ID = ID;
+            await _dbContext.Users.AddAsync(userToUpdate);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -100,14 +82,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsersAsync()
         {
-            try
-            {
-                return await _dbContext.Users.ToArrayAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            return await _dbContext.Users.ToArrayAsync();
         }
 
         /// <summary>
@@ -116,20 +91,14 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the user to retrieve.</param>
         /// <returns>The data for the retrieved user.</returns>
         [HttpGet("{ID}", Name = "GetUser")]
-        public async Task<ActionResult<User>> GetUserAsync(string ID)
+        public async Task<ActionResult<User>> GetUserAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("User ID must be numerical.");
+            var userToReturn = await _dbContext.Users.FindAsync(ID);
 
-            try
-            {
-                return await _dbContext.Users
-                    .FirstOrDefaultAsync(x => x.ID == longId);
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            if (userToReturn == null)
+                return NotFound("Could not find user.");
+
+            return userToReturn;
         }
 
         /// <summary>
@@ -138,26 +107,15 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">The ID of the user to delete.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{ID}", Name = "DeleteUser")]
-        public async Task<ActionResult> DeleteUserAsync(string ID)
+        public async Task<ActionResult> DeleteUserAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("User ID must be numerical.");
+            var userToDelete = await _dbContext.Users.FindAsync(ID);
 
-            try
-            {
-                var userToDelete = await _dbContext.Users
-                    .FirstOrDefaultAsync(x => x.ID == longId);
+            if (userToDelete == null)
+                return NotFound("Unable to find user.");
 
-                if (userToDelete == null)
-                    return NotFound("Unable to find user.");
-
-                _dbContext.Users.Remove(userToDelete);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            _dbContext.Users.Remove(userToDelete);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }

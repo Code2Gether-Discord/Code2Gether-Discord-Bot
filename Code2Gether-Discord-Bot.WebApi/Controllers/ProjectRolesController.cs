@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Code2Gether_Discord_Bot.WebApi.Controllers
 {
+    /// <summary>
+    /// A Web API controller that manages the project roles in the Code2Gether Discord Bot's Project Database.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ProjectRolesController : Controller
     {
-        /// <summary>
-        /// A Web API controller that manages the Roles in the Code2Gether Discord Bot's Project Database.
-        /// </summary>
         #region Fields
         private readonly DiscordBotDbContext _dbContext;
         #endregion
@@ -33,7 +33,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectRoleToAdd">Project role to add to database.</param>
         /// <returns>Action result containing details of added project role.</returns>
         [HttpPost(Name = "PostProjectRole")]
-        public async Task<ActionResult<ProjectRole>> AddProjectAsync(ProjectRole projectRoleToAdd)
+        public async Task<ActionResult<ProjectRole>> AddProjectRoleAsync(ProjectRole projectRoleToAdd)
         {
             if (projectRoleToAdd == null)
                 return BadRequest("Project Role is null.");
@@ -41,16 +41,8 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             // Ensures we don't replace an existing project.
             projectRoleToAdd.ID = 0;
 
-            try
-            {
-                await _dbContext.ProjectRoles.AddAsync(projectRoleToAdd);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Occurs if issue with database.
-                return Problem(ex.Message, statusCode: 500);
-            }
+            await _dbContext.ProjectRoles.AddAsync(projectRoleToAdd);
+            await _dbContext.SaveChangesAsync();
 
             var result = CreatedAtAction(actionName: "GetProjectRole",
                 routeValues: new { ID = projectRoleToAdd.ID },
@@ -66,28 +58,18 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectRoleToUpdate">Project role info to replace the current project role.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutProjectRole")]
-        public async Task<ActionResult<ProjectRole>> UpdateProjectRoleAsync(string ID, ProjectRole projectRoleToUpdate)
+        public async Task<ActionResult<ProjectRole>> UpdateProjectRoleAsync(long ID, ProjectRole projectRoleToUpdate)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("Project Role ID must be numerical.");
+            var projectRoleToRemove = await _dbContext.ProjectRoles.FindAsync(ID);
 
-            try
-            {
-                var projectRoleToRemove = await _dbContext.ProjectRoles.FirstOrDefaultAsync(x => x.ID == longId);
+            if (projectRoleToRemove == null)
+                return NotFound("Unable to find project role.");
 
-                if (projectRoleToRemove == null)
-                    return NotFound("Unable to find project role.");
+            _dbContext.ProjectRoles.Remove(projectRoleToRemove);
 
-                _dbContext.ProjectRoles.Remove(projectRoleToRemove);
-
-                projectRoleToUpdate.ID = longId;
-                await _dbContext.ProjectRoles.AddAsync(projectRoleToUpdate);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            projectRoleToUpdate.ID = ID;
+            await _dbContext.ProjectRoles.AddAsync(projectRoleToUpdate);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
@@ -97,39 +79,25 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <returns>All project roles in the database.</returns>
         [HttpGet(Name = "GetAllProjectRoles")]
-        public async Task<ActionResult<IEnumerable<ProjectRole>>> GetAllProjectsAsync()
+        public async Task<ActionResult<IEnumerable<ProjectRole>>> GetAllProjectRolesAsync()
         {
-            try
-            {
-                return await _dbContext.ProjectRoles.ToArrayAsync();
-            }
-            catch(Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            var projectRole = await _dbContext.ProjectRoles.ToArrayAsync();
+
+            if (projectRole == null)
+                return NotFound("Could not find project role.");
+
+            return projectRole;
         }
 
-        
         /// <summary>
         /// Gets a single project role based on the input ID.
         /// </summary>
         /// <param name="ID">ID of the project role to retrieve.</param>
         /// <returns>The data for the retrieved project role.</returns>
         [HttpGet("{ID}", Name = "GetProjectRole")]
-        public async Task<ActionResult<ProjectRole>> GetProjectAsync(string ID)
+        public async Task<ActionResult<ProjectRole>> GetProjectRoleAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("Project Role ID must be numerical.");
-
-            try
-            {
-                return await _dbContext.ProjectRoles
-                .FirstOrDefaultAsync(x => x.ID == longId);
-            }
-            catch(Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            return await _dbContext.ProjectRoles.FindAsync(ID);
         }
 
         /// <summary>
@@ -138,26 +106,15 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">The ID of the project role to delete.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{ID}", Name = "DeleteProjectRole")]
-        public async Task<ActionResult> DeleteProjectRoleAsync(string ID)
+        public async Task<ActionResult> DeleteProjectRoleAsync(long ID)
         {
-            if (!long.TryParse(ID, out var longId))
-                return BadRequest("Project Role ID must be numerical.");
+            var projectRoleToDelete = await _dbContext.ProjectRoles.FindAsync(ID);
 
-            try
-            {
-                var projectRoleToDelete = await _dbContext.ProjectRoles
-                    .FirstOrDefaultAsync(x => x.ID == longId);
+            if (projectRoleToDelete == null)
+                return NotFound("Unable to find project role.");
 
-                if (projectRoleToDelete == null)
-                    return NotFound("Unable to find project role.");
-
-                _dbContext.ProjectRoles.Remove(projectRoleToDelete);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch(Exception ex)
-            {
-                return Problem(ex.Message, statusCode: 500);
-            }
+            _dbContext.ProjectRoles.Remove(projectRoleToDelete);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }

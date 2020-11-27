@@ -16,7 +16,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
     public class UsersController : Controller
     {
         #region Fields
-        private DiscordBotDbContext _dbContext;
+        private readonly DiscordBotDbContext _dbContext;
         #endregion
 
         #region Constructor

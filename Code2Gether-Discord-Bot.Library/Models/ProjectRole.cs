@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace Code2Gether_Discord_Bot.Library.Models

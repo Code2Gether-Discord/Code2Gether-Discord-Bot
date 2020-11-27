@@ -3,3 +3,6 @@ bin
 obj
 Properties
 *.json
+
+# Do not include SQLite .db files in repository.
+*.db

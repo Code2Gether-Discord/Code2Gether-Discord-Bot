@@ -2,6 +2,7 @@
 using Discord;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -12,6 +13,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public long ID { get; set; }
         [Required]
         public string UserName { get; set; }
+        [JsonIgnore]
         [NotMapped]
         public IUser DiscordUserInfo { get; set; }
         #endregion

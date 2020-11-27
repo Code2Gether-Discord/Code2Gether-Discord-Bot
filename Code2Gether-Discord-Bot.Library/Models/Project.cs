@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,8 +12,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public long ID { get; set; }
         public string Name { get; set; }
         public User Author { get; set; }
-        public IList<User> ProjectMembers { get; set; } = new List<User>();
+        public ICollection<User> ProjectMembers { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public bool IsActive => ProjectMembers.Count > 2;
         #endregion
 

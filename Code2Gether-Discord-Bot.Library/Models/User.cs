@@ -16,13 +16,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
         [JsonIgnore]
         [NotMapped]
         public IUser DiscordUserInfo { get; set; }
+        [NotMapped]
+        public ProjectRole role { get; set; }
         #endregion
 
         #region Constructor
-        public User() 
-        {
-
-        }
+        public User() { }
 
         public User(IUser user) : this()
         {

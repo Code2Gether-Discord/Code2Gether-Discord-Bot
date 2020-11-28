@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -27,17 +28,38 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public Project Project
         {
             get => _lazyLoader.Load(this, ref _project);
-            set => _project = value;
+            set
+            {
+                _project = value;
+                ProjectID = _project.ID;
+            }
         }
         public User User
         {
             get => _lazyLoader.Load(this, ref _user);
-            set => _user = value;
+            set
+            {
+                _user = value;
+                UserID = _user.ID;
+            }
         }
         public ProjectRole ProjectRole
         {
             get => _lazyLoader.Load(this, ref _projectRole);
-            set => _projectRole = value;
+            set
+            {
+                _projectRole = value;
+                ProjectRoleID = _projectRole.ID;
+            }
+        }
+        #endregion
+
+        #region Constructor
+        public UserRole() { }
+
+        public UserRole(ILazyLoader lazyLoader) : this()
+        {
+            _lazyLoader = lazyLoader;
         }
         #endregion
     }

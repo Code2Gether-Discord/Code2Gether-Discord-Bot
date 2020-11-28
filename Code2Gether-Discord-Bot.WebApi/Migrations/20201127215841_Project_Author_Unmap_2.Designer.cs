@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    [Migration("20201126160034_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20201127215841_Project_Author_Unmap_2")]
+    partial class Project_Author_Unmap_2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("AuthorID")
+                    b.Property<long>("AuthorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -32,7 +32,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Projects");
                 });
@@ -52,8 +52,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("RoleName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -80,11 +81,39 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.UserRole", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ProjectID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ProjectRoleID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("UserID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ProjectID");
+
+                    b.HasIndex("ProjectRoleID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("UserRole");
+                });
+
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>
                 {
                     b.HasOne("Code2Gether_Discord_Bot.Library.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
                 });
@@ -94,6 +123,33 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.HasOne("Code2Gether_Discord_Bot.Library.Models.Project", null)
                         .WithMany("ProjectMembers")
                         .HasForeignKey("ProjectID");
+                });
+
+            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.UserRole", b =>
+                {
+                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.ProjectRole", "ProjectRole")
+                        .WithMany()
+                        .HasForeignKey("ProjectRoleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("ProjectRole");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>

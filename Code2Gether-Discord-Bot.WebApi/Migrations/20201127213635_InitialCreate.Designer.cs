@@ -3,14 +3,16 @@ using System;
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    partial class DiscordBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201127213635_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("AuthorId")
+                    b.Property<long?>("AuthorID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -30,7 +32,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorID");
 
                     b.ToTable("Projects");
                 });
@@ -109,9 +111,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                 {
                     b.HasOne("Code2Gether_Discord_Bot.Library.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorID");
 
                     b.Navigation("Author");
                 });

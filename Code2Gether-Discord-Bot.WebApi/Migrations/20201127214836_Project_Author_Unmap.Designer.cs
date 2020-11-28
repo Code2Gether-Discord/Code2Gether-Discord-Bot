@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    [Migration("20201127195758_Add_User_Roles")]
-    partial class Add_User_Roles
+    [Migration("20201127214836_Project_Author_Unmap")]
+    partial class Project_Author_Unmap
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,15 +24,13 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("AuthorID")
+                    b.Property<long>("AuthorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AuthorID");
 
                     b.ToTable("Projects");
                 });
@@ -52,8 +50,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("RoleName")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -104,15 +103,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("UserRole");
-                });
-
-            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>
-                {
-                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorID");
-
-                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.User", b =>

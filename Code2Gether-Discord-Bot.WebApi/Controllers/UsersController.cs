@@ -19,6 +19,13 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         private readonly DiscordBotDbContext _dbContext;
         #endregion
 
+        #region Records
+        /// <summary>
+        /// Facade for "User" type when serializing output.
+        /// </summary>
+        public record UserOutput(long ID, string UserName);
+        #endregion
+
         #region Constructor
         public UsersController(DiscordBotDbContext dbContext)
         {
@@ -80,9 +87,10 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <returns>All users in the database.</returns>
         [HttpGet(Name = "GetAllUsers")]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsersAsync()
+        public async Task<ActionResult<IEnumerable<UserOutput>>> GetAllUsersAsync()
         {
-            return await _dbContext.Users.ToArrayAsync();
+            var users = await _dbContext.Users.ToArrayAsync();
+            return users.Select(x => new UserOutput(x.ID, x.UserName)).ToArray();
         }
 
         /// <summary>
@@ -91,14 +99,14 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the user to retrieve.</param>
         /// <returns>The data for the retrieved user.</returns>
         [HttpGet("{ID}", Name = "GetUser")]
-        public async Task<ActionResult<User>> GetUserAsync(long ID)
+        public async Task<ActionResult<UserOutput>> GetUserAsync(long ID)
         {
             var userToReturn = await _dbContext.Users.FindAsync(ID);
 
             if (userToReturn == null)
                 return NotFound("Could not find user.");
 
-            return userToReturn;
+            return new UserOutput(userToReturn.ID, userToReturn.UserName);
         }
 
         /// <summary>

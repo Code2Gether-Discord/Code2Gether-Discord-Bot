@@ -75,10 +75,19 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// Get all user rroles in the database.
         /// </summary>
         /// <returns>All user roles in the database.</returns>
-        [HttpGet(Name ="GetAllUserRoles")]
+        [HttpGet(Name = "GetAllUserRoles")]
         public async Task<ActionResult<IEnumerable<UserRole>>> GetAllUserRolesAsync()
         {
             return await _dbContext.UserRoles.ToListAsync();
+        }
+
+        [HttpGet("Project={ProjectID}", Name = "GetAllUserRolesForProject")]
+        public async Task<ActionResult<IEnumerable<UserRole>>> GetAllUserRolesForProjectAsync(string ProjectID)
+        {
+            return await _dbContext.UserRoles
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID.ToString() == ProjectID)
+                .ToArrayAsync();
         }
 
         /// <summary>

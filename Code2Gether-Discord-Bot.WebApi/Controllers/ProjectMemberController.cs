@@ -13,14 +13,14 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class UserRolesController : ControllerBase
+    public class ProjectMemberController : ControllerBase
     {
         #region Fields
         private readonly DiscordBotDbContext _dbContext;
         #endregion
 
         #region Constructor
-        public UserRolesController(DiscordBotDbContext context)
+        public ProjectMemberController(DiscordBotDbContext context)
         {
             _dbContext = context;
         }
@@ -34,7 +34,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="userToAdd">User role to add to database.</param>
         /// <returns>Action result containing details of added user role.</returns>
         [HttpPost(Name = "PostUserRole")]
-        public async Task<ActionResult<UserRole>> AddUserRoleAsync(UserRole userRoleToAdd)
+        public async Task<ActionResult<ProjectMember>> AddUserRoleAsync(ProjectMember userRoleToAdd)
         {
             if (userRoleToAdd == null)
                 return BadRequest("User role is null.");
@@ -55,7 +55,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectRoleToUpdate">User role info to replace the current user role.</param>
         /// <returns>No content.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserRoleAsync(long ID, UserRole userRoleToUpdate)
+        public async Task<IActionResult> PutUserRoleAsync(long ID, ProjectMember userRoleToUpdate)
         {
             var userRoleToRemove = await _dbContext.UserRoles.FindAsync(ID);
 
@@ -76,18 +76,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <returns>All user roles in the database.</returns>
         [HttpGet(Name = "GetAllUserRoles")]
-        public async Task<ActionResult<IEnumerable<UserRole>>> GetAllUserRolesAsync()
+        public async Task<ActionResult<IEnumerable<ProjectMember>>> GetAllUserRolesAsync()
         {
             return await _dbContext.UserRoles.ToListAsync();
-        }
-
-        [HttpGet("Project={ProjectID}", Name = "GetAllUserRolesForProject")]
-        public async Task<ActionResult<IEnumerable<UserRole>>> GetAllUserRolesForProjectAsync(string ProjectID)
-        {
-            return await _dbContext.UserRoles
-                .AsAsyncEnumerable()
-                .Where(x => x.ProjectID.ToString() == ProjectID)
-                .ToArrayAsync();
         }
 
         /// <summary>
@@ -96,7 +87,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the user role to retrieve.</param>
         /// <returns>The data for the retrieved user role.</returns>
         [HttpGet("{id}", Name = "GetUserRole")]
-        public async Task<ActionResult<UserRole>> GetUserRoleAsync(long ID)
+        public async Task<ActionResult<ProjectMember>> GetUserRoleAsync(long ID)
         {
             var userRoleToReturn = await _dbContext.UserRoles.FindAsync(ID);
 

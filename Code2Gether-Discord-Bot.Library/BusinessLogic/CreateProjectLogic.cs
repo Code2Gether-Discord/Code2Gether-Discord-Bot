@@ -52,7 +52,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             else
             {
                 // todo: Load user or create new one.
-                var user = new User(_context.User);
+                var user = new Member(_context.User);
 
                 Project newProject = _projectManager.CreateProject(projectName, user);
                 title = "Success";

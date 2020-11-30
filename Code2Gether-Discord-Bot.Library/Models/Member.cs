@@ -3,30 +3,31 @@ using Discord;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Code2Gether_Discord_Bot.Library.Interfaces;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
-    public class User
+    [Table("MEMBER")]
+    public class Member : IMember
     {
         #region Properties
+        [Column("MEMBER_ID")]
         [Key]
         public long ID { get; set; }
-        [Required]
-        public string UserName { get; set; }
+        [Column("MEMBER_SNOWFLAKE")]
+        public ulong SnowflakeId { get; set; }
         [JsonIgnore]
         [NotMapped]
         public IUser DiscordUserInfo { get; set; }
-        [NotMapped]
-        public ProjectRole role { get; set; }
         #endregion
 
         #region Constructor
-        public User() { }
+        public Member() { }
 
-        public User(IUser user) : this()
+        public Member(IUser user) : this()
         {
             DiscordUserInfo = user;
-            UserName = DiscordUserInfo.Username;
+            SnowflakeId = DiscordUserInfo.Id;
         }
         #endregion
     }

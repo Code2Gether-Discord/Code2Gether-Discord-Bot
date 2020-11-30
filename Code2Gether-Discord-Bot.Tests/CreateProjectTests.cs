@@ -26,7 +26,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Id = 123456789123456789
             };
 
-            var user = new User(fakeUser);
+            var user = new Member(fakeUser);
 
             var client = new FakeDiscordClient()
             {

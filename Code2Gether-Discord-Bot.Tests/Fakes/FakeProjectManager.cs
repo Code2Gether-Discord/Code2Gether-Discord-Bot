@@ -26,7 +26,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             return project != null;
         }
 
-        public Project CreateProject(string projectName, User author)
+        public Project CreateProject(string projectName, Member author)
         {
             var newId = GetNextId();
             var newProject = new Project(newId, projectName, author);
@@ -38,14 +38,16 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             throw new Exception($"Failed to create new project: {newProject}!");
         }
 
-        public bool JoinProject(string projectName, User user, out Project project)
+        public bool JoinProject(string projectName, Member user, out Project project)
         {
             project = _projectRepository.Read(projectName);
 
             if (project == null) return false;  // Project must exist
-            if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
 
+            /*
+            if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
             project.ProjectMembers.Add(user);
+            */
 
             return _projectRepository.Update(project);
         }

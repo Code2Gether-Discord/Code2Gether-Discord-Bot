@@ -2,14 +2,16 @@
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    partial class DiscordBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201130000510_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AuthorId");
-
                     b.ToTable("PROJECT");
                 });
 
@@ -60,51 +60,17 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("PROJECT_MEMBER_ID");
 
-                    b.Property<long>("MemberId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("MEMBER_ID");
-
                     b.Property<long>("ProjectID")
                         .HasColumnType("INTEGER")
                         .HasColumnName("PROJECT_ID");
 
+                    b.Property<long>("UserID")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("MEMBER_ID");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("ProjectID");
-
                     b.ToTable("PROJECT_MEMBER");
-                });
-
-            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>
-                {
-                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.Member", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.ProjectMember", b =>
-                {
-                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

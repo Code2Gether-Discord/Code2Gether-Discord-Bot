@@ -73,6 +73,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             return NoContent();
         }
+
         /// <summary>
         /// Gets all projects in the database.
         /// </summary>
@@ -80,12 +81,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllProjects")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
         {
-            var projects = await _dbContext.Projects.ToArrayAsync();
-
-            foreach(var project in projects)
-                await populateProjectUsersAsync(project);
-
-            return projects;
+            return await _dbContext.Projects.ToArrayAsync();
         }
 
         /// <summary>
@@ -100,8 +96,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             if (projectToReturn == null)
                 return NotFound("Could not find project.");
-
-            await populateProjectUsersAsync(projectToReturn);
 
             return projectToReturn;
         }
@@ -123,34 +117,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
-        }
-        #endregion
-
-        #region Methods
-        private async Task populateProjectUsersAsync(Project project)
-        {
-            var userRoles = await _dbContext
-                .UserRoles
-                .AsAsyncEnumerable()
-                .Where(x => x.ProjectID == project.ID)
-                .ToListAsync();
-
-            var users = await _dbContext
-                .Users
-                .AsAsyncEnumerable()
-                .Where(x => userRoles.Select(y => y.ID).Contains(x.ID))
-                .ToListAsync();
-
-            foreach (var user in users)
-            {
-                user.role = userRoles
-                    .FirstOrDefault(x => x.ID == user.ID)
-                    .ProjectRole;
-
-                if (user.role == null) continue;
-
-                project.ProjectMembers.Add(user);
-            }
         }
         #endregion
     }

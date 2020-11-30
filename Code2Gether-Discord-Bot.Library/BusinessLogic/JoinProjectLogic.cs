@@ -50,7 +50,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _ = _projectManager.DoesProjectExist(projectName, out Project tProject);
 
             // todo: Load user or create new one.
-            var user = new User(_context.User);
+            var user = new Member(_context.User);
 
             if (_projectManager.JoinProject(projectName, user, out Project project))
             {
@@ -60,8 +60,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                               + Environment.NewLine
                               + $"{project}";
 
+                /*
                 if (!tProject.IsActive && project.IsActive) // If project has become active from new user
                     TransitionToActiveProject(project);
+                */
             }
             else
             {
@@ -89,12 +91,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var role = await _context.Guild
                 .CreateRoleAsync($"project-{project.Name}", GuildPermissions.None, null, false, true);
 
+            /*
             foreach (var member in project.ProjectMembers)
             {
                 await _context.Guild
                     .GetUserAsync(member.DiscordUserInfo.Id).Result
                     .AddRoleAsync(role);
             }
+            */
 
             await channel.SendMessageAsync(embed: new EmbedBuilder()
                 .WithColor(Color.Purple)

@@ -9,9 +9,8 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
     {
         #region DbSets
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<ProjectRole> ProjectRoles { get; set; }
-        public virtual DbSet<UserRole> ProjectUserProjectRoles { get; set; }
+        public virtual DbSet<Member> Members { get; set; }
+        public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
         #endregion
 
         #region Methods
@@ -27,7 +26,7 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
         #endregion
 
         #region Methods
-        public DbSet<Code2Gether_Discord_Bot.Library.Models.UserRole> UserRoles { get; set; }
+        public DbSet<Code2Gether_Discord_Bot.Library.Models.ProjectMember> UserRoles { get; set; }
         #endregion
     }
 }

@@ -2,29 +2,29 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
-    public class UserRole
+    [Table("PROJECT_MEMBER")]
+    public class ProjectMember
     {
         #region Fields
         // Allows the Entity Framework to load a value only when its called (not immediately)
         private readonly ILazyLoader _lazyLoader;
         private Project _project;
-        private User _user;
-        private ProjectRole _projectRole;
+        private Member _member;
         #endregion
 
         #region Properties
+        [Column("PROJECT_MEMBER_ID")]
         [Key]
         public long ID { get; set; }
+        [Column("PROJECT_ID")]
         [ForeignKey(nameof(Project))]
         public long ProjectID { get; set; }
-        [ForeignKey(nameof(User))]
-        public long UserID { get; set; }
-        [ForeignKey(nameof(ProjectRole))]
-        public long ProjectRoleID { get; set; }
+        [Column("MEMBER_ID")]
+        [ForeignKey(nameof(Member))]
+        public long MemberId { get; set; }
         public Project Project
         {
             get => _lazyLoader.Load(this, ref _project);
@@ -34,30 +34,21 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 ProjectID = _project.ID;
             }
         }
-        public User User
+        public Member Member
         {
-            get => _lazyLoader.Load(this, ref _user);
+            get => _lazyLoader.Load(this, ref _member);
             set
             {
-                _user = value;
-                UserID = _user.ID;
-            }
-        }
-        public ProjectRole ProjectRole
-        {
-            get => _lazyLoader.Load(this, ref _projectRole);
-            set
-            {
-                _projectRole = value;
-                ProjectRoleID = _projectRole.ID;
+                _member = value;
+                MemberId = _member.ID;
             }
         }
         #endregion
 
         #region Constructor
-        public UserRole() { }
+        public ProjectMember() { }
 
-        public UserRole(ILazyLoader lazyLoader) : this()
+        public ProjectMember(ILazyLoader lazyLoader) : this()
         {
             _lazyLoader = lazyLoader;
         }

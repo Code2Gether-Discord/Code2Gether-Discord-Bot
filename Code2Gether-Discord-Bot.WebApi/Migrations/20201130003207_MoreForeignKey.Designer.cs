@@ -2,14 +2,16 @@
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    partial class DiscordBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201130003207_MoreForeignKey")]
+    partial class MoreForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,8 +50,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("AuthorId");
-
                     b.ToTable("PROJECT");
                 });
 
@@ -75,17 +75,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                     b.HasIndex("ProjectID");
 
                     b.ToTable("PROJECT_MEMBER");
-                });
-
-            modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>
-                {
-                    b.HasOne("Code2Gether_Discord_Bot.Library.Models.Member", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.ProjectMember", b =>

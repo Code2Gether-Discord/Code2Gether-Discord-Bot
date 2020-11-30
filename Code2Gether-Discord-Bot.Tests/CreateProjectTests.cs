@@ -7,6 +7,7 @@ using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Discord;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -15,68 +16,129 @@ namespace Code2Gether_Discord_Bot.Tests
     {
         private IBusinessLogic _logic;
         private IProjectRepository _repo;
+        private IUser _user;
 
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            _user = new FakeUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
-            var client = new FakeDiscordClient()
-            {
-                FakeApplication = new FakeApplication()
-                {
-                    Owner = user
-                }
-            };
-
-            var guild = new FakeGuild()
-            {
-
-            };
-
-            var messageChannel = new FakeMessageChannel()
-            {
-
-            };
-
-            var message = new FakeUserMessage()
-            {
-                Author = user
-            };
-
             _repo = new FakeProjectRepository()
             {
                 Projects = new Dictionary<int, Project>()
-                {
-                    {0, new Project(0, "unittest", user)},
-                }
             };
-
-            _logic = new CreateProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
-            {
-                Channel = messageChannel,
-                Client = client,
-                Guild = guild,
-                Message = message,
-                User = user
-            }, new FakeProjectManager(_repo), "unittest");
         }
 
         [Test]
         public void InstantiationTest() =>
             Assert.IsTrue(_logic != null);
 
+        /// <summary>
+        /// Executing should add a new one from a previously empty project list.
+        /// </summary>
         [Test]
-        public async Task ExecutionTest()
+        public async Task AddFromEmptyExecutionTest()
         {
+            #region Arrange
+
+            var client = new FakeDiscordClient()
+            {
+                FakeApplication = new FakeApplication()
+                {
+                    Owner = _user
+                }
+            };
+
+            var message = new FakeUserMessage()
+            {
+                Author = _user
+            };
+
+            _logic = new CreateProjectLogic(
+                UtilityFactory.GetLogger(GetType()),
+                new FakeCommandContext()
+                {
+                    Channel = new FakeMessageChannel(),
+                    Client = client,
+                    Guild = new FakeGuild(),
+                    Message = message,
+                    User = _user
+                },
+                new ProjectManager(_repo),
+                "UnitTestProject"
+            );
+
+            #endregion
+
+            #region Act
+
             await _logic.ExecuteAsync();
 
-            Assert.IsTrue(_repo.ReadAll().Count > 0);
+            #endregion
+
+            #region Assert
+
+            Assert.IsTrue(_repo.ReadAll().Count == 1);
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Since a project already exists in the repository. Executing again should add a new one.
+        /// </summary>
+        [Test]
+        public async Task AddAnotherProjectExecutionTest()
+        {
+            #region Arrange
+
+            var client = new FakeDiscordClient()
+            {
+                FakeApplication = new FakeApplication()
+                {
+                    Owner = _user
+                }
+            };
+
+            var message = new FakeUserMessage()
+            {
+                Author = _user
+            };
+
+            var projectManager = new ProjectManager(_repo);
+            projectManager.CreateProject("UnitTestProject1", _user);
+
+            _logic = new CreateProjectLogic(
+                UtilityFactory.GetLogger(GetType()),
+                new FakeCommandContext()
+                {
+                    Channel = new FakeMessageChannel(),
+                    Client = client,
+                    Guild = new FakeGuild(),
+                    Message = message,
+                    User = _user
+                },
+                projectManager,
+                "UnitTestProject2"
+            );
+
+            #endregion
+
+            #region Act
+
+            await _logic.ExecuteAsync();
+
+            #endregion
+
+            #region Assert
+
+            Assert.IsTrue(_repo.ReadAll().Count == 2);
+
+            #endregion
         }
     }
 }

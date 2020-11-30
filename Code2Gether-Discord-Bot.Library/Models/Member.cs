@@ -3,12 +3,11 @@ using Discord;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using Code2Gether_Discord_Bot.Library.Interfaces;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
     [Table("MEMBER")]
-    public class Member : IMember
+    public class Member
     {
         #region Properties
         [Column("MEMBER_ID")]

@@ -2,12 +2,11 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Code2Gether_Discord_Bot.Library.Interfaces;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
     [Table("PROJECT")]
-    public class Project : IProject
+    public class Project
     {
         #region Fields
         private readonly ILazyLoader _lazyLoader;

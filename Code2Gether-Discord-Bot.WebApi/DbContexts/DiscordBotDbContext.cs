@@ -23,6 +23,13 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
 
             base.OnConfiguring(optionsBuilder);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProjectMember>(b => b.HasKey(x => new { x.MemberID, x.ProjectID }));
+
+            base.OnModelCreating(modelBuilder);
+        }
         #endregion
 
         #region Methods

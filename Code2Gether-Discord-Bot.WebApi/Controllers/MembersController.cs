@@ -59,7 +59,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="memberToUpdate">Member info to replace the current member.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutMember")]
-        public async Task<ActionResult<Member>> UpdateMemberAsync(long ID, Member memberToUpdate)
+        public async Task<ActionResult<Member>> UpdateMemberAsync(int ID, Member memberToUpdate)
         {
             var memberToRemove = await _dbContext.Members.FindAsync(ID);
 

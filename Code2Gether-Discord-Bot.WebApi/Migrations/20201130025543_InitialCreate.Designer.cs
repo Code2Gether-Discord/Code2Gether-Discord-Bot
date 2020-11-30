@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    [Migration("20201130003513_MoreForeignKey3")]
-    partial class MoreForeignKey3
+    [Migration("20201130025543_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Member", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("MEMBER_ID");
@@ -35,12 +35,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.Project", b =>
                 {
-                    b.Property<long>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasColumnName("PROJECT_ID");
 
-                    b.Property<long>("AuthorId")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("MEMBER_ID");
 
@@ -57,22 +57,15 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
 
             modelBuilder.Entity("Code2Gether_Discord_Bot.Library.Models.ProjectMember", b =>
                 {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("PROJECT_MEMBER_ID");
-
-                    b.Property<long>("MemberId")
+                    b.Property<int>("MemberID")
                         .HasColumnType("INTEGER")
                         .HasColumnName("MEMBER_ID");
 
-                    b.Property<long>("ProjectID")
+                    b.Property<int>("ProjectID")
                         .HasColumnType("INTEGER")
                         .HasColumnName("PROJECT_ID");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("MemberId");
+                    b.HasKey("MemberID", "ProjectID");
 
                     b.HasIndex("ProjectID");
 
@@ -94,7 +87,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                 {
                     b.HasOne("Code2Gether_Discord_Bot.Library.Models.Member", "Member")
                         .WithMany()
-                        .HasForeignKey("MemberId")
+                        .HasForeignKey("MemberID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

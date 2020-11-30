@@ -48,9 +48,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
             return _projectRepository.Update(project);
         }
 
-        private long GetNextId()
+        private int GetNextId()
         {
-            long i = 0;
+            int i = 0;
 
             try
             {

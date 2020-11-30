@@ -12,7 +12,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         #region Properties
         [Column("MEMBER_ID")]
         [Key]
-        public long ID { get; set; }
+        public int ID { get; set; }
         [Column("MEMBER_SNOWFLAKE")]
         public ulong SnowflakeId { get; set; }
         [JsonIgnore]

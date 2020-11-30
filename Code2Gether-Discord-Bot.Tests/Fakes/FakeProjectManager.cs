@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Discord;
 
 namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
@@ -52,9 +49,9 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             return _projectRepository.Update(project);
         }
 
-        private long GetNextId()
+        private int GetNextId()
         {
-            long i = 0;
+            int i = 0;
 
             try
             {

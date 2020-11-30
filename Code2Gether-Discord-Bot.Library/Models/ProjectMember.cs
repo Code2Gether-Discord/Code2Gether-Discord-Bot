@@ -16,15 +16,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
         #endregion
 
         #region Properties
-        [Column("PROJECT_MEMBER_ID")]
-        [Key]
-        public long ID { get; set; }
         [Column("PROJECT_ID")]
         [ForeignKey(nameof(Project))]
-        public long ProjectID { get; set; }
+        public int ProjectID { get; set; }
         [Column("MEMBER_ID")]
         [ForeignKey(nameof(Member))]
-        public long MemberId { get; set; }
+        public int MemberID { get; set; }
         public Project Project
         {
             get => _lazyLoader.Load(this, ref _project);
@@ -40,7 +37,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             set
             {
                 _member = value;
-                MemberId = _member.ID;
+                MemberID = _member.ID;
             }
         }
         #endregion

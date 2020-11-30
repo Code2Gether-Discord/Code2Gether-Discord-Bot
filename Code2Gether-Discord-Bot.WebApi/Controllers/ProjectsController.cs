@@ -58,7 +58,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectToUpdate">Project info to replace the current project.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(long ID, Project projectToUpdate)
+        public async Task<ActionResult<Project>> GetProjectAsync(int ID, Project projectToUpdate)
         {
             var projectToRemove = await _dbContext.Projects.FindAsync(ID);
 

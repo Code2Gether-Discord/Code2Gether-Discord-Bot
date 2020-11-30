@@ -16,12 +16,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
         #region Properies
         [Column("PROJECT_ID")]
         [Key]
-        public long ID { get; set; }
+        public int ID { get; set; }
         [Column("PROJECT_NAME")]
         public string Name { get; set; }
         [Column("MEMBER_ID")]
         [ForeignKey(nameof(Author))]
-        public long AuthorId { get; set; }
+        public int AuthorId { get; set; }
         public Member Author
         {
             get => _lazyLoader.Load(this, ref _author);
@@ -41,7 +41,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             _lazyLoader = lazyLoader;
         }
 
-        public Project(long id, string name, Member author) : this()
+        public Project(int id, string name, Member author) : this()
         {
             ID = id;
             Name = name;

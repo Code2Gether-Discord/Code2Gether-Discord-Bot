@@ -29,65 +29,40 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         #region REST API Methods
         /// <summary>
-        /// Create a new user role..
+        /// Create a new project member..
         /// </summary>
-        /// <param name="userToAdd">User role to add to database.</param>
-        /// <returns>Action result containing details of added user role.</returns>
-        [HttpPost(Name = "PostUserRole")]
+        /// <param name="userToAdd">Project member to add to database.</param>
+        /// <returns>Action result containing details of added project member.</returns>
+        [HttpPost(Name = "PostProjectMember")]
         public async Task<ActionResult<ProjectMember>> AddUserRoleAsync(ProjectMember userRoleToAdd)
         {
             if (userRoleToAdd == null)
                 return BadRequest("User role is null.");
 
-            // Ensures we don't replace an existing user role.
-            userRoleToAdd.ID = 0;
-
             await _dbContext.UserRoles.AddAsync(userRoleToAdd);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserRole", new { id = userRoleToAdd.ID }, userRoleToAdd);
-        }
-
-        /// <summary>
-        /// Updates the user role with the input ID.
-        /// </summary>
-        /// <param name="ID">ID of the user role to update.</param>
-        /// <param name="projectRoleToUpdate">User role info to replace the current user role.</param>
-        /// <returns>No content.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserRoleAsync(long ID, ProjectMember userRoleToUpdate)
-        {
-            var userRoleToRemove = await _dbContext.UserRoles.FindAsync(ID);
-
-            if (userRoleToRemove == null)
-                return NotFound("Unable to find user role.");
-
-            _dbContext.UserRoles.Remove(userRoleToRemove);
-
-            userRoleToUpdate.ID = ID;
-            await _dbContext.UserRoles.AddAsync(userRoleToUpdate);
-            await _dbContext.SaveChangesAsync();
-
             return NoContent();
+            // return CreatedAtAction("GetUserRole", new { id = userRoleToAdd.ID }, userRoleToAdd);
         }
 
         /// <summary>
-        /// Get all user rroles in the database.
+        /// Get all project members in the database.
         /// </summary>
-        /// <returns>All user roles in the database.</returns>
-        [HttpGet(Name = "GetAllUserRoles")]
-        public async Task<ActionResult<IEnumerable<ProjectMember>>> GetAllUserRolesAsync()
+        /// <returns>All project members in the database.</returns>
+        [HttpGet(Name = "GetAllProjectMembers")]
+        public async Task<ActionResult<IEnumerable<ProjectMember>>> GetAllProjectMembersAsync()
         {
             return await _dbContext.UserRoles.ToListAsync();
         }
 
         /// <summary>
-        /// Gets a single user role based on the input ID.
+        /// Gets a single project member based on the input ID.
         /// </summary>
-        /// <param name="ID">ID of the user role to retrieve.</param>
-        /// <returns>The data for the retrieved user role.</returns>
-        [HttpGet("{id}", Name = "GetUserRole")]
-        public async Task<ActionResult<ProjectMember>> GetUserRoleAsync(long ID)
+        /// <param name="ID">ID of the project member to retrieve.</param>
+        /// <returns>The data for the retrieved project member.</returns>
+        [HttpGet("{id}", Name = "GetProjectMember")]
+        public async Task<ActionResult<ProjectMember>> GetProjectMemberAsync(long ID)
         {
             var userRoleToReturn = await _dbContext.UserRoles.FindAsync(ID);
 
@@ -100,7 +75,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <summary>
         /// Deletes the user role with the input ID.
         /// </summary>
-        /// <param name="ID">The ID of the user role to delete.</param>
+        /// <param name="ID">The ID of the project member to delete.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserRoleAsync(long ID)

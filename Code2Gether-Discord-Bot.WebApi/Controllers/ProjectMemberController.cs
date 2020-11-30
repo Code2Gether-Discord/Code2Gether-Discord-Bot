@@ -56,6 +56,8 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             return await _dbContext.UserRoles.ToListAsync();
         }
 
+        /*
+
         /// <summary>
         /// Gets a single project member based on the input ID.
         /// </summary>
@@ -90,6 +92,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             return NoContent();
         }
+
+        */
+
         #endregion
     }
 }

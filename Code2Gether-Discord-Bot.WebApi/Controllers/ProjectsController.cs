@@ -82,6 +82,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
         {
             return await _dbContext.Projects.ToArrayAsync();
+            // todo: Create method to convert projects to ProjectOutput.
         }
 
         /// <summary>
@@ -90,14 +91,21 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the project to retrieve.</param>
         /// <returns>The data for the retrieved project.</returns>
         [HttpGet("{ID}", Name = "GetProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(long ID)
+        public async Task<ActionResult<ProjectOutput>> GetProjectAsync(int ID)
         {
             var projectToReturn = await _dbContext.Projects.FindAsync(ID);
 
             if (projectToReturn == null)
                 return NotFound("Could not find project.");
 
-            return projectToReturn;
+            var userSnowflakes = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == ID)
+                .Select(x => x.Member.SnowflakeId)
+                .ToListAsync();
+
+            return new ProjectOutput(projectToReturn, userSnowflakes);
         }
 
         /// <summary>
@@ -120,4 +128,6 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         }
         #endregion
     }
+
+    public record ProjectOutput(Project Project, IList<ulong> SnowflakeId);
 }

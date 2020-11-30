@@ -23,6 +23,8 @@ namespace Code2Gether_Discord_Bot.WebApi
         {
             services.AddControllers();
 
+            services.AddHealthChecks();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Code2Gether_Discord_Bot.WebApi", Version = "v1" });
@@ -49,6 +51,7 @@ namespace Code2Gether_Discord_Bot.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

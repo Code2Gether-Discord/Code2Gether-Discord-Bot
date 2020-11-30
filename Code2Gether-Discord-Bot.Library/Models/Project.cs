@@ -1,40 +1,57 @@
-﻿using Discord;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
+    [Table("PROJECT")]
     public class Project
     {
-        [Key]
-        public long ID { get; }
-        [Required]
-        public string Name { get; }
-        [Required]
-        public IUser Author { get; }
-        public IList<IUser> ProjectMembers { get; set; } = new List<IUser>();
-        public bool IsActive
-        {
-            get
-            {
-                // return ProjectMembers.Count > 2;
-                return false;
-            }
-            }
+        #region Fields
+        private readonly ILazyLoader _lazyLoader;
+        private Member _author;
+        #endregion
 
-        public Project() 
+        #region Properies
+        [Column("PROJECT_ID")]
+        [Key]
+        public int ID { get; set; }
+        [Column("PROJECT_NAME")]
+        public string Name { get; set; }
+        [Column("MEMBER_ID")]
+        [ForeignKey(nameof(Author))]
+        public int AuthorId { get; set; }
+        public Member Author
         {
-            ProjectMembers = new List<IUser>();
+            get => _lazyLoader.Load(this, ref _author);
+            set
+            {
+                _author = value;
+                AuthorId = _author.ID;
+            }
+        }
+        #endregion
+
+        #region Constructors
+        public Project() { }
+
+        public Project(ILazyLoader lazyLoader) : this()
+        {
+            _lazyLoader = lazyLoader;
         }
 
-        public Project(long id, string name, IUser author) : this()
+        public Project(int id, string name, Member author) : this()
         {
             ID = id;
             Name = name;
             Author = author;
         }
+        #endregion
 
+        #region Methods
         public override string ToString() =>
-            $"Project Name: {Name}; Is Active: {IsActive}; Created by: {Author}"; // Members: {ProjectMembers.Count}";
+            $"Project Name: {Name}; Created by: {Author}";
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
-    internal class FakeUser : IUser
+    internal class FakeDiscordUser : IUser
     {
         public string AvatarId { get; set; }
 

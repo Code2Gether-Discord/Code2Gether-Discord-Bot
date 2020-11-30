@@ -13,14 +13,14 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository
     /// </summary>
     public class ProjectDAL : IProjectRepository
     {
-        private ConcurrentDictionary<long, Project> _projects = new ConcurrentDictionary<long, Project>();
+        private ConcurrentDictionary<int, Project> _projects = new ConcurrentDictionary<int, Project>();
 
         public bool Create(Project newProject)
         {
             return _projects.TryAdd(newProject.ID, newProject);
         }
 
-        public Project Read(long id)
+        public Project Read(int id)
         {
             if (_projects.TryGetValue(id, out Project project))
                 return project;
@@ -32,7 +32,7 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository
             return ReadAll().Values.FirstOrDefault(p => p.Name == projectName);
         }
 
-        public IDictionary<long, Project> ReadAll()
+        public IDictionary<int, Project> ReadAll()
         {
             return _projects;
         }
@@ -42,7 +42,7 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository
             return _projects.TryUpdate(newProject.ID, newProject, Read(newProject.ID));
         }
 
-        public bool Delete(long id)
+        public bool Delete(int id)
         {
             return _projects.TryRemove(id, out _);
         }

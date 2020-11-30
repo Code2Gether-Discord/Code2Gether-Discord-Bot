@@ -13,7 +13,7 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var user = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,

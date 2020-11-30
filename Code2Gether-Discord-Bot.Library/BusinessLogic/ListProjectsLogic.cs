@@ -47,10 +47,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(project.Value
                           + Environment.NewLine
                           + "Current Members: ");
+
+                /*
                 foreach (var member in project.Value.ProjectMembers)
                 {
                     sb.Append($"{member}; ");
                 }
+                */
+
                 sb.Append(Environment.NewLine);
             }
 

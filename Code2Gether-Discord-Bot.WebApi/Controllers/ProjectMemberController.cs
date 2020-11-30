@@ -39,7 +39,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             if (userRoleToAdd == null)
                 return BadRequest("User role is null.");
 
-            await _dbContext.UserRoles.AddAsync(userRoleToAdd);
+            await _dbContext.ProjectMembers.AddAsync(userRoleToAdd);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
@@ -53,25 +53,55 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllProjectMembers")]
         public async Task<ActionResult<IEnumerable<ProjectMember>>> GetAllProjectMembersAsync()
         {
-            return await _dbContext.UserRoles.ToListAsync();
+            return await _dbContext.ProjectMembers.ToListAsync();
         }
 
-        /*
+        /// <summary>
+        /// Gets project members belonging to input Project ID.
+        /// </summary>
+        /// <param name="ProjectID">Project ID to filter the project members by.</param>
+        /// <returns>The project members belonging to the input project.</returns>
+        [HttpGet("project={ProjectID}", Name = "GetMembersForProject")]
+        public async Task<ActionResult<IEnumerable<ProjectMember>>> GetMembersForProjectAsync(int ProjectID)
+        {
+            var projectMembersToReturn = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == ProjectID)
+                .ToListAsync();
+
+            return projectMembersToReturn;
+        }
 
         /// <summary>
-        /// Gets a single project member based on the input ID.
+        /// Gets project members that have the input Member ID.
         /// </summary>
-        /// <param name="ID">ID of the project member to retrieve.</param>
-        /// <returns>The data for the retrieved project member.</returns>
-        [HttpGet("{id}", Name = "GetProjectMember")]
-        public async Task<ActionResult<ProjectMember>> GetProjectMemberAsync(long ID)
+        /// <param name="MemberID">Member ID to filter the project members by.</param>
+        /// <returns>The project members with the input member.</returns>
+        [HttpGet("member={MemberID}", Name = "GetProjectsForMember")]
+        public async Task<ActionResult<IEnumerable<ProjectMember>>> GetProjectsForMemberAsync(int MemberID)
         {
-            var userRoleToReturn = await _dbContext.UserRoles.FindAsync(ID);
+            var projectMembersToReturn = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.MemberID == MemberID)
+                .ToListAsync();
 
-            if(userRoleToReturn == null)
-                return NotFound("Could not find user role.");
+            return projectMembersToReturn;
+        }
 
-            return userRoleToReturn;
+        [HttpGet("project={ProjectID}/member={MemberID}", Name = "GetProjectMember")]
+        public async Task<ActionResult<ProjectMember>> GetProjectMemberAsync(int ProjectID, int MemberID)
+        {
+            var projectMemberToReturn = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .FirstOrDefaultAsync(x => x.MemberID == MemberID && x.ProjectID == ProjectID);
+
+            if (projectMemberToReturn == null)
+                return NotFound("Umable to find project member.");
+
+            return projectMemberToReturn;
         }
 
         /// <summary>
@@ -79,21 +109,22 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <param name="ID">The ID of the project member to delete.</param>
         /// <returns>No content.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserRoleAsync(long ID)
+        [HttpDelete("project={ProjectID}/member={MemberID}", Name = "GetProjectMember")]
+        public async Task<IActionResult> DeleteProjectMemberAsync(int ProjectID, int MemberID)
         {
-            var projectUserProjectRole = await _dbContext.UserRoles.FindAsync(ID);
+            var projectMemberToDelete = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .FirstOrDefaultAsync(x => x.MemberID == MemberID && x.ProjectID == ProjectID);
 
-            if (projectUserProjectRole == null)
-                return NotFound("Unable to find user role.");
+            if (projectMemberToDelete == null)
+                return NotFound("Unable to find project member.");
 
-            _dbContext.UserRoles.Remove(projectUserProjectRole);
+            _dbContext.ProjectMembers.Remove(projectMemberToDelete);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
-
-        */
 
         #endregion
     }

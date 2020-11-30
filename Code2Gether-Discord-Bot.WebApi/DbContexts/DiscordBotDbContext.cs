@@ -31,9 +31,5 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
             base.OnModelCreating(modelBuilder);
         }
         #endregion
-
-        #region Methods
-        public DbSet<Code2Gether_Discord_Bot.Library.Models.ProjectMember> UserRoles { get; set; }
-        #endregion
     }
 }

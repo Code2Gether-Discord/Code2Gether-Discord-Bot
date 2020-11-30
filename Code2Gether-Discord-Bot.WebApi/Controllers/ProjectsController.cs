@@ -79,10 +79,13 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <returns>All projects in the database.</returns>
         [HttpGet(Name = "GetAllProjects")]
-        public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
+        public async Task<ActionResult<IEnumerable<ProjectOutput>>> GetAllProjectsAsync()
         {
-            return await _dbContext.Projects.ToArrayAsync();
-            // todo: Create method to convert projects to ProjectOutput.
+            var projects = await _dbContext.Projects.ToArrayAsync();
+
+            var outputTasks = projects.Select(x => getProjectOutputAsync(x));
+
+            return await Task.WhenAll(outputTasks);
         }
 
         /// <summary>
@@ -98,14 +101,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             if (projectToReturn == null)
                 return NotFound("Could not find project.");
 
-            var userSnowflakes = await _dbContext
-                .ProjectMembers
-                .AsAsyncEnumerable()
-                .Where(x => x.ProjectID == ID)
-                .Select(x => x.Member.SnowflakeId)
-                .ToListAsync();
-
-            return new ProjectOutput(projectToReturn, userSnowflakes);
+            return await getProjectOutputAsync(projectToReturn);
         }
 
         /// <summary>
@@ -127,7 +123,21 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             return NoContent();
         }
         #endregion
+
+        #region Methods
+        private async Task<ProjectOutput> getProjectOutputAsync(Project project)
+        {
+            var userSnowflakes = await _dbContext
+                .ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == project.ID)
+                .Select(x => x.Member.SnowflakeId)
+                .ToListAsync();
+
+            return new ProjectOutput(project, userSnowflakes);
+        }
+        #endregion
     }
 
-    public record ProjectOutput(Project Project, IList<ulong> SnowflakeId);
+    public record ProjectOutput(Project Project, IList<ulong> MemberSnowflakeIds);
 }

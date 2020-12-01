@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Models;
+﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
@@ -16,12 +12,7 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
-            {
-                Username = "UnitTest",
-                DiscriminatorValue = 1234,
-                Id = 123456789123456789
-            };
+            var user = TestConfig.User();
 
             var client = new FakeDiscordClient()
             {

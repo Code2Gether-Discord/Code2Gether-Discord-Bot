@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
@@ -19,12 +15,7 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
-            {
-                Username = "UnitTest",
-                DiscriminatorValue = 1234,
-                Id = 123456789123456789
-            };
+            var user = TestConfig.User();
 
             var client = new FakeDiscordClient()
             {
@@ -49,13 +40,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _repo = new FakeProjectRepository()
-            {
-                Projects = new Dictionary<int, Project>()
-                {
-                    {0, new Project(0, "unittest", user)},
-                }
-            };
+            _repo = TestConfig.ProjectRepository();
 
             _logic = new JoinProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
             {
@@ -64,7 +49,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = user
-            }, new FakeProjectManager(_repo), "unittest");
+            }, TestConfig.ProjectManager(), "unittest");
         }
 
         [Test]

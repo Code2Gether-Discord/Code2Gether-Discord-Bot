@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using Code2Gether_Discord_Bot.Library.BusinessLogic;
+﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Static;
-using Code2Gether_Discord_Bot.Tests.Fakes;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
@@ -15,41 +13,10 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = TestConfig.User();
-
-            var client = new FakeDiscordClient()
-            {
-                FakeApplication = new FakeApplication()
-                {
-                    Owner = user
-                }
-            };
-
-            var guild = new FakeGuild()
-            {
-
-            };
-
-            var messageChannel = new FakeMessageChannel()
-            {
-
-            };
-
-            var message = new FakeUserMessage()
-            {
-                Author = user
-            };
-
             _repo = TestConfig.ProjectRepository();
+            _repo.Create(TestConfig.Project(0));
 
-            _logic = new ListProjectsLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
-            {
-                Channel = messageChannel,
-                Client = client,
-                Guild = guild,
-                Message = message,
-                User = user
-            }, _repo);
+            _logic = TestConfig.ListProjectsLogic(_repo);
         }
 
         [Test]

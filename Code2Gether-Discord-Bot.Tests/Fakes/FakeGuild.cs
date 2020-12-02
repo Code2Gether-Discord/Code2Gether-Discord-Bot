@@ -2,20 +2,13 @@
 using Discord.Audio;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
     internal class FakeGuild : IGuild
     {
-        private Dictionary<ulong, IGuildChannel> _guildChannels = new Dictionary<ulong, IGuildChannel>()
-        {
-            { 123456789123456789, new FakeGuildChannel() }
-        };
-
         public string Name { get; set; }
 
         public int AFKTimeout { get; set; }
@@ -188,16 +181,18 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public Task<IGuildChannel> GetChannelAsync(ulong id, CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)
         {
-            return Task.Run(() =>
+            throw new NotImplementedException();
+            /*return Task.Run(() =>
             {
                 _guildChannels.TryGetValue(id, out IGuildChannel channel);
                 return channel;
-            });
+            });*/
         }
 
         public Task<IReadOnlyCollection<IGuildChannel>> GetChannelsAsync(CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)
         {
-            return Task.Run(() => (IReadOnlyCollection<IGuildChannel>)_guildChannels);
+            throw new NotImplementedException();
+            // return Task.Run(() => (IReadOnlyCollection<IGuildChannel>)_guildChannels);
         }
 
         public Task<IGuildUser> GetCurrentUserAsync(CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)

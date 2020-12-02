@@ -1,15 +1,20 @@
-﻿using System;
+﻿using Discord;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Discord;
 
 namespace Code2Gether_Discord_Bot.Tests.Fakes
 {
     internal class FakeGuildChannel : IGuildChannel
     {
-        public ulong Id { get; }
         public DateTimeOffset CreatedAt { get; }
+        public IGuild Guild { get; }
+        public ulong GuildId { get; }
+        public ulong Id { get; }
+        public string Name { get; }
+        public IReadOnlyCollection<Overwrite> PermissionOverwrites { get; }
+        public int Position { get; }
+
         public Task ModifyAsync(Action<GuildChannelProperties> func, RequestOptions options = null)
         {
             throw new NotImplementedException();
@@ -55,11 +60,6 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public int Position { get; }
-        public IGuild Guild { get; }
-        public ulong GuildId { get; }
-        public IReadOnlyCollection<Overwrite> PermissionOverwrites { get; }
-
         IAsyncEnumerable<IReadOnlyCollection<IUser>> IChannel.GetUsersAsync(CacheMode mode, RequestOptions options)
         {
             return GetUsersAsync(mode, options);
@@ -70,7 +70,6 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public string Name { get; }
         public Task DeleteAsync(RequestOptions options = null)
         {
             throw new NotImplementedException();

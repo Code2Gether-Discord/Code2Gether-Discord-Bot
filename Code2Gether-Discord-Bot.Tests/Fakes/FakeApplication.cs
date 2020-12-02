@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Discord;
+﻿using Discord;
+using System;
 
 namespace Code2Gether_Discord_Bot.Tests.Fakes
 {

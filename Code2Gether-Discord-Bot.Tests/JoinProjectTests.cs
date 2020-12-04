@@ -55,7 +55,7 @@ namespace Code2Gether_Discord_Bot.Tests
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "unittest", user)},
+                    {0, new Project(0, "UnitTestProject", user)},
                 }
             };
 
@@ -66,7 +66,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = fakeuser
-            }, new FakeProjectManager(_repo), "unittest");
+            }, new ProjectManager(_repo), "UnitTestProject");
         }
 
         [Test]

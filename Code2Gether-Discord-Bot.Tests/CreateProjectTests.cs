@@ -66,7 +66,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = fakeUser
-            }, new FakeProjectManager(_repo), "unittest");
+            }, new ProjectManager(_repo), "unittest");
         }
 
         [Test]

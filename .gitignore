@@ -1,7 +1,13 @@
-.vs
+# Ignore user-specific settings, except GitHub workflow files
+.*
+!.github
+
+# Project directories should be ignored
 bin
 obj
 Properties
+
+# JSON config files should be ignored
 *.json
 
 # Do not include SQLite .db files in repository.

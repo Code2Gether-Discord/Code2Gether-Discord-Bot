@@ -2,7 +2,6 @@
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord.Commands;
 using System;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
 
 namespace Code2Gether_Discord_Bot.Static

@@ -7,6 +7,7 @@ namespace Code2Gether_Discord_Bot.Models
         string DiscordToken { get; set; }
         string Prefix { get; set; }
         bool Debug { get; set; }
+        string ConnectionString { get; set; }
     }
 
     public class Config : IConfig
@@ -20,13 +21,17 @@ namespace Code2Gether_Discord_Bot.Models
         [JsonProperty("debug")]
         public bool Debug { get; set; }
 
+        [JsonProperty("connectionString")]
+        public string ConnectionString { get; set; }
+
         public Config() { }
 
-        public Config(string prefix, string token, bool debug)
+        public Config(string prefix, string token, bool debug, string connectionString)
         {
             Prefix = prefix;
             DiscordToken = token;
             Debug = debug;
+            ConnectionString = connectionString;
         }
     }
 }

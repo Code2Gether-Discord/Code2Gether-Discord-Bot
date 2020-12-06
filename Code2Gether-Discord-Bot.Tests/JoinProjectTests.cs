@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
@@ -80,7 +81,7 @@ namespace Code2Gether_Discord_Bot.Tests
         {
             await _logic.ExecuteAsync();
             var project = await _repo.ReadAsync(0);
-            Assert.IsTrue(project.Members.Count > 0);
+            Assert.IsTrue(project.Members.Count() > 0);
         }
     }
 }

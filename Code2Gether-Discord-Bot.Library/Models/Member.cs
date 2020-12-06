@@ -19,7 +19,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         [JsonIgnore]
         [NotMapped]
         public IUser DiscordUserInfo { get; set; }
-        public List<Project> Projects { get; set; }
+        public List<Project> Projects { get; set; } = new List<Project>();
         #endregion
 
         #region Constructor

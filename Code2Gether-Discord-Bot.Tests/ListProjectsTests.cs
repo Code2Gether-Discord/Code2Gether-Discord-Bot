@@ -84,11 +84,11 @@ namespace Code2Gether_Discord_Bot.Tests
         }
 
         [Test]
-        public async Task EmbedExecutionTest()
+        public async Task EmbedContainsProjectNameExecutionTest()
         {
             var embed = await _logic.ExecuteAsync();
-            var projects = await _repo.ReadAsync(0);
-            Assert.IsTrue(embed.Description.Contains(projects.ToString()));
+            var project = await _repo.ReadAsync(0);
+            Assert.IsTrue(embed.Description.Contains(project.Name));
         }
     }
 }

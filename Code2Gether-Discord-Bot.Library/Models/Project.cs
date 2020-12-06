@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -34,8 +35,8 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 AuthorId = _author.ID;
             }
         }
-        public List<Member> Members { get; set; }
-        public bool IsActive => Members.Count >= 2;
+        public List<Member> Members { get; set; } = new List<Member>();
+        public bool IsActive => Members.Count() >= 2;
         #endregion
 
         #region Constructors
@@ -52,11 +53,6 @@ namespace Code2Gether_Discord_Bot.Library.Models
             Name = name;
             Author = author;
         }
-        #endregion
-
-        #region Methods
-        public override string ToString() =>
-            $"Project Name: {Name}; Created by: {Author}";
         #endregion
     }
 }

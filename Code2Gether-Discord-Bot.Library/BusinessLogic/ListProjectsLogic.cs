@@ -47,13 +47,15 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             foreach (var project in projects)
             {
-                sb.Append(project
+                var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
+                sb.Append($"{project.Name}; Created by: {authorUser.Username}#{authorUser.Discriminator}"
                           + Environment.NewLine
                           + "Current Members: ");
 
                 foreach (var member in project.Members)
                 {
-                    sb.Append($"{member}; ");
+                    var user = await _context.Guild.GetUserAsync(member.SnowflakeId);
+                    sb.Append($"{user}; ");
                 }
 
                 sb.Append(Environment.NewLine);

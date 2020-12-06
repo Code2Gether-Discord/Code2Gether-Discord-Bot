@@ -38,8 +38,13 @@ namespace Code2Gether_Discord_Bot.Library.Models
             var project = (await _projectRepository
                 .ReadAllAsync())
                 .FirstOrDefault(x => x.Name == projectName);
+            
+            project.Members.Add(user);
 
-            return await _projectRepository.UpdateAsync(project);
+            var result = await _projectRepository.UpdateAsync(project);
+            project = await _projectRepository.ReadAsync(projectName);
+
+            return result && project.Members.Contains(user);
         }
     }
 }

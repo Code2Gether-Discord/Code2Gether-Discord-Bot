@@ -8,6 +8,6 @@ namespace Code2Gether_Discord_Bot.Library.Models
         Task<bool> DoesProjectExistAsync(string projectName);
         Task<Project> GetProjectAsync(string projectName);
         Task<Project> CreateProjectAsync(string projectName, Member author);
-        Task<bool> JoinProjectAsync(string projectName, Member user);
+        Task<bool> JoinProjectAsync(string projectName, Member member);
     }
 }

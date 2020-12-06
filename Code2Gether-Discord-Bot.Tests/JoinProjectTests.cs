@@ -81,7 +81,16 @@ namespace Code2Gether_Discord_Bot.Tests
         {
             await _logic.ExecuteAsync();
             var project = await _repo.ReadAsync(0);
-            Assert.IsTrue(project.Members.Count() > 0);
+            Assert.IsTrue(project.Members.Count() == 1);
+        }
+
+        [Test]
+        public async Task DoubleExecutionDoesntAddMemberTwiceTest()
+        {
+            await _logic.ExecuteAsync();
+            await _logic.ExecuteAsync();
+            var project = await _repo.ReadAsync(0);
+            Assert.IsTrue(project.Members.Count() == 1);
         }
     }
 }

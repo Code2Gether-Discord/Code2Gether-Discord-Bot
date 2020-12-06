@@ -33,18 +33,21 @@ namespace Code2Gether_Discord_Bot.Library.Models
             throw new Exception($"Failed to create new project: {newProject}!");
         }
 
-        public async Task<bool> JoinProjectAsync(string projectName, Member user)
+        public async Task<bool> JoinProjectAsync(string projectName, Member member)
         {
             var project = (await _projectRepository
                 .ReadAllAsync())
                 .FirstOrDefault(x => x.Name == projectName);
-            
-            project.Members.Add(user);
+
+            if (!project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+                project.Members.Add(member);
+            else
+                return false;
 
             var result = await _projectRepository.UpdateAsync(project);
             project = await _projectRepository.ReadAsync(projectName);
 
-            return result && project.Members.Contains(user);
+            return result && project.Members.Contains(member);
         }
     }
 }

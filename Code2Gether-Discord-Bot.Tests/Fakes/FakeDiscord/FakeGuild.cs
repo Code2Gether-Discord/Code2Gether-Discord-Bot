@@ -1,13 +1,11 @@
-﻿using Discord;
-using Discord.Audio;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Audio;
 
-namespace Code2Gether_Discord_Bot.Tests.Fakes
+namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord
 {
     internal class FakeGuild : IGuild
     {

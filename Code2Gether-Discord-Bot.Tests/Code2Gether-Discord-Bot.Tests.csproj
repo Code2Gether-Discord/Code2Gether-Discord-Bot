@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Code2Gether-Discord-Bot\Code2Gether-Discord-Bot.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Fakes\FakeRepositories\" />
-  </ItemGroup>
-
 </Project>

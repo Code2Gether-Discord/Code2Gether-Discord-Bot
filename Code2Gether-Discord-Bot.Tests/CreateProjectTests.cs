@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -55,7 +59,7 @@ namespace Code2Gether_Discord_Bot.Tests
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "unittest", user)},
+                    { 0, new Project(0, "unittest", user) },
                 }
             };
 
@@ -77,8 +81,9 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task ExecutionTest()
         {
             await _logic.ExecuteAsync();
+            var projects = await _repo.ReadAllAsync();
 
-            Assert.IsTrue(_repo.ReadAll().Count > 0);
+            Assert.IsTrue(projects.Count() > 0);
         }
     }
 }

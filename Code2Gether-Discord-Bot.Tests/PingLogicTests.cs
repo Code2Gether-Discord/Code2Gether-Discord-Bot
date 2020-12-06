@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -76,7 +79,8 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task ExecutionTest()
         {
             await _logic.ExecuteAsync();
-            Assert.IsTrue(_repo.ReadAll().Count > 0);
+            var projects = await _repo.ReadAllAsync();
+            Assert.IsTrue(projects.Count() > 0);
         }
 
         [Test]

@@ -42,7 +42,7 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(Project newProject)
+        public Task<bool> UpdateAsync(Project existingProject)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
 ﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
+using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
@@ -84,29 +85,29 @@ namespace Code2Gether_Discord_Bot.Tests
         #endregion
 
         /// <summary>
-        /// Instantiates a FakeProject with generic Name and Author.
+        /// Instantiates a Project with generic Name and Author.
         /// </summary>
-        /// <param name="id">FakeProject's Id.</param>
-        /// <returns>FakeProject with irrelevant Name and Author.</returns>
-        public static FakeProject Project(int id) =>
+        /// <param name="id">Project's Id.</param>
+        /// <returns>Project with irrelevant Name and Author.</returns>
+        public static Project Project(int id) =>
             Project(id, $"proj{id}");
         /// <summary>
-        /// Instantiates a FakeProject with custom Id and Author.
+        /// Instantiates a Project with custom Id and Author.
         /// </summary>
-        /// <param name="id">FakeProject's Id.</param>
-        /// <param name="name">FakeProject's Name.</param>
-        /// <returns>FakeProject with custom id and author and irrelevant project name.</returns>
-        public static FakeProject Project(int id, string name) =>
+        /// <param name="id">Project's Id.</param>
+        /// <param name="name">Project's Name.</param>
+        /// <returns>Project with custom id and author and irrelevant project name.</returns>
+        public static Project Project(int id, string name) =>
             Project(id, name, User());
         /// <summary>
-        /// Instantiates a FakeProject with custom Id, Name and Author.
+        /// Instantiates a Project with custom Id, Name and Author.
         /// </summary>
-        /// <param name="id">FakeProject's Id.</param>
-        /// <param name="name">FakeProject's Name.</param>
-        /// <param name="author">FakeProject's Author.</param>
-        /// <returns>FakeProject with all the custom properties.</returns>
-        public static FakeProject Project(int id, string name, FakeUser author) =>
-            new FakeProject
+        /// <param name="id">Project's Id.</param>
+        /// <param name="name">Project's Name.</param>
+        /// <param name="author">Project's Author.</param>
+        /// <returns>Project with all the custom properties.</returns>
+        public static Project Project(int id, string name, FakeUser author) =>
+            new Project
             (
                 id,
                 name,

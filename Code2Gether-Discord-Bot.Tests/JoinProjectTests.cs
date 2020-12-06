@@ -79,8 +79,8 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task ExecutionTest()
         {
             await _logic.ExecuteAsync();
-            
-            // Assert.IsTrue(_repo.Read(0).ProjectMembers.Count > 0);
+            var project = await _repo.ReadAsync(0);
+            Assert.IsTrue(project.Members.Count > 0);
         }
     }
 }

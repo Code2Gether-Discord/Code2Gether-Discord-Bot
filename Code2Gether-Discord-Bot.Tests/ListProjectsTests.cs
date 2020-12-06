@@ -87,7 +87,8 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task EmbedExecutionTest()
         {
             var embed = await _logic.ExecuteAsync();
-            Assert.IsTrue(embed.Description.Contains(_repo.ReadAsync(0).ToString()));
+            var projects = await _repo.ReadAsync(0);
+            Assert.IsTrue(embed.Description.Contains(projects.ToString()));
         }
     }
 }

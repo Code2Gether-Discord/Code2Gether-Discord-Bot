@@ -35,6 +35,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             }
         }
         public List<Member> Members { get; set; }
+        public bool IsActive => Members.Count >= 2;
         #endregion
 
         #region Constructors

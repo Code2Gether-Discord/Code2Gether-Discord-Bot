@@ -9,7 +9,7 @@ namespace Code2Gether_Discord_Bot.Library.Static
         private static IProjectRepository instance = GetProjectRepository();
 
         public static IProjectRepository GetProjectRepository() =>
-            instance != null ? instance : new ProjectDAL();
+            instance != null ? instance : new FakeProjectDAL();
 
         //public static IProjectRepository GetProjectRepository() =>
         //    new ProjectDAL();

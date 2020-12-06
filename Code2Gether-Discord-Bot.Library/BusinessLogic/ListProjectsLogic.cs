@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Discord;
 using Discord.Commands;
 
@@ -21,45 +22,46 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _context = context;
             _projectRepository = projectRepository;
         }
-
-        public Task<Embed> ExecuteAsync()
+        
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
-            ListProjects(out string title, out string description);
+            var embedContent = await ListProjectsAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle(title)
-                .WithDescription(description)
+                .WithTitle(embedContent.Title)
+                .WithDescription(embedContent.Description)
                 .WithAuthor(_context.User)
                 .Build();
-            return Task.FromResult(embed);
+
+            return embed;
         }
 
-        private void ListProjects(out string title, out string description)
+        private async Task<EmbedContent> ListProjectsAsync()
         {
+            var embedContent = new EmbedContent();
             var sb = new StringBuilder();
-            var projects = _projectRepository.ReadAll();
+            var projects = await _projectRepository.ReadAllAsync();
 
             foreach (var project in projects)
             {
-                sb.Append(project.Value
+                sb.Append(project
                           + Environment.NewLine
                           + "Current Members: ");
 
-                /*
-                foreach (var member in project.Value.ProjectMembers)
+                foreach (var member in project.Members)
                 {
                     sb.Append($"{member}; ");
                 }
-                */
 
                 sb.Append(Environment.NewLine);
             }
 
-            title = $"List Projects ({projects.Values.Count})";
-            description = sb.ToString();
+            embedContent.Title = $"List Projects ({projects.Count()})";
+            embedContent.Description = sb.ToString();
+            return embedContent;
         }
     }
 }

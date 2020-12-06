@@ -21,28 +21,24 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _newChannelName = newChannelName;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
-            if (MakeNewTextChannel(_newChannelName, out IChannel newChannelObj))
+            var newChannel = await _context.Guild.CreateTextChannelAsync(_newChannelName);
+
+            if (newChannel is not null)
             {
                 var embed = new EmbedBuilder()
                     .WithColor(Color.Purple)
-                    .WithTitle($"Made Channel: {newChannelObj.Name}")
-                    .WithDescription($"Successfully made new channel: <#{newChannelObj.Id}>")
+                    .WithTitle($"Made Channel: {newChannel.Name}")
+                    .WithDescription($"Successfully made new channel: <#{newChannel.Id}>")
                     .WithAuthor(_context.Message.Author)
                     .Build();
-                return Task.FromResult(embed);
+                return embed;
             }
 
             throw new Exception($"Failed to create channel: {_newChannelName}");
-        }
-
-        private bool MakeNewTextChannel(string newChannel, out IChannel newChannelObj)
-        {
-            newChannelObj = _context.Guild.CreateTextChannelAsync(newChannel).Result;
-            return newChannel != null;
         }
     }
 }

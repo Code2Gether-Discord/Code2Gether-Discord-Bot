@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
+using System.Threading.Tasks;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -13,52 +14,32 @@ namespace Code2Gether_Discord_Bot.Library.Models
             _projectRepository = projectRepository;
         }
 
-        public bool DoesProjectExist(string projectName) =>
-            _projectRepository.Read(projectName) != null;
-
-        public bool DoesProjectExist(string projectName, out Project project)
+        public async Task<bool> DoesProjectExistAsync(string projectName)
         {
-            project = _projectRepository.Read(projectName);
-            return project != null;
+            return (await _projectRepository.ReadAsync(projectName)) is not null;
         }
 
-        public Project CreateProject(string projectName, Member author)
+        public Task<Project> GetProjectAsync(string projectName)
         {
-            var newId = GetNextId();
-            var newProject = new Project(newId, projectName, author);
-            if (_projectRepository.Create(newProject))
-            {
-                JoinProject(projectName, author, out newProject);
-                return newProject;
-            }
+            return _projectRepository.ReadAsync(projectName);
+        }
+
+        public async Task<Project> CreateProjectAsync(string projectName, Member author)
+        {
+            var newProject = new Project(0, projectName, author);
+            if (await _projectRepository.CreateAsync(newProject))
+                if (await JoinProjectAsync(projectName, author))    // Author joins new projects by default
+                    return newProject;
             throw new Exception($"Failed to create new project: {newProject}!");
         }
 
-        public bool JoinProject(string projectName, Member user, out Project project)
+        public async Task<bool> JoinProjectAsync(string projectName, Member user)
         {
-            project = _projectRepository.Read(projectName);
+            var project = (await _projectRepository
+                .ReadAllAsync())
+                .FirstOrDefault(x => x.Name == projectName);
 
-            if (project == null) return false;  // Project must exist
-
-            /*
-            if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
-            project.ProjectMembers.Add(user);
-            */
-            
-            return _projectRepository.Update(project);
-        }
-
-        private int GetNextId()
-        {
-            int i = 0;
-
-            try
-            {
-                i = _projectRepository.ReadAll().Keys.Max();
-            }
-            catch (InvalidOperationException) {}    // No projects available yet
-
-            return i;
+            return await _projectRepository.UpdateAsync(project);
         }
     }
 }

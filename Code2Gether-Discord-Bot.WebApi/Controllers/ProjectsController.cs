@@ -79,13 +79,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <returns>All projects in the database.</returns>
         [HttpGet(Name = "GetAllProjects")]
-        public async Task<ActionResult<IEnumerable<ProjectOutput>>> GetAllProjectsAsync()
+        public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
         {
-            var projects = await _dbContext.Projects.ToArrayAsync();
-
-            var outputTasks = projects.Select(x => getProjectOutputAsync(x));
-
-            return await Task.WhenAll(outputTasks);
+            return await _dbContext.Projects.ToArrayAsync();
         }
 
         /// <summary>
@@ -94,14 +90,14 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the project to retrieve.</param>
         /// <returns>The data for the retrieved project.</returns>
         [HttpGet("{ID}", Name = "GetProject")]
-        public async Task<ActionResult<ProjectOutput>> GetProjectAsync(int ID)
+        public async Task<ActionResult<Project>> GetProjectAsync(int ID)
         {
             var projectToReturn = await _dbContext.Projects.FindAsync(ID);
 
             if (projectToReturn == null)
                 return NotFound("Could not find project.");
 
-            return await getProjectOutputAsync(projectToReturn);
+            return projectToReturn;
         }
 
         /// <summary>
@@ -125,6 +121,8 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         #endregion
 
         #region Methods
+        /*
+
         private async Task<ProjectOutput> getProjectOutputAsync(Project project)
         {
             var userSnowflakes = await _dbContext
@@ -136,6 +134,8 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             return new ProjectOutput(project, userSnowflakes);
         }
+        */
+
         #endregion
     }
 

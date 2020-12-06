@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -18,10 +19,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
         [Key]
         public int ID { get; set; }
         [Column("PROJECT_NAME")]
+        [Required]
         public string Name { get; set; }
         [Column("MEMBER_ID")]
         [ForeignKey(nameof(Author))]
         public int AuthorId { get; set; }
+        [NotMapped]
         public Member Author
         {
             get => _lazyLoader.Load(this, ref _author);
@@ -31,6 +34,8 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 AuthorId = _author.ID;
             }
         }
+        public List<Member> Members { get; set; }
+        public bool IsActive => Members.Count >= 2;
         #endregion
 
         #region Constructors

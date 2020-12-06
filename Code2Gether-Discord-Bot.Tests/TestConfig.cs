@@ -114,18 +114,18 @@ namespace Code2Gether_Discord_Bot.Tests
                 author
             );
         /// <summary>
-        /// Instantiates a FakeProjectManager with empty FakeProjectRepository.
+        /// Instantiates a ProjectManager with empty FakeProjectRepository.
         /// </summary>
-        /// <returns>FakeProjectManager with empty project repository.</returns>
-        public static FakeProjectManager ProjectManager() =>
-            new FakeProjectManager(ProjectRepository());
+        /// <returns>ProjectManager with empty project repository.</returns>
+        public static ProjectManager ProjectManager() =>
+            new ProjectManager(ProjectRepository());
         /// <summary>
-        /// Instantiates a FakeProjectManager with custom IProjectRepository.
+        /// Instantiates a ProjectManager with custom IProjectRepository.
         /// </summary>
-        /// <param name="projectRepository">FakeProjectManager's project repository.</param>
-        /// <returns>FakeProjectManager with custom project repository.</returns>
-        public static FakeProjectManager ProjectManager(IProjectRepository projectRepository) =>
-            new FakeProjectManager(projectRepository);
+        /// <param name="projectRepository">ProjectManager's project repository.</param>
+        /// <returns>ProjectManager with custom project repository.</returns>
+        public static ProjectManager ProjectManager(IProjectRepository projectRepository) =>
+            new ProjectManager(projectRepository);
         /// <summary>
         /// Instantiates a empty FakeProjectRepository.
         /// </summary>

@@ -1,7 +1,6 @@
 ﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -11,17 +10,17 @@ namespace Code2Gether_Discord_Bot.Tests
     /// </summary>
     internal static class TestConfig
     {
-        #region BusinessLogicFactory
+        #region BusinessLogic
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.ExcuseGeneratorLogic"/>.
         /// </summary>
         /// <returns>ExcuseGeneratorLogic with irrelevant properties.</returns>
         public static IBusinessLogic ExcuseGeneratorLogic()
         {
-            var classContext = typeof(object);
+            var logger = Logger();
             var context = CommandContext();
 
-            return BusinessLogicFactory.ExcuseGeneratorLogic(classContext, context);
+            return new ExcuseGeneratorLogic(logger, context);
         }
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.InfoLogic"/>.
@@ -29,10 +28,10 @@ namespace Code2Gether_Discord_Bot.Tests
         /// <returns>InfoLogic with irrelevant properties.</returns>
         public static IBusinessLogic InfoLogic()
         {
-            var classContext = typeof(object);
+            var logger = Logger();
             var context = CommandContext();
 
-            return BusinessLogicFactory.GetInfoLogic(classContext, context);
+            return new InfoLogic(logger, context);
         }
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.JoinProjectLogic"/> with a custom project repository.
@@ -42,9 +41,11 @@ namespace Code2Gether_Discord_Bot.Tests
         /// <returns>JoinProjectLogic with a custom project repository and irrelevant properties.</returns>
         public static IBusinessLogic JoinProjectLogic(IProjectRepository projectRepository, string projectName)
         {
+            var logger = Logger();
             var context = CommandContext();
+            var projectManager = ProjectManager(projectRepository);
 
-            return new JoinProjectLogic(Logger(), context, ProjectManager(projectRepository), projectName);
+            return new JoinProjectLogic(logger, context, projectManager, projectName);
         }
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.ListProjectsLogic"/> with a custom project repository.
@@ -53,9 +54,10 @@ namespace Code2Gether_Discord_Bot.Tests
         /// <returns>ListProjectsLogic with a custom project repository and irrelevant properties.</returns>
         public static IBusinessLogic ListProjectsLogic(IProjectRepository projectRepository)
         {
+            var logger = Logger();
             var context = CommandContext();
 
-            return new ListProjectsLogic(Logger(), context, projectRepository);
+            return new ListProjectsLogic(logger, context, projectRepository);
         }
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.MakeChannelLogic"/>.
@@ -63,12 +65,12 @@ namespace Code2Gether_Discord_Bot.Tests
         /// <returns>MakeChannelLogic with irrelevant properties.</returns>
         public static IBusinessLogic MakeChannelLogic()
         {
-            var classContext = typeof(object);
+            var logger = Logger();
             var context = CommandContext();
             context.Message = UserMessage(context.Message.Author as FakeUser, "debug!makechannel make-me");
             var channelName = "test-channel";
 
-            return BusinessLogicFactory.GetMakeChannelLogic(classContext, context, channelName);
+            return new MakeChannelLogic(logger, context, channelName);
         }
         /// <summary>
         /// Instantiates a generic <see cref="Library.BusinessLogic.PingLogic"/>.
@@ -76,11 +78,11 @@ namespace Code2Gether_Discord_Bot.Tests
         /// <returns>PingLogic with irrelevant properties.</returns>
         public static IBusinessLogic PingLogic()
         {
-            var classContext = typeof(object);
+            var logger = Logger();
             var context = CommandContext();
             var latency = 1;
 
-            return BusinessLogicFactory.GetPingLogic(classContext, context, latency);
+            return new PingLogic(logger, context, latency);
         }
         #endregion
 

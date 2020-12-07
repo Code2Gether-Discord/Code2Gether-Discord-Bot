@@ -42,12 +42,18 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> JoinProjectAsync()
         {
             var embedContent = new EmbedContent();
+
             var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
 
-            var user = new Member(_context.User);    
+            var user = new Member(_context.User);   
+            
+            // Attempt to join the project
             var result = await _projectManager.JoinProjectAsync(projectName, user);
+
+            // Get the updated project object
             var project = await _projectManager.GetProjectAsync(projectName);
             
+            // If joining was successful
             if (result)
             {
                 embedContent.Title = "Success";
@@ -56,7 +62,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                                          + Environment.NewLine
                                          + $"{project}";
 
-                if (project.IsActive) // If project has become active from new user
+                // If project has become active from new user
+                if (project.IsActive) 
                     TransitionToActiveProject(project);
             }
             else

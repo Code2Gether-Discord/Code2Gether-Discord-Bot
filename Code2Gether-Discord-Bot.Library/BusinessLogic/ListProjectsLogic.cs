@@ -42,18 +42,25 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> ListProjectsAsync()
         {
             var embedContent = new EmbedContent();
+
             var sb = new StringBuilder();
+
+            // Read all projects
             var projects = await _projectRepository.ReadAllAsync();
 
             foreach (var project in projects)
             {
+
+                // Get Discord User details for project's author
                 var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
+
                 sb.Append($"{project.Name}; Created by: {authorUser.Username}#{authorUser.Discriminator}"
                           + Environment.NewLine
                           + "Current Members: ");
 
                 foreach (var member in project.Members)
                 {
+                    // Get the Discord user for each project's member
                     var user = await _context.Guild.GetUserAsync(member.SnowflakeId);
                     sb.Append($"{user}; ");
                 }
@@ -61,8 +68,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(Environment.NewLine);
             }
 
-            embedContent.Title = $"List Projects ({projects.Count()})";
-            embedContent.Description = sb.ToString();
+            embedContent.Title = $"List Projects ({projects.Count()})"; // "List Projects (0)"
+            embedContent.Description = sb.ToString();   // "some-project ; Created by: SomeUser#1234 \r\n Current Members: SomeUser#1234 \r\n "
             return embedContent;
         }
     }

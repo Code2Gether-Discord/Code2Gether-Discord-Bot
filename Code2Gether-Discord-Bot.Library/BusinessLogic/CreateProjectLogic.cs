@@ -43,23 +43,27 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
 
+            // Check if a project exists before creating one (unique project names)
             if (await _projectManager.DoesProjectExistAsync(projectName))
             {
                 embedContent.Title = "Failed";
                 embedContent.Description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
+            // If no project exists by that name
             else
             {
-                // todo: Load user or create new one.
                 var user = new Member(_context.User);
 
+                // Create a new project
                 Project newProject = await _projectManager.CreateProjectAsync(projectName, user);
+
                 embedContent.Title = "Success";
                 embedContent.Description = $"Successfully created inactive project **{newProject.Name}**!"
                                            + Environment.NewLine
                                            + Environment.NewLine
                                            + $"{newProject}";
             }
+
             return embedContent;
         }
     }

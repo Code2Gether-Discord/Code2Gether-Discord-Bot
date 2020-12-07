@@ -41,9 +41,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent();
 
-            var projectName = _arguments
-                .Trim()
-                .Split(' ')[0];
+            var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
 
             if (await _projectManager.DoesProjectExistAsync(projectName))
             {

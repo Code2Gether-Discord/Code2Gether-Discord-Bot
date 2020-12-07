@@ -42,10 +42,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> JoinProjectAsync()
         {
             var embedContent = new EmbedContent();
-            var projectName = _arguments
-                .Trim()
-                .Split(' ')[0]; 
-            
+            var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
+
             var user = new Member(_context.User);    
             var result = await _projectManager.JoinProjectAsync(projectName, user);
             var project = await _projectManager.GetProjectAsync(projectName);

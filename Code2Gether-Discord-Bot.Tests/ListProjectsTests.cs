@@ -73,22 +73,34 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
         [Test]
-        public async Task ExecutionTest()
+        public async Task EmbedContainsEveryProjectNameExecutionTest()
         {
-            await _logic.ExecuteAsync();
+            var embed = await _logic.ExecuteAsync();
             var projects = await _repo.ReadAllAsync();
-            Assert.IsTrue(projects.Count() > 0);
+            var projectNames = projects.Select(p => p.Name);
+
+            bool hasEveryProjectName = true;
+            foreach (var projectName in projectNames)
+            {
+                if (!embed.Description.Contains(projectName))
+                {
+                    hasEveryProjectName = false;
+                }
+            }
+
+            Assert.IsTrue(hasEveryProjectName);
         }
 
         [Test]
-        public async Task EmbedContainsProjectNameExecutionTest()
+        public async Task EmbedContainsTotalProjectCountExecutionTest()
         {
             var embed = await _logic.ExecuteAsync();
-            var project = await _repo.ReadAsync(0);
-            Assert.IsTrue(embed.Description.Contains(project.Name));
+            var projects = await _repo.ReadAllAsync();
+
+            Assert.IsTrue(embed.Title.Contains(projects.Count().ToString()));
         }
     }
 }

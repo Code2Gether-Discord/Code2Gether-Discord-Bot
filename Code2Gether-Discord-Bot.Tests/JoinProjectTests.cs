@@ -74,23 +74,32 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
+        /// <summary>
+        /// Passes: If joining an existing project results in 1 member
+        /// Fails:  If joining an existing project results in 0 members
+        /// </summary>
         [Test]
-        public async Task ExecutionTest()
+        public async Task SingleExecutionTest()
         {
             await _logic.ExecuteAsync();
             var project = await _repo.ReadAsync(0);
-            Assert.IsTrue(project.Members.Count() == 1);
+            Assert.AreEqual(1, project.Members.Count);
         }
 
+        /// <summary>
+        /// Passes: If joining an existing project twice results in only 1 member
+        /// Fails:  If joining an existing project twice results 2 duplicate members
+        /// </summary>
         [Test]
-        public async Task DoubleExecutionDoesntAddMemberTwiceTest()
+        public async Task DoubleExecutionTest()
         {
             await _logic.ExecuteAsync();
             await _logic.ExecuteAsync();
             var project = await _repo.ReadAsync(0);
-            Assert.IsTrue(project.Members.Count() == 1);
+            
+            Assert.AreEqual(1, project.Members.Count);
         }
     }
 }

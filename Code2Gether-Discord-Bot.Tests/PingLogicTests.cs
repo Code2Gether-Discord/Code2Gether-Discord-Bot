@@ -56,7 +56,7 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
         [Test]
         public async Task EmbedAuthorHasValueTest()

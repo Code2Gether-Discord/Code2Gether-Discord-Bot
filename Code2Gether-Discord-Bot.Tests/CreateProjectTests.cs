@@ -55,13 +55,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = fakeUser
             };
 
-            _repo = new FakeProjectRepository()
-            {
-                Projects = new Dictionary<int, Project>()
-                {
-                    { 0, new Project(0, "unittest", user) },
-                }
-            };
+            _repo = new FakeProjectRepository();
 
             _logic = new CreateProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
             {
@@ -75,15 +69,36 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
+        /// <summary>
+        /// Passes: If when creating a new project, project repo contains an additional project
+        /// Fails:  If when creating a new project, project repo does not change
+        /// </summary>
         [Test]
-        public async Task ExecutionTest()
+        public async Task SingleExecutionTest()
+        {
+            var initialProjects = await _repo.ReadAllAsync();
+            await _logic.ExecuteAsync();
+            var finalProjects = await _repo.ReadAllAsync();
+
+            Assert.AreEqual(initialProjects.Count() + 1, finalProjects.Count());
+        }
+
+        /// <summary>
+        /// Passes: If when creating a duplicate project, total projects do not change during second execution
+        /// Fails:  If when creating a duplicate project, an two additional projects now exist in project repo
+        /// </summary>
+        [Test]
+        public async Task DoubleExecutionTest()
         {
             await _logic.ExecuteAsync();
-            var projects = await _repo.ReadAllAsync();
+            var intermediaryProjects = await _repo.ReadAllAsync();
+            await _logic.ExecuteAsync();
 
-            Assert.IsTrue(projects.Count() > 0);
+            var finalProjects = await _repo.ReadAllAsync();
+
+            Assert.AreEqual(intermediaryProjects.Count(), finalProjects.Count());
         }
     }
 }

@@ -12,3 +12,4 @@ Properties
 
 # Do not include SQLite .db files in repository.
 *.db
+/SonarScanner.bat

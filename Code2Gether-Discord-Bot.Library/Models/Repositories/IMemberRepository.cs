@@ -8,6 +8,6 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 {
     public interface IMemberRepository : IDataRepository<Member>
     {
-        public Task<Member> ReadAsync(ulong snowflakeId);
+        public Task<Member> ReadFromSnowflakeAsync(ulong snowflakeId);
     }
 }

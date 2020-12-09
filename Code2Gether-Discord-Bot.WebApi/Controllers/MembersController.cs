@@ -91,7 +91,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">ID of the member to retrieve.</param>
         /// <returns>The data for the retrieved member.</returns>
         [HttpGet("{ID}", Name = "GetMember")]
-        public async Task<ActionResult<Member>> GetMemberAsync(long ID)
+        public async Task<ActionResult<Member>> GetMemberAsync(int ID)
         {
             var memberToReturn = await _dbContext.Members.FindAsync(ID);
 
@@ -107,7 +107,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">The ID of the member to delete.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{ID}", Name = "DeleteUser")]
-        public async Task<ActionResult> DeleteMemberASync(long ID)
+        public async Task<ActionResult> DeleteMemberASync(int ID)
         {
             var memberToDelete = await _dbContext.Members.FindAsync(ID);
 

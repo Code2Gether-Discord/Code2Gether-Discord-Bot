@@ -7,8 +7,7 @@ using System.Collections.Generic;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
-    [Table("MEMBER")]
-    public class Member
+    public class Member : IDataModel
     {
         #region Properties
         [Column("MEMBER_ID")]

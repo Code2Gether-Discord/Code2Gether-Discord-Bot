@@ -33,7 +33,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectToAdd">Project to add to database.</param>
         /// <returns>Action result containing the details of the added project.</returns>
         [HttpPost(Name = "PostProject")]
-        public async Task<ActionResult<Project>> AddProjectAsync(Project projectToAdd)
+        public async Task<ActionResult> AddProjectAsync(Project projectToAdd)
         {
             if (projectToAdd == null)
                 return BadRequest("Project is null.");
@@ -44,11 +44,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             await _dbContext.Projects.AddAsync(projectToAdd);
             await _dbContext.SaveChangesAsync();
 
-            var result = CreatedAtAction(actionName: "GetProject",
-                routeValues: new { ID = projectToAdd.ID },
-                value: projectToAdd);
-
-            return result;
+            return NoContent();
         }
 
         /// <summary>
@@ -106,7 +102,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="ID">THe ID of the project to delte.</param>
         /// <returns>No content.</returns>
         [HttpDelete("{ID}", Name = "DeleteProject")]
-        public async Task<ActionResult> DeleteProjectAsync(long ID)
+        public async Task<ActionResult> DeleteProjectAsync(int ID)
         {
             var projectToDelete = await _dbContext.Projects.FindAsync(ID);
 

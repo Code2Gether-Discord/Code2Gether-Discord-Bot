@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.Lib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.Tests", "Code2Gether-Discord-Bot.Tests\Code2Gether-Discord-Bot.Tests.csproj", "{473A61A7-CBF3-40F8-A183-06C0C466523A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot.WebApi", "Code2Gether-Discord-Bot.WebApi\Code2Gether-Discord-Bot.WebApi.csproj", "{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.WebApi", "Code2Gether-Discord-Bot.WebApi\Code2Gether-Discord-Bot.WebApi.csproj", "{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

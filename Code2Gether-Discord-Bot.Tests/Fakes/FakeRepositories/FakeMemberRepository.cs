@@ -25,7 +25,7 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories
             throw new Exception($"Failed to member project with ID {id}");
         }
 
-        public Task<Member> ReadAsync(ulong memberSnowflakeId)
+        public Task<Member> ReadFromSnowflakeAsync(ulong memberSnowflakeId)
         {
             return Task.FromResult(Members.Values.FirstOrDefault(p => p.SnowflakeId == memberSnowflakeId));
         }

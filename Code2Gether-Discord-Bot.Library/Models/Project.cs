@@ -8,7 +8,7 @@ using System.Linq;
 namespace Code2Gether_Discord_Bot.Library.Models
 {
     [Table("PROJECT")]
-    public class Project
+    public class Project : IDataModel
     {
         #region Fields
         private readonly ILazyLoader _lazyLoader;
@@ -36,6 +36,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             }
         }
         public List<Member> Members { get; set; } = new List<Member>();
+        [NotMapped]
         public bool IsActive => Members.Count() >= 2;
         #endregion
 

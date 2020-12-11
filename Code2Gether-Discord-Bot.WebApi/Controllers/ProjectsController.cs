@@ -41,6 +41,18 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             // Ensures we don't replace an existing project
             projectToAdd.ID = 0;
 
+            // Only use members from the DB, not from the de-serialized JSON.
+            var members = projectToAdd.Members.Select(x => x.ID).ToArray();
+
+            var membersToAdd = await _dbContext
+                .Members
+                .AsAsyncEnumerable()
+                .Where(x => members.Contains(x.ID))
+                .ToListAsync();
+
+            projectToAdd.Members.Clear();
+            projectToAdd.Members.AddRange(membersToAdd);
+
             await _dbContext.Projects.AddAsync(projectToAdd);
             await _dbContext.SaveChangesAsync();
 
@@ -54,7 +66,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// <param name="projectToUpdate">Project info to replace the current project.</param>
         /// <returns>No content.</returns>
         [HttpPut("{ID}", Name = "PutProject")]
-        public async Task<ActionResult<Project>> GetProjectAsync(int ID, Project projectToUpdate)
+        public async Task<ActionResult<Project>> UpdateProjectAsync(int ID, Project projectToUpdate)
         {
             var projectToRemove = await _dbContext.Projects.FindAsync(ID);
 

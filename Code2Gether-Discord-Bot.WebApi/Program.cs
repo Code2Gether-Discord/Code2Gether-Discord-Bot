@@ -1,13 +1,10 @@
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
+using Code2Gether_Discord_Bot.WebApi.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.WebApi
@@ -25,6 +22,7 @@ namespace Code2Gether_Discord_Bot.WebApi
             {
                 var dbContext = services.GetRequiredService<DiscordBotDbContext>();
                 await dbContext.Database.MigrateAsync();
+                // await dbContext.TestAsync();
             }
             catch (Exception e)
             {

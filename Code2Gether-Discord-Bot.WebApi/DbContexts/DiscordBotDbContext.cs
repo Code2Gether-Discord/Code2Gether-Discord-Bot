@@ -15,12 +15,15 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
         #region Methods
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"DataSource=Code2GetherDiscordBot.db", o =>
-            {
-                o.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-            });
-
             base.OnConfiguring(optionsBuilder);
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite(@"DataSource=Code2GetherDiscordBot.db", o =>
+                {
+                    o.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+                });
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

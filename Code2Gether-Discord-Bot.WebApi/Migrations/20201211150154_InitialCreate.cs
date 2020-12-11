@@ -7,30 +7,36 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "MEMBER",
+                name: "Members",
                 columns: table => new
                 {
-                    MEMBER_ID = table.Column<int>(type: "INTEGER", nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    MEMBER_SNOWFLAKE = table.Column<ulong>(type: "INTEGER", nullable: false)
+                    SnowflakeId = table.Column<ulong>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MEMBER", x => x.MEMBER_ID);
+                    table.PrimaryKey("PK_Members", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PROJECT",
+                name: "Projects",
                 columns: table => new
                 {
-                    PROJECT_ID = table.Column<int>(type: "INTEGER", nullable: false)
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PROJECT_NAME = table.Column<string>(type: "TEXT", nullable: false),
-                    MEMBER_ID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    AuthorID = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PROJECT", x => x.PROJECT_ID);
+                    table.PrimaryKey("PK_Projects", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Projects_Members_AuthorID",
+                        column: x => x.AuthorID,
+                        principalTable: "Members",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,16 +50,16 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                 {
                     table.PrimaryKey("PK_MemberProject", x => new { x.MembersID, x.ProjectsID });
                     table.ForeignKey(
-                        name: "FK_MemberProject_MEMBER_MembersID",
+                        name: "FK_MemberProject_Members_MembersID",
                         column: x => x.MembersID,
-                        principalTable: "MEMBER",
-                        principalColumn: "MEMBER_ID",
+                        principalTable: "Members",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MemberProject_PROJECT_ProjectsID",
+                        name: "FK_MemberProject_Projects_ProjectsID",
                         column: x => x.ProjectsID,
-                        principalTable: "PROJECT",
-                        principalColumn: "PROJECT_ID",
+                        principalTable: "Projects",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -61,6 +67,11 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                 name: "IX_MemberProject_ProjectsID",
                 table: "MemberProject",
                 column: "ProjectsID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_AuthorID",
+                table: "Projects",
+                column: "AuthorID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -69,10 +80,10 @@ namespace Code2Gether_Discord_Bot.WebApi.Migrations
                 name: "MemberProject");
 
             migrationBuilder.DropTable(
-                name: "MEMBER");
+                name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "PROJECT");
+                name: "Members");
         }
     }
 }

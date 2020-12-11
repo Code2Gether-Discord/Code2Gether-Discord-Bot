@@ -66,10 +66,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             if (memberToRemove == null)
                 return NotFound("Unable to find user");
 
-            _dbContext.Members.Remove(memberToRemove);
-
             memberToUpdate.ID = ID;
-            await _dbContext.Members.AddAsync(memberToUpdate);
+            _dbContext.Members.Update(memberToUpdate);
+
             await _dbContext.SaveChangesAsync();
 
             return NoContent();

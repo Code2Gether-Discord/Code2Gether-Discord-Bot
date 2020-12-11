@@ -24,7 +24,9 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
 
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite(@"DataSource=Code2GetherDiscordBot.db", o =>
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseSqlite(@"DataSource=Code2GetherDiscordBot.db", o =>
                     {
                         o.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
                     })
@@ -34,11 +36,14 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Project>()
                 .HasMany(x => x.Members)
                 .WithMany(x => x.Projects);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Project>()
+                .HasOne(x => x.Author);
         }
         #endregion
     }

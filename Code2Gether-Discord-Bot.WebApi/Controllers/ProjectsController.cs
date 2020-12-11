@@ -41,6 +41,10 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             // Ensures we don't replace an existing project
             projectToAdd.ID = 0;
 
+            var author = await _dbContext.Members.FindAsync(projectToAdd.Author.ID);
+
+            projectToAdd.Author = author;
+
             var members = projectToAdd.Members.Select(x => x.ID).ToArray();
 
             var membersToAdd = await _dbContext
@@ -72,10 +76,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             if (projectToRemove == null)
                 return NotFound("Unable to find project.");
 
-            _dbContext.Projects.Remove(projectToRemove);
-
             projectToUpdate.ID = ID;
-            await _dbContext.Projects.AddAsync(projectToUpdate);
+            _dbContext.Projects.Update(projectToUpdate);
+
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
@@ -126,25 +129,5 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             return NoContent();
         }
         #endregion
-
-        #region Methods
-        /*
-
-        private async Task<ProjectOutput> getProjectOutputAsync(Project project)
-        {
-            var userSnowflakes = await _dbContext
-                .ProjectMembers
-                .AsAsyncEnumerable()
-                .Where(x => x.ProjectID == project.ID)
-                .Select(x => x.Member.SnowflakeId)
-                .ToListAsync();
-
-            return new ProjectOutput(project, userSnowflakes);
-        }
-        */
-
-        #endregion
     }
-
-    public record ProjectOutput(Project Project, IList<ulong> MemberSnowflakeIds);
 }

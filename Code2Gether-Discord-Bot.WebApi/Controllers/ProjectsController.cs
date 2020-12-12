@@ -41,26 +41,15 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             // Ensures we don't replace an existing project
             projectToAdd.ID = 0;
 
-            var author = await _dbContext.Members.FindAsync(projectToAdd.Author.ID);
-
-            projectToAdd.Author = author;
-
-            var members = projectToAdd.Members.Select(x => x.ID).ToArray();
-
-            var membersToAdd = await _dbContext
-                .Members
-                .AsAsyncEnumerable()
-                .Where(x => members.Contains(x.ID))
-                .ToListAsync();
-
-            projectToAdd.Members.Clear();
-            projectToAdd.Members.AddRange(membersToAdd);
+            await ProcessProjectMembers(projectToAdd);
 
             var query = await _dbContext.Projects.AddAsync(projectToAdd);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
+
+
 
         /// <summary>
         /// Updates the project with the input ID.
@@ -77,6 +66,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
                 return NotFound("Unable to find project.");
 
             projectToUpdate.ID = ID;
+
+            await ProcessProjectMembers(projectToUpdate);
+
             _dbContext.Projects.Update(projectToUpdate);
 
             await _dbContext.SaveChangesAsync();
@@ -127,6 +119,26 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
+        }
+        #endregion
+
+        #region Methods
+        private async Task ProcessProjectMembers(Project projectToAdd)
+        {
+            var author = await _dbContext.Members.FindAsync(projectToAdd.Author.ID);
+
+            projectToAdd.Author = author;
+
+            var members = projectToAdd.Members.Select(x => x.ID).ToArray();
+
+            var membersToAdd = await _dbContext
+                .Members
+                .AsAsyncEnumerable()
+                .Where(x => members.Contains(x.ID))
+                .ToListAsync();
+
+            projectToAdd.Members.Clear();
+            projectToAdd.Members.AddRange(membersToAdd);
         }
         #endregion
     }

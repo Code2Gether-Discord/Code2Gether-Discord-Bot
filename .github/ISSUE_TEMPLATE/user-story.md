@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Given...**
-Some context or condition exits
+Some context or condition exists
 Ex: Given my bank account is in credit, and I made no withdrawals recently
 
 **When...**

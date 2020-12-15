@@ -33,4 +33,8 @@
     <ProjectReference Include="..\Code2Gether-Discord-Bot.Library\Code2Gether-Discord-Bot.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

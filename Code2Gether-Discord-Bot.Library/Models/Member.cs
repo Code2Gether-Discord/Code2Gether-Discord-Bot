@@ -7,15 +7,11 @@ using Newtonsoft.Json;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
-    [Table("MEMBER")]
     public class Member : IDataModel
     {
         #region Properties
-        [Column("MEMBER_ID")]
         [Key]
         public virtual int ID { get; set; }
-        [Column("SNOWFLAKE_ID")]
-        [Required]
         public virtual ulong SnowflakeId { get; set; }
         public virtual List<Project> Projects { get; set; } = new List<Project>();
         [JsonIgnore]

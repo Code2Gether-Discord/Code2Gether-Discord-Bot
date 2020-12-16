@@ -11,7 +11,7 @@ namespace Code2Gether_Discord_Bot.Static
         public static IConfig GetConfig()
         {
             // Default value
-            IConfig config = new Config("c!", "Nzg4MjgxNDgyMDE5NDcxMzYw.X9hOVg.0Ee2JVhgLbIAg8vB17bW43IEPfs", true);
+            IConfig config = new Config("c!", "PLACEHOLDER", true);
             try
             {
                 config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile.FullName));

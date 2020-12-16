@@ -22,6 +22,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             _logger.Log(_context);
 
+
             // Set from a private method
             string title = string.Empty;    // Title for leet answer
             string description = string.Empty;  // Leet answer response

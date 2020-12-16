@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -26,6 +27,15 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             {
                 variables.titleSlug = qName;
             }
+        }
+        public class Question
+        {
+            public string questionId;
+            public string questionFrontendId;
+            public object boundTopicId;
+            public string title;
+            public string titleSlug;
+            public string content;
         }
         public class Variables
         {
@@ -74,9 +84,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var response = await client.PostAsync(url, data);
             
             string result = response.Content.ReadAsStringAsync().Result;
-            var desJson = JsonConvert.DeserializeObject(result);
+            dynamic desJson = JsonConvert.DeserializeObject(result);
+            var re = new Regex(@"<[^>]*>");
 
-            return (title, result); 
+            string plainResponse = desJson.data.question.content;
+            plainResponse = re.Replace(plainResponse, "");
+            plainResponse = plainResponse.Replace("&nbsp;", "");
+            return (desJson.data.question.title, plainResponse); 
         
         }
     }

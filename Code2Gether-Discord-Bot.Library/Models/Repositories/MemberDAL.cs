@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
@@ -9,9 +10,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public MemberDAL(string connectionString) : base(connectionString) { }
 
-        public Task<Member> ReadFromSnowflakeAsync(ulong snowflakeId)
+        public async Task<Member> ReadFromSnowflakeAsync(ulong snowflakeId)
         {
-            throw new NotImplementedException();
+            var users = await ReadAllAsync();
+            var queriedUser = users.FirstOrDefault(u => u.SnowflakeId.Equals(snowflakeId));
+            return queriedUser;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
@@ -9,9 +10,13 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public ProjectDAL(string connectionString) : base(connectionString) { }
 
-        public Task<Project> ReadAsync(string projectName)
+        public async Task<Project> ReadAsync(string projectName)
         {
-            throw new NotImplementedException();
+            var projects = await ReadAllAsync();
+            var queriedProject = projects
+                .FirstOrDefault(p => p.Name
+                    .Equals(projectName));
+            return queriedProject;
         }
     }
 }

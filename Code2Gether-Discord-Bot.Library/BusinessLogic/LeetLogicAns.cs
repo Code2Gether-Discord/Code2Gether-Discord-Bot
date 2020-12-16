@@ -21,8 +21,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         public Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
-
-
+            
             // Set from a private method
             string title = string.Empty;    // Title for leet answer
             string description = string.Empty;  // Leet answer response

@@ -15,7 +15,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private ILogger _logger;
         private ICommandContext _context;
         private string _args;
-               public LeetLogic(ILogger logger, ICommandContext context, string args)
+        public LeetLogic(ILogger logger, ICommandContext context, string args)
         {
             _logger = logger;
             _context = context;
@@ -25,8 +25,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             _logger.Log(_context);
 
-          
-            var result =  await GetQuestions(_args.Replace("-", "").ToLower());
+
+            var result = await GetQuestions(_args.Replace("-", "").ToLower());
             // Set from a private method
             string title = result.Item1;    // Title for leet question
             string description = result.Item2;  // Prompt for leet question
@@ -39,31 +39,31 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             return await Task.FromResult(embed);
         }
-       private async Task<(string, string)> GetQuestions(string questionTitle)
+        private async Task<(string, string)> GetQuestions(string questionTitle)
         {
-                var formattedQues = questionTitle.Replace(" ", "-").ToLower(); //Changes spaces to dashes, to be sent in the url.
-                var values = new JSONRequest(formattedQues);
-                var json = JsonConvert.SerializeObject(values);
+            var formattedQues = questionTitle.Replace(" ", "-").ToLower(); //Changes spaces to dashes, to be sent in the url.
+            var values = new JSONRequest(formattedQues);
+            var json = JsonConvert.SerializeObject(values);
             string plainDescription = "You requested an invalid question";
             string title = "Invalid";
-                var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-                const string url = "https://leetcode.com/graphql";
-                using var client = new HttpClient();
+            const string url = "https://leetcode.com/graphql";
+            using var client = new HttpClient();
 
-                var response = await client.PostAsync(url, data);
+            var response = await client.PostAsync(url, data);
 
-                string result = await response.Content.ReadAsStringAsync();
-              var  desJson = JsonConvert.DeserializeObject<JSONResponse>(result);
-              var tagRemover = new Regex(@"<[^>]*>"); //using Regex to remove HTML tags in JSON response.
+            string result = await response.Content.ReadAsStringAsync();
+            var desJson = JsonConvert.DeserializeObject<JSONResponse>(result);
+            var tagRemover = new Regex(@"<[^>]*>"); //using Regex to remove HTML tags in JSON response.
             if (desJson.Data != null)
             {
-                title = desJson.Data.Question.Title ;
+                title = desJson.Data.Question.Title;
                 plainDescription = $"*{desJson.Data.Question.TopicTags[0].Name}* \n" + desJson.Data.Question.Content;
                 plainDescription = tagRemover.Replace(plainDescription, "").Replace("&nbsp;", "");
             }
             return (title, plainDescription);
         }
-       
+
     }
 }

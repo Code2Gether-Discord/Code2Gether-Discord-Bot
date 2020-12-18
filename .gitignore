@@ -1,5 +1,9 @@
-.vs
-bin
-obj
-Properties
+# Directories
+.vs/
+.usr/
+bin/
+obj/
+Properties/
+
+# File extensions
 *.json

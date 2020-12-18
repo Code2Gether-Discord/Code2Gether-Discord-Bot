@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
-using Code2Gether_Discord_Bot.Library.Models;
+﻿using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Globalization;
 using Newtonsoft.Json;
+using System.Globalization;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using System;
+using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -17,7 +15,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private ILogger _logger;
         private ICommandContext _context;
         private string _args;
-        private static readonly HttpClient client = new HttpClient();
         public class JSONRequest
         {
            public  string operationName = "questionData";
@@ -29,6 +26,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 variables.titleSlug = qName;
             }
         }
+
         public class Question
         {
             public string questionId;
@@ -38,10 +36,24 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             public string titleSlug;
             public string content;
         }
+
         public class Variables
         {
            public string titleSlug;
           
+        }
+        public class JSONResponse
+        {
+          public  DataJSONResponse data = new DataJSONResponse();
+        }
+        public class DataJSONResponse
+        {
+           public QuestionJSONResponse question = new QuestionJSONResponse();
+        }
+        public class QuestionJSONResponse
+        {
+            public string title { get; set; }
+            public string content { get; set; }
         }
         public LeetLogic(ILogger logger, ICommandContext context, string args)
         {
@@ -49,13 +61,12 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _context = context;
             _args = args;
         }
-
         public async Task<Embed> ExecuteAsync()
         {
             _logger.Log(_context);
 
           
-            var result =  await getQuestions(_args.Replace("-", "").ToLower());
+            var result =  await GetQuestions(_args.Replace("-", "").ToLower());
             // Set from a private method
             string title = result.Item1;    // Title for leet question
             string description = result.Item2;  // Prompt for leet question
@@ -68,32 +79,30 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             return await Task.FromResult(embed);
         }
-       public async Task<(string, string)> getQuestions(string qName)
+       private async Task<(string, string)> GetQuestions(string questionTitle)
         {
-                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                var title = textInfo.ToTitleCase(qName.Replace("-", " "));
-                var formattedQues = qName.Replace(" ", "-").ToLower();
+                var formattedQues = questionTitle.Replace(" ", "-").ToLower(); //Changes spaces to dashes, to be sent in the url.
                 var values = new JSONRequest(formattedQues);
                 var json = JsonConvert.SerializeObject(values);
-
+            string plainDescription = "You requested an invalid question";
+            string title = "Invalid";
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var url = "https://leetcode.com/graphql";
+                const string url = "https://leetcode.com/graphql";
                 using var client = new HttpClient();
 
                 var response = await client.PostAsync(url, data);
 
-                string result = response.Content.ReadAsStringAsync().Result;
-              dynamic  desJson = JsonConvert.DeserializeObject(result);
-                var re = new Regex(@"<[^>]*>");
-
-               string plainResponse = desJson.data.question.content;
-                plainResponse = re.Replace(plainResponse, "");
-                plainResponse = plainResponse.Replace("&nbsp;", "");
-
-       
-            return (desJson.data.question.title, plainResponse);
-
+                string result = await response.Content.ReadAsStringAsync();
+              var  desJson = JsonConvert.DeserializeObject<JSONResponse>(result);
+              var tagRemover = new Regex(@"<[^>]*>"); //using Regex to remove HTML tags in JSON response.
+            if (desJson.data.question != null)
+            {
+                title = desJson.data.question.title;
+                plainDescription = desJson.data.question.content;
+                plainDescription = tagRemover.Replace(plainDescription, "").Replace("&nbsp;", "");
+            }
+            return (title, plainDescription);
         }
        
     }

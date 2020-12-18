@@ -22,8 +22,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _logger.Log(_context);
             
             // Set from a private method
-            string title = string.Empty;    // Title for leet answer
-            string description = string.Empty;  // Leet answer response
+            string title = "Coming Soon";    // Title for leet answer
+            string description = "This command is still under development.";  // Leet answer response
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)

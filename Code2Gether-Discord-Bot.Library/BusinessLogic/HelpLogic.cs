@@ -34,6 +34,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .AddField("Commands", GetCommandText())
                 .WithAuthor(_context.Message.Author)
                 .Build();
+
             return Task.FromResult(embed);
         }
 

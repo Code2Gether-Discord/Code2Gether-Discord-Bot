@@ -63,7 +63,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var result = await response.Content.ReadAsStringAsync();
             var desJson = JsonConvert.DeserializeObject<JsonResponse>(result);
             var tagRemover = new Regex(@"<[^>]*>"); // Using Regex to remove HTML tags in JSON response.
-            if (desJson.Data.Question != null)
+            if (desJson.Data?.Question != null)
             {
                 title = desJson.Data.Question.Title;
                 plainDescription = $"*{desJson.Data.Question.TopicTags[0].Name}* \n{desJson.Data.Question.Content}";

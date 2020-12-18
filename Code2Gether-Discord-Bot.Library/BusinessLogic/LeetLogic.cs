@@ -8,6 +8,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using System;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -69,29 +70,31 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         }
        public async Task<(string, string)> getQuestions(string qName)
         {
-            
-            TextInfo textInfo =  new CultureInfo("en-US", false).TextInfo;
-            var title =  textInfo.ToTitleCase(qName.Replace("-", " "));
-            var formattedQues = qName.Replace(" ", "-").ToLower();
-            var values = new JSONRequest(formattedQues);
-            var json = JsonConvert.SerializeObject(values);
+                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                var title = textInfo.ToTitleCase(qName.Replace("-", " "));
+                var formattedQues = qName.Replace(" ", "-").ToLower();
+                var values = new JSONRequest(formattedQues);
+                var json = JsonConvert.SerializeObject(values);
 
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "https://leetcode.com/graphql";
-            using var client = new HttpClient();
+                var url = "https://leetcode.com/graphql";
+                using var client = new HttpClient();
 
-            var response = await client.PostAsync(url, data);
-            
-            string result = response.Content.ReadAsStringAsync().Result;
-            dynamic desJson = JsonConvert.DeserializeObject(result);
-            var re = new Regex(@"<[^>]*>");
+                var response = await client.PostAsync(url, data);
 
-            string plainResponse = desJson.data.question.content;
-            plainResponse = re.Replace(plainResponse, "");
-            plainResponse = plainResponse.Replace("&nbsp;", "");
-            return (desJson.data.question.title, plainResponse); 
-        
+                string result = response.Content.ReadAsStringAsync().Result;
+              dynamic  desJson = JsonConvert.DeserializeObject(result);
+                var re = new Regex(@"<[^>]*>");
+
+               string plainResponse = desJson.data.question.content;
+                plainResponse = re.Replace(plainResponse, "");
+                plainResponse = plainResponse.Replace("&nbsp;", "");
+
+       
+            return (desJson.data.question.title, plainResponse);
+
         }
+       
     }
 }

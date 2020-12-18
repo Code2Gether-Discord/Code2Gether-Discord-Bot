@@ -2,7 +2,6 @@
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
-
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class LeetAnsLogic : IBusinessLogic
@@ -35,5 +34,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             return Task.FromResult(embed);
         }
+
     }
 }

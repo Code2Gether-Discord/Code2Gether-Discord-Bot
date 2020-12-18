@@ -2,11 +2,11 @@
 using Discord;
 using Discord.Commands;
 using Newtonsoft.Json;
-using System.Globalization;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static Code2Gether_Discord_Bot.Library.Models.LeetcodeQuestion;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -15,37 +15,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private ILogger _logger;
         private ICommandContext _context;
         private string _args;
-        public class JSONRequest
-        {
-           public  string operationName = "questionData";
-            public Variables variables = new Variables();
-
-            public string query = "query questionData($titleSlug: String!) {\n  question(titleSlug: $titleSlug) {\n    questionId\n    questionFrontendId\n    boundTopicId\n    title\n    titleSlug\n    content\n    translatedTitle\n    translatedContent\n    isPaidOnly\n    difficulty\n    likes\n    dislikes\n    isLiked\n    similarQuestions\n    contributors {\n      username\n      profileUrl\n      avatarUrl\n      __typename\n    }\n    topicTags {\n      name\n      slug\n      translatedName\n      __typename\n    }\n    companyTagStats\n    codeSnippets {\n      lang\n      langSlug\n      code\n      __typename\n    }\n    stats\n    hints\n    solution {\n      id\n      canSeeDetail\n      paidOnly\n      hasVideoSolution\n      __typename\n    }\n    status\n    sampleTestCase\n    metaData\n    judgerAvailable\n    judgeType\n    mysqlSchemas\n    enableRunCode\n    enableTestMode\n    enableDebugger\n    envInfo\n    libraryUrl\n    adminUrl\n    __typename\n  }\n}\n";
-            public JSONRequest(string qName)
-            {
-                variables.titleSlug = qName;
-            }
-        }
-
-             public class Variables
-        {
-           public string titleSlug;
-          
-        }
-        public class JSONResponse
-        {
-          public  DataJSONResponse data = new DataJSONResponse();
-        }
-        public class DataJSONResponse
-        {
-           public QuestionJSONResponse question = new QuestionJSONResponse();
-        }
-        public class QuestionJSONResponse
-        {
-            public string title { get; set; }
-            public string content { get; set; }
-        }
-        public LeetLogic(ILogger logger, ICommandContext context, string args)
+               public LeetLogic(ILogger logger, ICommandContext context, string args)
         {
             _logger = logger;
             _context = context;
@@ -86,10 +56,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 string result = await response.Content.ReadAsStringAsync();
               var  desJson = JsonConvert.DeserializeObject<JSONResponse>(result);
               var tagRemover = new Regex(@"<[^>]*>"); //using Regex to remove HTML tags in JSON response.
-            if (desJson.data.question != null)
+            if (desJson.Data != null)
             {
-                title = desJson.data.question.title;
-                plainDescription = desJson.data.question.content;
+                title = desJson.Data.Question.Title ;
+                plainDescription = $"*{desJson.Data.Question.TopicTags[0].Name}* \n" + desJson.Data.Question.Content;
                 plainDescription = tagRemover.Replace(plainDescription, "").Replace("&nbsp;", "");
             }
             return (title, plainDescription);

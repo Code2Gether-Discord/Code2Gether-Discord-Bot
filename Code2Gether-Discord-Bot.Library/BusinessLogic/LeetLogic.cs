@@ -67,7 +67,9 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             {
                 title = desJson.Data.Question.Title;
                 plainDescription = $"*{desJson.Data.Question.TopicTags[0].Name}* \n{desJson.Data.Question.Content}";
-                plainDescription = tagRemover.Replace(plainDescription, "").Replace("&nbsp;", "");
+                plainDescription = tagRemover
+                    .Replace(plainDescription, "")
+                    .Replace("&nbsp;", "");
             }
 
             return (title, plainDescription);

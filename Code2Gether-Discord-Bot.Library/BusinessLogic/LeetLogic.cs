@@ -27,17 +27,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
         }
 
-        public class Question
-        {
-            public string questionId;
-            public string questionFrontendId;
-            public object boundTopicId;
-            public string title;
-            public string titleSlug;
-            public string content;
-        }
-
-        public class Variables
+             public class Variables
         {
            public string titleSlug;
           

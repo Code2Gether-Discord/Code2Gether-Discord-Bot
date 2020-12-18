@@ -27,8 +27,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             _logger.Log(_context);
 
-
             var result = await GetQuestions(_args);
+
             // Set from a private method
             var title = result.Item1; // Title for leet question
             var description = result.Item2; // Prompt for leet question
@@ -62,7 +62,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
             var result = await response.Content.ReadAsStringAsync();
             var desJson = JsonConvert.DeserializeObject<JsonResponse>(result);
-            var tagRemover = new Regex(@"<[^>]*>"); //using Regex to remove HTML tags in JSON response.
+            var tagRemover = new Regex(@"<[^>]*>"); // Using Regex to remove HTML tags in JSON response.
             if (desJson.Data != null)
             {
                 title = desJson.Data.Question.Title;

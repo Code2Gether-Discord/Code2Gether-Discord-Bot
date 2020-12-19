@@ -10,23 +10,17 @@ using Newtonsoft.Json;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class LeetLogic : IBusinessLogic
+    public class LeetLogic : BaseLogic
     {
         private readonly string _args;
-        private readonly ICommandContext _context;
-        private readonly ILogger _logger;
 
-        public LeetLogic(ILogger logger, ICommandContext context, string args)
+        public LeetLogic(ILogger logger, ICommandContext context, string args) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _args = args;
         }
 
-        public async Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var result = await GetQuestions(_args);
 
             // Set from a private method

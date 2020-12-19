@@ -8,25 +8,19 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class CreateProjectLogic : IBusinessLogic
+    public class CreateProjectLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IProjectManager _projectManager;
         private string _arguments;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _projectManager = projectManager;
             _arguments = arguments;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public override Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             CreateInactiveProject(out string title, out string description);
 
             var embed = new EmbedBuilder()

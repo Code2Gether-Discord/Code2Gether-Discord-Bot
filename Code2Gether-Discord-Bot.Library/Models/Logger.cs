@@ -6,10 +6,8 @@ namespace Code2Gether_Discord_Bot.Library.Models
 {
     public class Logger : ILogger
     {
-        private string _typeName { get; set; } = "N/A";
-
-        public Logger() { }
-
+        private string _typeName { get; }
+        
         public Logger(Type classContext)
         {
             _typeName = classContext.Name;
@@ -26,9 +24,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public void Log(LogSeverity level, string message, Exception exception) =>
             Log(level, $"{message} | Exception: {exception.Message}{Environment.NewLine}{exception.StackTrace}");
 
-        public void Log(ICommandContext context)
+        public void Log(Type logicClass, ICommandContext context)
         {
-            Log(LogSeverity.Info, $"Executed by {context.Message.Author} on {context.Guild} #{context.Channel}");
+            Log(LogSeverity.Info, $"{logicClass.Name} executed by {context.Message.Author} on {context.Guild} #{context.Channel}");
         }
     }
 }

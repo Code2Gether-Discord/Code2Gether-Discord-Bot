@@ -7,24 +7,18 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class PingLogic : IBusinessLogic
+    public class PingLogic : BaseLogic
     {
-        ILogger _logger;
-        ICommandContext _context;
-        int _latency;   // Latency must be passed in since it's a client function
+        private readonly int _latency;   // Latency must be passed in since it's a client function
 
-        public PingLogic(ILogger logger, ICommandContext context, int latency)
+        public PingLogic(ILogger logger, ICommandContext context, int latency) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _latency = latency;
         }
 
-        public async Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
-            string socLatencyString = $"Socket Latency: {_latency}ms";
+            var socLatencyString = $"Socket Latency: {_latency}ms";
             Embed embed;
 
             try

@@ -1,35 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class JoinProjectLogic : IBusinessLogic
+    public class JoinProjectLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IProjectManager _projectManager;
         private string _arguments;
 
-        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
+        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _projectManager = projectManager;
             _arguments = arguments;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public override Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             JoinProject(out string title, out string description);
 
             var embed = new EmbedBuilder()

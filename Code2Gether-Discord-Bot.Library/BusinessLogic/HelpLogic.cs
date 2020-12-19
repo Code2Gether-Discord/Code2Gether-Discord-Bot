@@ -2,31 +2,24 @@
 using Discord;
 using Discord.Commands;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class HelpLogic : IBusinessLogic
+    public class HelpLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IEnumerable<ModuleInfo> _modules;
         private string _prefix;
 
-        public HelpLogic(ILogger logger, ICommandContext context, IEnumerable<ModuleInfo> modules, string prefix)
+        public HelpLogic(ILogger logger, ICommandContext context, IEnumerable<ModuleInfo> modules, string prefix) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _modules = modules;
             _prefix = prefix;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public override Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
                 .WithTitle("Help")

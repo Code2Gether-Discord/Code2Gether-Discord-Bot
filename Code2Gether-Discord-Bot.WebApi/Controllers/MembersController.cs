@@ -1,5 +1,4 @@
-﻿using System;
-using Code2Gether_Discord_Bot.Library.Models;
+﻿using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.WebApi.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -94,10 +93,25 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         {
             var memberToReturn = await _dbContext.Members.FindAsync(ID);
 
-            if (memberToReturn == null)
-                return NotFound("Could not find user.");
+            return memberToReturn == null
+                ? NotFound("Could not find user.")
+                : memberToReturn;
+        }
 
-            return memberToReturn;
+        /// <summary>
+        /// Gets a single member based on the member's snowflake ID.
+        /// </summary>
+        /// <param name="memberName">Snowflake ID of the member to retrieve.</param>
+        /// <returns>The data for the retrieved member.</returns>
+        [HttpGet("snowflakeID={snowflakeID}", Name = "GetMember")]
+        public async Task<ActionResult<Member>> GetMemberAsync(ulong snowflakeID)
+        {
+            var memberToReturn = await _dbContext.Members
+                .FirstOrDefaultAsync(x => x.SnowflakeId == snowflakeID);
+
+            return memberToReturn == null
+                ? NotFound($"Could not find member with snowflake ID {snowflakeID}")
+                : memberToReturn;
         }
 
         /// <summary>

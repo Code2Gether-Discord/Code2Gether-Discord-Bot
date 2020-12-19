@@ -1,9 +1,8 @@
-﻿using System;
-using Discord;
+﻿using Discord;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -14,8 +13,8 @@ namespace Code2Gether_Discord_Bot.Library.Models
         public virtual int ID { get; set; }
         public virtual ulong SnowflakeId { get; set; }
         public virtual List<Project> Projects { get; set; } = new List<Project>();
-        [JsonIgnore]
         [NotMapped]
+        [JsonIgnore]
         public IUser DiscordUserInfo { get; set; }
         #endregion
 

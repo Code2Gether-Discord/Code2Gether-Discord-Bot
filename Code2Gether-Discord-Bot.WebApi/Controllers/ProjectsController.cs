@@ -96,10 +96,25 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         {
             var projectToReturn = await _dbContext.Projects.FindAsync(ID);
 
-            if (projectToReturn == null)
-                return NotFound("Could not find project.");
+            return projectToReturn == null
+                ? NotFound($"Could not find project with ID {ID}")
+                : projectToReturn;
+        }
 
-            return projectToReturn;
+        /// <summary>
+        /// Gets a single project based on project name.
+        /// </summary>
+        /// <param name="projectName">Bame of the project to retrieve.</param>
+        /// <returns>The data for the retrieved project.</returns>
+        [HttpGet("projectName={projectName}", Name="GetProjectName")]
+        public async Task<ActionResult<Project>> GetProjectAsync(string projectName)
+        {
+            var project = await _dbContext.Projects
+                .FirstOrDefaultAsync(x => x.Name == projectName);
+
+            return project == null
+                ? NotFound($"Unable to find project with name {projectName}")
+                : project;
         }
 
         /// <summary>

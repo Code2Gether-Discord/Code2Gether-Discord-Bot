@@ -9,21 +9,14 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class InfoLogic : IBusinessLogic
+    public class InfoLogic : BaseLogic
     {
-        ILogger _logger;
-        ICommandContext _context;
-
-        public InfoLogic(ILogger logger, ICommandContext context)
+        public InfoLogic(ILogger logger, ICommandContext context) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public override Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var app = _context.Client.GetApplicationInfoAsync().Result;
             var guilds = _context.Client.GetGuildsAsync().Result;
             

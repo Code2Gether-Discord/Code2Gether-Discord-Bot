@@ -9,6 +9,6 @@ namespace Code2Gether_Discord_Bot.Static
     public class ManagerFactory
     {
         public static IProjectManager GetProjectManager() =>
-            new ProjectManager(RepositoryFactory.GetProjectRepository());
+            new ProjectManager(RepositoryFactory.GetMemberRepository(), RepositoryFactory.GetProjectRepository());
     }
 }

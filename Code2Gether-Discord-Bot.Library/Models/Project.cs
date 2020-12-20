@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
@@ -22,12 +23,33 @@ namespace Code2Gether_Discord_Bot.Library.Models
         #region Constructors
         public Project() { }
 
-        public Project(int id, string name, Member author) : this()
+        public Project(string name, Member author) : this()
         {
-            ID = id;
             Name = name;
             Author = author;
         }
+        #endregion
+
+        #region Methods
+
+        public override string ToString()
+        {
+            var nl = Environment.NewLine;
+
+            var sb = new StringBuilder();
+
+            sb.Append($"Project Name: {Name}{nl}");
+            sb.Append($"Author: {Author}{nl}");
+
+            sb.Append($"Project Members:{nl}");
+            foreach (var member in Members)
+            {
+                sb.Append($"\t{member}{nl}");
+            }
+
+            return sb.ToString();
+        }
+
         #endregion
     }
 }

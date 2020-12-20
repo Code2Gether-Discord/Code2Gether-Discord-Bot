@@ -17,7 +17,8 @@ namespace Code2Gether_Discord_Bot.Tests
     internal class CreateProjectTests
     {
         private IBusinessLogic _logic;
-        private IProjectRepository _repo;
+        private IMemberRepository _memberRepository;
+        private IProjectRepository _projectRepository;
 
         [SetUp]
         public void Setup()
@@ -54,7 +55,8 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = fakeUser
             };
 
-            _repo = new FakeProjectRepository();
+            _memberRepository = new FakeMemberRepository();
+            _projectRepository = new FakeProjectRepository();
 
             _logic = new CreateProjectLogic(new Logger(GetType()), new FakeCommandContext()
             {
@@ -63,7 +65,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = fakeUser
-            }, new ProjectManager(_repo), "unittest");
+            }, new ProjectManager(_memberRepository, _projectRepository), "unittest");
         }
 
         [Test]
@@ -77,9 +79,9 @@ namespace Code2Gether_Discord_Bot.Tests
         [Test]
         public async Task SingleExecutionTest()
         {
-            var initialProjects = await _repo.ReadAllAsync();
+            var initialProjects = await _projectRepository.ReadAllAsync();
             await _logic.ExecuteAsync();
-            var finalProjects = await _repo.ReadAllAsync();
+            var finalProjects = await _projectRepository.ReadAllAsync();
 
             Assert.AreEqual(initialProjects.Count() + 1, finalProjects.Count());
         }
@@ -92,10 +94,10 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task DoubleExecutionTest()
         {
             await _logic.ExecuteAsync();
-            var intermediaryProjects = await _repo.ReadAllAsync();
+            var intermediaryProjects = await _projectRepository.ReadAllAsync();
             await _logic.ExecuteAsync();
 
-            var finalProjects = await _repo.ReadAllAsync();
+            var finalProjects = await _projectRepository.ReadAllAsync();
 
             Assert.AreEqual(intermediaryProjects.Count(), finalProjects.Count());
         }

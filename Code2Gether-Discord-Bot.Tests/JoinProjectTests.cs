@@ -16,7 +16,8 @@ namespace Code2Gether_Discord_Bot.Tests
     internal class JoinProjectTests
     {
         private IBusinessLogic _logic;
-        private IProjectRepository _repo;
+        private IMemberRepository _memberRepository;
+        private IProjectRepository _projectRepository;
 
         [SetUp]
         public void Setup()
@@ -53,11 +54,13 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = fakeuser
             };
 
-            _repo = new FakeProjectRepository()
+            _memberRepository = new FakeMemberRepository();
+
+            _projectRepository = new FakeProjectRepository()
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "UnitTestProject", user)},
+                    {0, new Project("UnitTestProject", user)},
                 }
             };
 
@@ -68,7 +71,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Guild = guild,
                 Message = message,
                 User = fakeuser
-            }, new ProjectManager(_repo), "UnitTestProject");
+            }, new ProjectManager(_memberRepository, _projectRepository), "UnitTestProject");
         }
 
         [Test]
@@ -83,7 +86,7 @@ namespace Code2Gether_Discord_Bot.Tests
         public async Task SingleExecutionTest()
         {
             await _logic.ExecuteAsync();
-            var project = await _repo.ReadAsync(0);
+            var project = await _projectRepository.ReadAsync(0);
             Assert.AreEqual(1, project.Members.Count);
         }
 
@@ -96,7 +99,7 @@ namespace Code2Gether_Discord_Bot.Tests
         {
             await _logic.ExecuteAsync();
             await _logic.ExecuteAsync();
-            var project = await _repo.ReadAsync(0);
+            var project = await _projectRepository.ReadAsync(0);
             
             Assert.AreEqual(1, project.Members.Count);
         }

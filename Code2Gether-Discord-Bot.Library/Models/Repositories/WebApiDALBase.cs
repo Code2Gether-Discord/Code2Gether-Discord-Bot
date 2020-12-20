@@ -1,6 +1,7 @@
 ﻿using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 {
@@ -8,7 +9,7 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
         where TDataModel : class, IDataModel
     {
         protected string _connectionString;
-        protected abstract string tableRoute { get; }
+        protected abstract string _tableRoute { get; }
 
         protected WebApiDALBase(string connectionString)
         {
@@ -17,55 +18,55 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public async Task<bool> CreateAsync(TDataModel newModel)
         {
-            var client = getClient();
+            var client = GetClient();
 
-            var request = new RestRequest(tableRoute);
+            var request = new RestRequest(_tableRoute);
 
-            request.AddJsonBody(newModel);
+            var jsonBody = SerializeModel(newModel);
+
+            request.AddJsonBody(jsonBody, "application/json");
 
             var result = await client.ExecutePostAsync<TDataModel>(request);
-
-            // Log result information?
-
+            
             return result.IsSuccessful;
+        }
+
+        protected virtual string SerializeModel(TDataModel modelToSerialize)
+        {
+            var settings = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+            return JsonConvert.SerializeObject(modelToSerialize, settings);
         }
 
         public async Task<IEnumerable<TDataModel>> ReadAllAsync()
         {
-            var client = getClient();
+            var client = GetClient();
 
-            var request = new RestRequest(tableRoute);
+            var request = new RestRequest(_tableRoute);
 
             var result = await client.ExecuteGetAsync<IList<TDataModel>>(request);
-
-            // Log result information?
-
+            
             return result.IsSuccessful ? result.Data : null;
         }
 
         public async Task<TDataModel> ReadAsync(int id)
         {
-            var client = getClient();
+            var client = GetClient();
 
-            var request = new RestRequest($"{tableRoute}/{id}");
+            var request = new RestRequest($"{_tableRoute}/{id}");
 
             var result = await client.ExecuteGetAsync<TDataModel>(request);
-
-            // Log result information?
 
             return result.IsSuccessful ? result.Data : null;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var client = getClient();
+            var client = GetClient();
 
-            var request = new RestRequest($"{tableRoute}/{id}", Method.DELETE);
+            var request = new RestRequest($"{_tableRoute}/{id}", Method.DELETE);
 
             var result = await client.ExecuteAsync<TDataModel>(request);
-
-            // Log result information?
-
+            
             return result.IsSuccessful;
         }
 
@@ -75,26 +76,23 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
             if (modelToUpdate == null)
             {
-                // Log error?
                 return false;
             }
 
-            existingModel.ID = existingModel.ID;
+            var client = GetClient();
 
-            var client = getClient();
+            var request = new RestRequest($"{_tableRoute}/{existingModel.ID}", Method.PUT);
 
-            var request = new RestRequest($"{tableRoute}/{existingModel.ID}", Method.PUT);
+            var jsonBody = SerializeModel(existingModel); // Had this set to the old model. Whoops!
 
-            request.AddJsonBody(existingModel);
+            request.AddJsonBody(jsonBody);
 
             var result = await client.ExecuteAsync<TDataModel>(request);
-
-            // Log result information?
 
             return result.IsSuccessful;
         }
 
-        protected RestClient getClient()
+        protected RestClient GetClient()
         {
             // Put any authentication protocols here?
             return new RestClient(_connectionString);

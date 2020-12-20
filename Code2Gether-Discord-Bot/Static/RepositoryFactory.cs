@@ -6,5 +6,8 @@ namespace Code2Gether_Discord_Bot.Static
     {
         public static IProjectRepository GetProjectRepository() =>
             new ProjectDAL(UtilityFactory.GetConfig().ConnectionString);
+
+        public static IMemberRepository GetMemberRepository() =>
+            new MemberDAL(UtilityFactory.GetConfig().ConnectionString);
     }
 }

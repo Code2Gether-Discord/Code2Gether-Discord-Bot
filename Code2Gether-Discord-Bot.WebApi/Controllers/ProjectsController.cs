@@ -69,8 +69,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             await ProcessProjectMembers(projectToUpdate);
 
-            _dbContext.Projects.Update(projectToUpdate);
+            _dbContext.Projects.Remove(projectToRemove);
 
+            await _dbContext.Projects.AddAsync(projectToUpdate);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();

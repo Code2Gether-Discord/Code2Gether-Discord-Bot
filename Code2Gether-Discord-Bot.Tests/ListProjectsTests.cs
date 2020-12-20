@@ -56,7 +56,7 @@ namespace Code2Gether_Discord_Bot.Tests
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "unittest", user)},
+                    {0, new Project("unittest", user)},
                 }
             };
 

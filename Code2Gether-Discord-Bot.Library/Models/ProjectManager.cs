@@ -7,10 +7,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
 {
     public class ProjectManager : IProjectManager
     {
+        private IMemberRepository _memberRepository;
         private IProjectRepository _projectRepository;
 
-        public ProjectManager(IProjectRepository projectRepository)
+        public ProjectManager(IMemberRepository memberRepository, IProjectRepository projectRepository)
         {
+            _memberRepository = memberRepository;
             _projectRepository = projectRepository;
         }
 
@@ -45,11 +47,19 @@ namespace Code2Gether_Discord_Bot.Library.Models
         /// or author failed to join the project.</returns>
         public async Task<Project> CreateProjectAsync(string projectName, Member author)
         {
-            var newProject = new Project(0, projectName, author);
-            if (await _projectRepository.CreateAsync(newProject))
-                if (await JoinProjectAsync(projectName, author))    // Author joins new projects by default
+            if (await _memberRepository.CreateAsync(author)) // Create author member
+            {
+                author = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId);    // Update local object for author
+
+                var newProject = new Project(projectName, author);
+
+                newProject.Members.Add(author);
+
+                if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
                     return newProject;
-            throw new Exception($"Failed to create new project: {newProject}!");
+            }
+
+            throw new Exception($"Failed to create new project: {projectName}!");
         }
 
         /// <summary>

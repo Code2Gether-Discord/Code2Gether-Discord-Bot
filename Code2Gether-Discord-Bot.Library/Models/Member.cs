@@ -27,5 +27,12 @@ namespace Code2Gether_Discord_Bot.Library.Models
             SnowflakeId = DiscordUserInfo.Id;
         }
         #endregion
+
+        #region Methods
+
+        public override string ToString() =>
+            $"{SnowflakeId}";
+
+        #endregion
     }
 }

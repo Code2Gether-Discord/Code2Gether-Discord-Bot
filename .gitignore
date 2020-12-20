@@ -3,13 +3,11 @@
 !.github
 
 # Project directories should be ignored
-bin
-obj
-Properties
+bin/
+obj/
+Properties/
 
-# JSON config files should be ignored
+# Some file extensions should be ignored
 *.json
-
-# Do not include SQLite .db files in repository.
 *.db
-/SonarScanner.bat
+*.bat

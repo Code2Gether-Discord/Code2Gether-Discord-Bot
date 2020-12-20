@@ -1,32 +1,32 @@
 name: CD
 
 on:
-  workflow_dispatch:
-    inputs:
-      configuration:
-        description: 'Build Configuration'
-        required: true
-        default: 'Release'
-      output:
-        description: 'Output directory'
-        required: false
-        default: 'artifacts'
+  push:
+    branches:
+      - main
 
 jobs:
   deployment:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v2
+      
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.100
+    
+    - name: Stop Discord Bot Service
+      env:
+        SUDOER:  ${{ secrets.SUDO_CD }}
+      run: echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot stop
+    
     - name: Publish
-      run: dotnet publish -c "${{ github.event.inputs.configuration }}" -o "${{ github.event.inputs.output }}"
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2.2.1
-      with:
-          path: 
-            "${{ github.event.inputs.output }}"
+      run: dotnet publish -c "Release" -o "/home/ubuntu/Code2Gether-Discord-Bot/release"
+      
+    - name: Start Discord Bot service
+      env:
+        SUDOER:  ${{ secrets.SUDO_CD }}
+      run: echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot restart

@@ -1,8 +1,7 @@
 ﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Static;
 using Discord.Commands;
 using System;
-using Code2Gether_Discord_Bot.Library.Static;
 
 namespace Code2Gether_Discord_Bot.Static
 {
@@ -26,15 +25,20 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic ExcuseGeneratorLogic(Type classContext, ICommandContext context) =>
             new ExcuseGeneratorLogic(UtilityFactory.GetLogger(classContext), context);
-
-
+        
         public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string arguments) =>
             new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), arguments);
 
-        public static IBusinessLogic GetJoinProjectLogic(Type classContext, SocketCommandContext context, string arguments) =>
+        public static IBusinessLogic GetJoinProjectLogic(Type classContext, ICommandContext context, string arguments) =>
             new JoinProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), arguments);
 
-        public static IBusinessLogic GetListProjectsLogic(Type classContext, SocketCommandContext context) =>
+        public static IBusinessLogic GetListProjectsLogic(Type classContext, ICommandContext context) =>
             new ListProjectsLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository());
+
+        public static IBusinessLogic GetLeetLogic(Type classContext, ICommandContext context, string title) =>
+            new LeetLogic(UtilityFactory.GetLogger(classContext), context, title);
+
+        public static IBusinessLogic GetLeetAnsLogic(Type classContext, ICommandContext context, string answer) =>
+            new LeetAnsLogic(UtilityFactory.GetLogger(classContext), context, answer);
     }
 }

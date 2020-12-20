@@ -47,19 +47,31 @@ namespace Code2Gether_Discord_Bot.Library.Models
         /// or author failed to join the project.</returns>
         public async Task<Project> CreateProjectAsync(string projectName, Member author)
         {
-            if (await _memberRepository.CreateAsync(author)) // Create author member
+            var retrievedAuthor = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId);
+
+            // If author doesn't exist
+            if (retrievedAuthor == null)
             {
-                author = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId);    // Update local object for author
+                // Create author member
+                if (await _memberRepository.CreateAsync(author))
+                    author = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId); // Update author
+                else
+                    throw new Exception($"Failed to create new member: {author}!");
 
-                var newProject = new Project(projectName, author);
+            }
+            else // Author exists
+            {
+                author = retrievedAuthor;     // Update local object for author
+            }
 
-                newProject.Members.Add(author);
+            var newProject = new Project(projectName, author);
 
-                if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
-                {
-                    newProject = await _projectRepository.ReadAsync(newProject.Name);
-                    return newProject;
-                }
+            newProject.Members.Add(author);
+
+            if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
+            {
+                newProject = await _projectRepository.ReadAsync(newProject.Name);
+                return newProject;
             }
 
             throw new Exception($"Failed to create new project: {projectName}!");
@@ -74,14 +86,31 @@ namespace Code2Gether_Discord_Bot.Library.Models
         /// or false if the user is already in the project.</returns>
         public async Task<bool> JoinProjectAsync(string projectName, Member member)
         {
+            var retreivedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+
             // Get all projects and store matching one matching projectName
-            var project = (await _projectRepository
-                .ReadAllAsync())
-                .FirstOrDefault(x => x.Name == projectName);
+            var project = await _projectRepository.ReadAsync(projectName);
 
             // If the given member by SnowflakeId does not exist in the project as a member
             if (!project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+            {
+                // If member isn't in db
+                if (retreivedMember == null)
+                {
+                    if (await _memberRepository.CreateAsync(member)) // Create member
+                        member = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+                    else
+                    {
+                        throw new Exception($"Failed to add member: {member}");
+                    }
+                }
+                else // Will this ever be hit? Probably not. Don: "We can fix that logic later"
+                {
+                    member = retreivedMember;
+                }
+
                 project.Members.Add(member);
+            }
             else
                 return false;   // Else they are already in the project
 

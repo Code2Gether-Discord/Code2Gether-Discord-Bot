@@ -47,7 +47,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 // Get Discord User details for project's author
                 var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
 
-                sb.Append($"{project.Name}; Created by: {authorUser.Username}#{authorUser.Discriminator}"
+                sb.Append($"Project name: {project.Name}; Author: {authorUser.Username}#{authorUser.Discriminator}"
                           + Environment.NewLine
                           + "Current Members: ");
 

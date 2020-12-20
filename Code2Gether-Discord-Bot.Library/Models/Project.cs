@@ -44,7 +44,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             sb.Append($"Project Members:{nl}");
             foreach (var member in Members)
             {
-                sb.Append($"\t{member}{nl}");
+                sb.Append($"{member}; ");
             }
 
             return sb.ToString();

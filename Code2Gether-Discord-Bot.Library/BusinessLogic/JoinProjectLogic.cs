@@ -60,7 +60,6 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 if (project.IsActive) 
                     TransitionToActiveProject(project);
             }
-
             else
             {
                 embedContent.Title = "Failed";

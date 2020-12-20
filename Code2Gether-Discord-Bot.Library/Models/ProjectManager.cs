@@ -71,6 +71,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
             if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
             {
                 newProject = await _projectRepository.ReadAsync(newProject.Name);
+                await _projectRepository.AddMemberAsync(newProject, author);
+                newProject = await _projectRepository.ReadAsync(newProject.Name);
+
                 return newProject;
             }
 
@@ -113,7 +116,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 return false;   // Else they are already in the project
 
             // Update the project with new member
-            var result = await _projectRepository.UpdateAsync(project);
+            var result = await _projectRepository.AddMemberAsync(project, member);
 
             // Get the updated repository
             project = await _projectRepository.ReadAsync(projectName);

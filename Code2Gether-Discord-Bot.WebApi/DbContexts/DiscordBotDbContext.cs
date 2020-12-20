@@ -26,7 +26,6 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .UseLazyLoadingProxies()
                     .UseSqlite(@"DataSource=Code2GetherDiscordBot.db", o =>
                     {
                         o.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);

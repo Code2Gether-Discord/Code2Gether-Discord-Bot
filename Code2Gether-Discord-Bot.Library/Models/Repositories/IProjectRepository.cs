@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 {
     public interface IProjectRepository : IDataRepository<Project>
     {
         Task<Project> ReadAsync(string projectName);
+        Task<bool> AddMemberAsync(Project project, Member member);
+        Task<bool> RemoveMemberAsync(Project project, Member member);
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Code2Gether_Discord_Bot.WebApi.Migrations
 {
     [DbContext(typeof(DiscordBotDbContext))]
-    [Migration("20201220152420_InitialCreate")]
+    [Migration("20201220163406_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

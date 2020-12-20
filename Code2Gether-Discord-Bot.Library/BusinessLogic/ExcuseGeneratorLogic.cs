@@ -9,25 +9,16 @@ using System.Threading.Tasks;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class ExcuseGeneratorLogic : IBusinessLogic
+    public class ExcuseGeneratorLogic : BaseLogic
     {
-        #region Fields
-        private ILogger _logger;
-        private ICommandContext _context;
-        #endregion
-
         #region Constructor
-        public ExcuseGeneratorLogic(ILogger logger, ICommandContext context)
+        public ExcuseGeneratorLogic(ILogger logger, ICommandContext context) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
         }
         #endregion
 
-        public async Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var response = await GenerateExcuseAsync();
 
             var embed = new EmbedBuilder()
@@ -57,7 +48,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 var suffixString = @"</font>";
 
                 var split = decodedSource
-                    .Split(new string[] { prefixString, suffixString }, StringSplitOptions.None);
+                    .Split(new[] { prefixString, suffixString }, StringSplitOptions.None);
 
                 // The "excuse" should always be the fourth item in the split.
                 return split[3];

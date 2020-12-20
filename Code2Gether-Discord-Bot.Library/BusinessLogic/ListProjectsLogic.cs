@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,23 +9,17 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class ListProjectsLogic : IBusinessLogic
+    public class ListProjectsLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IProjectRepository _projectRepository;
 
-        public ListProjectsLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository)
+        public ListProjectsLogic(ILogger logger, ICommandContext context, IProjectRepository projectRepository) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _projectRepository = projectRepository;
         }
-        
-        public async Task<Embed> ExecuteAsync()
-        {
-            _logger.Log(_context);
 
+        public override async Task<Embed> ExecuteAsync()
+        {
             var embedContent = await ListProjectsAsync();
 
             var embed = new EmbedBuilder()

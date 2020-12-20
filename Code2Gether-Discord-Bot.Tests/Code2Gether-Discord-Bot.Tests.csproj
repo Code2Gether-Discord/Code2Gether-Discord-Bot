@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Code2Gether-Discord-Bot.Library\Code2Gether-Discord-Bot.Library.csproj" />
-    <ProjectReference Include="..\Code2Gether-Discord-Bot\Code2Gether-Discord-Bot.csproj" />
   </ItemGroup>
 
 </Project>

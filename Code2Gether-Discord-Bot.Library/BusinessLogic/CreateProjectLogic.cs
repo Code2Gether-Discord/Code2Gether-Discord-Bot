@@ -7,25 +7,19 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class CreateProjectLogic : IBusinessLogic
+    public class CreateProjectLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IProjectManager _projectManager;
         private string _arguments;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _projectManager = projectManager;
             _arguments = arguments;
         }
 
-        public async Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var embedContent = await CreateInactiveProjectAsync();
 
             var embed = new EmbedBuilder()
@@ -49,6 +43,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 embedContent.Title = "Failed";
                 embedContent.Description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
+
             // If no project exists by that name
             else
             {
@@ -61,7 +56,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 embedContent.Description = $"Successfully created inactive project **{newProject.Name}**!"
                                            + Environment.NewLine
                                            + Environment.NewLine
-                                           + $"{newProject}";
+                                           + newProject;
             }
 
             return embedContent;

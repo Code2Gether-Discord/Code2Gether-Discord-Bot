@@ -8,25 +8,19 @@ using Discord.Commands;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class JoinProjectLogic : IBusinessLogic
+    public class JoinProjectLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private IProjectManager _projectManager;
         private string _arguments;
 
-        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments)
+        public JoinProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _projectManager = projectManager;
             _arguments = arguments;
         }
 
-        public async Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-
             var embedContent = await JoinProjectAsync();
 
             var embed = new EmbedBuilder()
@@ -60,19 +54,20 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 embedContent.Description = $"{_context.User} has successfully joined project **{projectName}**!"
                                          + Environment.NewLine
                                          + Environment.NewLine
-                                         + $"{project}";
+                                         + project;
 
                 // If project has become active from new user
                 if (project.IsActive) 
                     TransitionToActiveProject(project);
             }
+
             else
             {
                 embedContent.Title = "Failed";
                 embedContent.Description = $"{_context.User} failed to join project **{projectName}**!"
                                            + Environment.NewLine
                                            + Environment.NewLine
-                                           + $"{project}";
+                                           + project;
             }
 
             return embedContent;

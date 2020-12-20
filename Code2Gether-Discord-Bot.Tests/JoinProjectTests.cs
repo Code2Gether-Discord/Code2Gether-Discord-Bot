@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories;
-using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
@@ -62,7 +61,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 }
             };
 
-            _logic = new JoinProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
+            _logic = new JoinProjectLogic(new Logger(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
                 Client = client,

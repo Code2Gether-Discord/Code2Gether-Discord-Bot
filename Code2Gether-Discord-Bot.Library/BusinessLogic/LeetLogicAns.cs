@@ -4,23 +4,17 @@ using Discord;
 using Discord.Commands;
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class LeetAnsLogic : IBusinessLogic
+    public class LeetAnsLogic : BaseLogic
     {
-        private ILogger _logger;
-        private ICommandContext _context;
         private string _args;
 
-        public LeetAnsLogic(ILogger logger, ICommandContext context, string args)
+        public LeetAnsLogic(ILogger logger, ICommandContext context, string args) : base(logger, context)
         {
-            _logger = logger;
-            _context = context;
             _args = args;
         }
 
-        public Task<Embed> ExecuteAsync()
+        public override Task<Embed> ExecuteAsync()
         {
-            _logger.Log(_context);
-            
             // Set from a private method
             string title = "Coming Soon";    // Title for leet answer
             string description = "This command is still under development.";  // Leet answer response

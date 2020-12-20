@@ -62,13 +62,34 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             if (projectToRemove == null)
                 return NotFound("Unable to find project.");
 
+            // Migrate the author and the members to the new project.
+            var authorId = projectToRemove.AuthorId;
+
+            var members = await _dbContext.ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == projectToUpdate.ID)
+                .Select(x => x.MemberID)
+                .ToListAsync();
+
             projectToUpdate.ID = ID;
             await ProcessAuthorAsync(projectToUpdate);
 
+            // Delete the old project.
             _dbContext.Projects.Remove(projectToRemove);
             await _dbContext.SaveChangesAsync();
 
+                        projectToUpdate.AuthorId = authorId;
             await _dbContext.Projects.AddAsync(projectToUpdate);
+
+            foreach(var member in members)
+            {
+                await _dbContext.ProjectMembers.AddAsync(new ProjectMember
+                {
+                    ProjectID = projectToUpdate.ID,
+                    MemberID = member,
+                });
+            }
+
             await _dbContext.SaveChangesAsync();
 
             return NoContent();

@@ -122,7 +122,9 @@ namespace Code2Gether_Discord_Bot.Library.Models
             project = await _projectRepository.ReadAsync(projectName);
 
             // Compare if update was successful, and the project now contains the member
-            return result && project.Members.Contains(member);
+            return result && project.Members
+                .Select(x => x.SnowflakeId)
+                .Contains(member.SnowflakeId);
         }
     }
 }

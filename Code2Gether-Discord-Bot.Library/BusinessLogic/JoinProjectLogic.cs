@@ -95,6 +95,9 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             // Give every project member the role
             foreach (var member in project.Members)
             {
+                // todo: populate DiscordUserId based on the snowflake ID here.
+                // Causes a null refernece exception if it doesn't.
+
                 await _context.Guild
                     .GetUserAsync(member.DiscordUserInfo.Id).Result
                     .AddRoleAsync(role);

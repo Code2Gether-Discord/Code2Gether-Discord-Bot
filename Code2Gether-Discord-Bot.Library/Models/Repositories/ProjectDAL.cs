@@ -13,9 +13,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         protected override string SerializeModel(Project projectToSerialize)
         {
+            var tempID = projectToSerialize.Author.ID;
+
             projectToSerialize.Author = new Member
             {
-                ID = projectToSerialize.ID
+                ID = tempID
             };
 
             projectToSerialize.Members = projectToSerialize
@@ -30,16 +32,6 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public async Task<Project> ReadAsync(string projectName)
         {
-            /*
-            var projects = await ReadAllAsync();
-
-            var queriedProject = projects
-                .FirstOrDefault(p => p.Name
-                    .Equals(projectName));
-
-            return queriedProject;
-             */
-
             var request = new RestRequest($"{_tableRoute}/projectName={projectName}");
 
             var result = await GetClient().ExecuteGetAsync<Project>(request);

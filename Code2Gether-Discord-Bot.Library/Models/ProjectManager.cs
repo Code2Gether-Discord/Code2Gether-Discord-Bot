@@ -56,7 +56,10 @@ namespace Code2Gether_Discord_Bot.Library.Models
                 newProject.Members.Add(author);
 
                 if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
+                {
+                    newProject = await _projectRepository.ReadAsync(newProject.Name);
                     return newProject;
+                }
             }
 
             throw new Exception($"Failed to create new project: {projectName}!");

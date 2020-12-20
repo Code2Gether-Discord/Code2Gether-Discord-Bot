@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
 using RestSharp;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
@@ -11,25 +9,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public ProjectDAL(string connectionString) : base(connectionString) { }
 
-        protected override string SerializeModel(Project projectToSerialize)
-        {
-            // Hold on to Auhor ID before replacing it in a new Author.
-            var tempID = projectToSerialize.Author.ID;
-
-            projectToSerialize.Author = new Member
-            {
-                ID = tempID
-            };
-
-            // Re-serialize members.
-            projectToSerialize.Members = projectToSerialize
-                .Members
-                ?.Select(x => new Member { ID = x.ID })
-                .ToList();
-
-            return JsonConvert.SerializeObject(projectToSerialize);
-        }
-
+        /// <summary>
+        /// Retrieves project based on project name.
+        /// </summary>
+        /// <param name="projectName">Name of project to retrieve.</param>
+        /// <returns>Data for project to retrieve. Null if not found.</returns>
         public async Task<Project> ReadAsync(string projectName)
         {
             var request = new RestRequest($"{_tableRoute}/projectName={projectName}");
@@ -37,6 +21,36 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             var result = await GetClient().ExecuteGetAsync<Project>(request);
 
             return result.IsSuccessful ? result.Data : null;
+        }
+
+        /// <summary>
+        /// Adds a member to a project.
+        /// </summary>
+        /// <param name="project">Project of member to add.</param>
+        /// <param name="member">Member to add to project.</param>
+        /// <returns>True if add is successful.</returns>
+        public async Task<bool> AddMemberAsync(Project project, Member member)
+        {
+            var request = new RestRequest($"{_tableRoute}/projectId={project.ID};memberId={member.ID}");
+
+            var result = await GetClient().ExecutePostAsync<Project>(request);
+
+            return result.IsSuccessful;
+        }
+
+        /// <summary>
+        /// Adds a member to a project.
+        /// </summary>
+        /// <param name="project">Project of member to delete.</param>
+        /// <param name="member">Member to delete from project.</param>
+        /// <returns>True if delete is successful.</returns>
+        public async Task<bool> RemoveMemberAsync(Project project, Member member)
+        {
+            var request = new RestRequest($"{_tableRoute}/projectId={project.ID};memberId={member.ID}", Method.DELETE);
+
+            var result = await GetClient().ExecuteAsync<Project>(request);
+
+            return result.IsSuccessful;
         }
     }
 }

@@ -16,6 +16,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Creates a new record of the input model.
+        /// </summary>
+        /// <param name="newModel">Model to add to DB.</param>
+        /// <returns>True if successful.</returns>
         public async Task<bool> CreateAsync(TDataModel newModel)
         {
             var client = GetClient();
@@ -37,6 +42,10 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             return JsonConvert.SerializeObject(modelToSerialize, settings);
         }
 
+        /// <summary>
+        /// Get all records in the DB.
+        /// </summary>
+        /// <returns>All records in the DB.</returns>
         public async Task<IEnumerable<TDataModel>> ReadAllAsync()
         {
             var client = GetClient();
@@ -48,6 +57,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             return result.IsSuccessful ? result.Data : null;
         }
 
+        /// <summary>
+        /// Gets the record for the input primary key.
+        /// </summary>
+        /// <param name="id">Primary key of record to retrieve.</param>
+        /// <returns>Record data if retrieved, null if not.</returns>
         public async Task<TDataModel> ReadAsync(int id)
         {
             var client = GetClient();
@@ -59,6 +73,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             return result.IsSuccessful ? result.Data : null;
         }
 
+        /// <summary>
+        /// Deletes the record with the input primary key.
+        /// </summary>
+        /// <param name="id">Primary key of record to delete.</param>
+        /// <returns>True if delete is successful.</returns>
         public async Task<bool> DeleteAsync(int id)
         {
             var client = GetClient();
@@ -70,20 +89,23 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
             return result.IsSuccessful;
         }
 
-        public async Task<bool> UpdateAsync(TDataModel existingModel)
+        /// <summary>
+        /// Updates the selected record.
+        /// </summary>
+        /// <param name="modelToReplace">Record to update.</param>
+        /// <returns>False if the record doesn't exist, or if the update failed.</returns>
+        public async Task<bool> UpdateAsync(TDataModel modelToReplace)
         {
-            var modelToUpdate = await ReadAsync(existingModel.ID);
+            var modelToUpdate = await ReadAsync(modelToReplace.ID);
 
             if (modelToUpdate == null)
-            {
                 return false;
-            }
 
             var client = GetClient();
 
-            var request = new RestRequest($"{_tableRoute}/{existingModel.ID}", Method.PUT);
+            var request = new RestRequest($"{_tableRoute}/{modelToReplace.ID}", Method.PUT);
 
-            var jsonBody = SerializeModel(existingModel); // Had this set to the old model. Whoops!
+            var jsonBody = SerializeModel(modelToReplace); // Had this set to the old model. Whoops!
 
             request.AddJsonBody(jsonBody);
 

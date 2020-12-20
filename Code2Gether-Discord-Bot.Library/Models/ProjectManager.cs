@@ -100,9 +100,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
                     if (await _memberRepository.CreateAsync(member)) // Create member
                         member = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
                     else
-                    {
                         throw new Exception($"Failed to add member: {member}");
-                    }
                 }
                 else // Will this ever be hit? Probably not. Don: "We can fix that logic later"
                 {

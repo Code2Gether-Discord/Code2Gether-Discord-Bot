@@ -15,6 +15,7 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
         #region DbSets
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Member> Members { get; set; }
+        public virtual DbSet<ProjectMember> ProjectMembers { get; set; }
         #endregion
 
         #region Methods
@@ -38,12 +39,18 @@ namespace Code2Gether_Discord_Bot.WebApi.DbContexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Project>()
-                .HasMany(x => x.Members)
-                .WithMany(x => x.Projects);
+            modelBuilder.Entity<ProjectMember>()
+                .HasKey(x => new { x.MemberID, x.ProjectID });
 
-            modelBuilder.Entity<Project>()
-                .HasOne(x => x.Author);
+            modelBuilder.Entity<ProjectMember>()
+                .HasOne<Project>()
+                .WithMany()
+                .HasForeignKey(x => x.ProjectID);
+
+            modelBuilder.Entity<ProjectMember>()
+                .HasOne<Member>()
+                .WithMany()
+                .HasForeignKey(x => x.MemberID);
         }
         #endregion
     }

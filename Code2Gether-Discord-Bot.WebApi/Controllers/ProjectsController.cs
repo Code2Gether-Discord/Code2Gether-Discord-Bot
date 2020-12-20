@@ -40,16 +40,13 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             // Ensures we don't replace an existing project
             projectToAdd.ID = 0;
-
-            await ProcessProjectMembers(projectToAdd);
+            await ProcessAuthorAsync(projectToAdd);
 
             var query = await _dbContext.Projects.AddAsync(projectToAdd);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
-
-
 
         /// <summary>
         /// Updates the project with the input ID.
@@ -66,8 +63,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
                 return NotFound("Unable to find project.");
 
             projectToUpdate.ID = ID;
-
-            await ProcessProjectMembers(projectToUpdate);
+            await ProcessAuthorAsync(projectToUpdate);
 
             _dbContext.Projects.Remove(projectToRemove);
             await _dbContext.SaveChangesAsync();
@@ -85,9 +81,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllProjects")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
         {
-            var projects = await _dbContext.Projects.ToArrayAsync();
+            var projectsToReturn = await _dbContext.Projects.ToArrayAsync();
 
-            return projects;
+            foreach (var project in projectsToReturn)
+                await JoinMembersAsync(project);
+
+            return projectsToReturn;
         }
 
         /// <summary>
@@ -100,9 +99,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         {
             var projectToReturn = await _dbContext.Projects.FindAsync(ID);
 
-            return projectToReturn == null
-                ? NotFound($"Could not find project with ID {ID}")
-                : projectToReturn;
+            if (projectToReturn == null)
+                return NotFound($"Could not find project with ID {ID}");
+
+            await JoinMembersAsync(projectToReturn);
+
+            return projectToReturn;
         }
 
         /// <summary>
@@ -110,15 +112,77 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <param name="projectName">Bame of the project to retrieve.</param>
         /// <returns>The data for the retrieved project.</returns>
-        [HttpGet("projectName={projectName}", Name="GetProjectName")]
+        [HttpGet("projectName={projectName}", Name = "GetProjectName")]
         public async Task<ActionResult<Project>> GetProjectAsync(string projectName)
         {
-            var project = await _dbContext.Projects
+            var projectToReturn = await _dbContext.Projects
                 .FirstOrDefaultAsync(x => x.Name == projectName);
 
-            return project == null
-                ? NotFound($"Unable to find project with name {projectName}")
-                : project;
+            if (projectToReturn == null)
+                return NotFound($"Unable to find project with name {projectName}");
+
+            await JoinMembersAsync(projectToReturn);
+
+            return projectToReturn;
+        }
+
+        /// <summary>
+        /// Add a member to a project.
+        /// </summary>
+        /// <param name="projectId">ID of project to add a member to.</param>
+        /// <param name="memberId">ID of member to add to the project.</param>
+        /// <returns></returns>
+        [HttpPost("projectId={projectId};memberId={memberId}", Name = "AddMemberToProject")]
+        public async Task<ActionResult> AddMemberAsync(int projectId, int memberId)
+        {
+            var project = _dbContext.ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == projectId);
+
+            if (project == null)
+                return NotFound($"Could not find project with ID {projectId}");
+
+            var member = await _dbContext.ProjectMembers
+                .AsAsyncEnumerable()
+                .FirstOrDefaultAsync(x => x.MemberID == memberId);
+
+            if (member != null)
+                return BadRequest($"Member {memberId} is already in project {projectId}");
+
+            var hasMember = await _dbContext.Members
+                .AsAsyncEnumerable()
+                .AnyAsync(x => x.ID == memberId);
+
+            if (!hasMember)
+                return BadRequest($"Could not find member with ID {memberId}");
+
+            var projectMember = new ProjectMember
+            {
+                ProjectID = projectId,
+                MemberID = memberId,
+            };
+
+            await _dbContext.ProjectMembers.AddAsync(projectMember);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("projectId={projectId};memberId={memberId}", Name = "DeleteMemberFromProject")]
+        public async Task<ActionResult> RemoveMemberAsync(int projectId, int memberId)
+        {
+            var projectMemberToDelete = await _dbContext.ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == projectId)
+                .FirstOrDefaultAsync(x => x.MemberID == memberId);
+
+            if (projectMemberToDelete == null)
+                return NotFound($"Could not find project {projectId} with member {memberId}");
+
+            _dbContext.ProjectMembers.Remove(projectMemberToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
         }
 
         /// <summary>
@@ -142,22 +206,32 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         #endregion
 
         #region Methods
-        private async Task ProcessProjectMembers(Project projectToAdd)
+        private async Task ProcessAuthorAsync(Project projectToAdd)
         {
             var author = await _dbContext.Members.FindAsync(projectToAdd.Author.ID);
 
             projectToAdd.Author = author;
+        }
 
-            var members = projectToAdd.Members.Select(x => x.ID).ToArray();
+        private async Task JoinMembersAsync(Project project)
+        {
+            var author = await _dbContext.Members
+                .FindAsync(project.AuthorId);
 
-            var membersToAdd = await _dbContext
-                .Members
+            project.Author = author;
+
+            var memberIDs = await _dbContext.ProjectMembers
                 .AsAsyncEnumerable()
-                .Where(x => members.Contains(x.ID))
+                .Where(x => x.ProjectID == project.ID)
+                .Select(x => x.MemberID)
                 .ToListAsync();
 
-            projectToAdd.Members.Clear();
-            projectToAdd.Members.AddRange(membersToAdd);
+            var members = await _dbContext.Members
+                .AsAsyncEnumerable()
+                .Where(x => memberIDs.Contains(x.ID))
+                .ToListAsync();
+
+            project.Members = members;
         }
         #endregion
     }

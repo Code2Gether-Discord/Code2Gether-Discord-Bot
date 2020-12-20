@@ -83,7 +83,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllMembers")]
         public async Task<ActionResult<IEnumerable<Member>>> GetAllMembersAsync()
         {
-            return await _dbContext.Members.ToArrayAsync();
+            var members = await _dbContext.Members.ToArrayAsync();
+
+            foreach (var member in members)
+                await JoinProjectsAsync(member);
+
+            return members;
         }
 
         /// <summary>
@@ -96,9 +101,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         {
             var memberToReturn = await _dbContext.Members.FindAsync(ID);
 
-            return memberToReturn == null
-                ? NotFound("Could not find user.")
-                : memberToReturn;
+            if (memberToReturn == null)
+                return NotFound("Could not find user.");
+
+            await JoinProjectsAsync(memberToReturn);
+
+            return memberToReturn;
         }
 
         /// <summary>
@@ -112,9 +120,12 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             var memberToReturn = await _dbContext.Members
                 .FirstOrDefaultAsync(x => x.SnowflakeId == snowflakeID);
 
-            return memberToReturn == null
-                ? NotFound($"Could not find member with snowflake ID {snowflakeID}")
-                : memberToReturn;
+            if (memberToReturn == null)
+                return NotFound($"Could not find member with snowflake ID {snowflakeID}");
+
+            await JoinProjectsAsync(memberToReturn);
+
+            return memberToReturn;
         }
 
         /// <summary>
@@ -131,9 +142,26 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
                 return NotFound("Unable to find user.");
 
             _dbContext.Members.Remove(memberToDelete);
+
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task JoinProjectsAsync(Member member)
+        {
+            var projectIDs = await _dbContext.ProjectMembers
+                .AsAsyncEnumerable()
+                .Where(x => x.MemberID == member.ID)
+                .Select(x => x.ProjectID)
+                .ToListAsync();
+
+            var projects = await _dbContext.Projects
+                .AsAsyncEnumerable()
+                .Where(x => projectIDs.Contains(x.ID))
+                .ToListAsync();
+
+            member.Projects = projects;
         }
     }
 }

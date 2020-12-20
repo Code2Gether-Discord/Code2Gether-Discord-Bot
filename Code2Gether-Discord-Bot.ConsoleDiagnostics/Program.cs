@@ -14,6 +14,7 @@ namespace Code2Gether_Discord_Bot.ConsoleDiagnostics
             var memberDal = new MemberDAL(connectionString);
             var projectDal = new ProjectDAL(connectionString);
 
+            // Create a new member.
             var member = new Member
             {
                 SnowflakeId = 12345
@@ -23,6 +24,7 @@ namespace Code2Gether_Discord_Bot.ConsoleDiagnostics
 
             var memberRetrieved = (await memberDal.ReadAllAsync()).FirstOrDefault();
 
+            // Create a new project with the member as an author.
             var project = new Project
             {
                 Name = "MyProject",
@@ -32,6 +34,23 @@ namespace Code2Gether_Discord_Bot.ConsoleDiagnostics
             project.Members.Add(memberRetrieved);
 
             await projectDal.CreateAsync(project);
+
+            // Create another new member.
+            var member2 = new Member
+            {
+                SnowflakeId = 23456
+            };
+
+            await memberDal.CreateAsync(member2);
+
+            var member2Retrieved = await memberDal.ReadFromSnowflakeAsync(23456);
+
+            // Add new member to project, and update.
+            var project2 = await projectDal.ReadAsync("MyProject");
+
+            project2.Members.Add(member2Retrieved);
+
+            await projectDal.UpdateAsync(project2);
         }
     }
 }

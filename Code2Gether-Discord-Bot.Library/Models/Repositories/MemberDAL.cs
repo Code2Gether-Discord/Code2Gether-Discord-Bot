@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 {
@@ -21,9 +21,11 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         public async Task<Member> ReadFromSnowflakeAsync(ulong snowflakeId)
         {
-            var users = await ReadAllAsync();
-            var queriedUser = users.FirstOrDefault(u => u.SnowflakeId.Equals(snowflakeId));
-            return queriedUser;
+            var request = new RestRequest($"{_tableRoute}/snowflakeID={snowflakeId}");
+
+            var result = await GetClient().ExecuteGetAsync<Member>(request);
+
+            return result.IsSuccessful ? result.Data : null;
         }
     }
 }

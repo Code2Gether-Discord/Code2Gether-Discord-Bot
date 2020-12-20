@@ -13,6 +13,7 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
 
         protected override string SerializeModel(Project projectToSerialize)
         {
+            // Hold on to Auhor ID before replacing it in a new Author.
             var tempID = projectToSerialize.Author.ID;
 
             projectToSerialize.Author = new Member
@@ -20,14 +21,13 @@ namespace Code2Gether_Discord_Bot.Library.Models.Repositories
                 ID = tempID
             };
 
+            // Re-serialize members.
             projectToSerialize.Members = projectToSerialize
                 .Members
                 ?.Select(x => new Member { ID = x.ID })
                 .ToList();
 
-            var json = JsonConvert.SerializeObject(projectToSerialize);
-
-            return json;
+            return JsonConvert.SerializeObject(projectToSerialize);
         }
 
         public async Task<Project> ReadAsync(string projectName)

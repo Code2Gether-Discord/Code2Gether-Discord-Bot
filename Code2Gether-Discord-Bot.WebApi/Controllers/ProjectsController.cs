@@ -70,6 +70,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             await ProcessProjectMembers(projectToUpdate);
 
             _dbContext.Projects.Remove(projectToRemove);
+            await _dbContext.SaveChangesAsync();
 
             await _dbContext.Projects.AddAsync(projectToUpdate);
             await _dbContext.SaveChangesAsync();
@@ -84,7 +85,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         [HttpGet(Name = "GetAllProjects")]
         public async Task<ActionResult<IEnumerable<Project>>> GetAllProjectsAsync()
         {
-            return await _dbContext.Projects.ToArrayAsync();
+            var projects = await _dbContext.Projects.ToArrayAsync();
+
+            return projects;
         }
 
         /// <summary>

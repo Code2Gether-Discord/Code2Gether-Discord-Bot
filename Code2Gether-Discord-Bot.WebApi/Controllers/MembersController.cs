@@ -68,8 +68,9 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
             memberToUpdate.ID = ID;
 
             _dbContext.Members.Remove(memberToUpdate);
-            
-            _dbContext.Members.AddAsync(memberToUpdate);
+            await _dbContext.SaveChangesAsync();
+
+            await _dbContext.Members.AddAsync(memberToUpdate);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();

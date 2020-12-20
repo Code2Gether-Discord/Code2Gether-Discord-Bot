@@ -103,7 +103,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
         /// </summary>
         /// <param name="memberName">Snowflake ID of the member to retrieve.</param>
         /// <returns>The data for the retrieved member.</returns>
-        [HttpGet("snowflakeID={snowflakeID}", Name = "GetMember")]
+        [HttpGet("snowflakeID={snowflakeID}", Name = "GetMemberSnowflake")]
         public async Task<ActionResult<Member>> GetMemberAsync(ulong snowflakeID)
         {
             var memberToReturn = await _dbContext.Members

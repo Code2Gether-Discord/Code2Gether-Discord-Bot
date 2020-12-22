@@ -66,21 +66,17 @@ namespace Code2Gether_Discord_Bot.Library.Models
 
             var newProject = new Project(projectName, author);
 
-            newProject.Members.Add(author);
+            if (!await _projectRepository.CreateAsync(newProject))
+                throw new Exception($"Failed to create new project: {projectName}!");
+            // Retrieve project to add member to.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
+            await _projectRepository.AddMemberAsync(newProject, author);
 
-            if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
-            {
-                // Retrieve project to add member to.
-                newProject = await _projectRepository.ReadAsync(newProject.Name);
-                await _projectRepository.AddMemberAsync(newProject, author);
+            // Retrieve project with added member.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
 
-                // Retrieve project with added member.
-                newProject = await _projectRepository.ReadAsync(newProject.Name);
+            return newProject;
 
-                return newProject;
-            }
-
-            throw new Exception($"Failed to create new project: {projectName}!");
         }
 
         /// <summary>
@@ -92,10 +88,10 @@ namespace Code2Gether_Discord_Bot.Library.Models
         /// or false if the user is already in the project.</returns>
         public async Task<bool> JoinProjectAsync(string projectName, Member member)
         {
-            var retreivedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+            var retrievedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
 
             // If member isn't in db
-            if (retreivedMember == null)
+            if (retrievedMember == null)
             {
                 // Create member
                 if (!await _memberRepository.CreateAsync(member))
@@ -105,7 +101,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
             }
             else
             {
-                member = retreivedMember;
+                member = retrievedMember;
             }
 
             // Get project matching projectName
@@ -113,14 +109,14 @@ namespace Code2Gether_Discord_Bot.Library.Models
 
             // If the given member by SnowflakeId does not exist in the project as a member
             // Add the member to the project.
-            if (!project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+            if (project != null && !project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
             {
                 if (!await _projectRepository.AddMemberAsync(project, member))
                     throw new Exception($"Failed to add member: {member}");
             }
             else
             {
-                return false;   // Else they are already in the project
+                return false;   // Else they are already in the project or project doesn't exist
             }
 
             // Get the updated project with new member.

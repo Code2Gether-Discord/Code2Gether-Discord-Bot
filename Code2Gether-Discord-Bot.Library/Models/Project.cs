@@ -4,17 +4,39 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
+    [Table("PROJECTS")]
     public class Project : IDataModel
     {
+        #region Fields
+        private Member author;
+        #endregion
+
         #region Properies
+        [Column("PROJECT_ID")]
         [Key]
         public virtual int ID { get; set; }
+        [Column("PROJECT_NAME")]
         [Required]
         public virtual string Name { get; set; }
-        public virtual Member Author { get; set; }
+        [JsonIgnore]
+        [Required]
+        [Column("AUTHOR_ID")]
+        public int AuthorId { get; set; }
+        [NotMapped]
+        public virtual Member Author 
+        {
+            get => author;
+            set
+            {
+                author = value;
+                AuthorId = author?.ID ?? 0;
+            }
+        }
+        [NotMapped]
         public virtual List<Member> Members { get; set; } = new List<Member>();
         [NotMapped]
         public bool IsActive => Members.Count() >= 2;
@@ -49,7 +71,6 @@ namespace Code2Gether_Discord_Bot.Library.Models
 
             return sb.ToString();
         }
-
         #endregion
     }
 }

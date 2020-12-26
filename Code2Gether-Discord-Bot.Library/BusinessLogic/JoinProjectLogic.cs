@@ -81,33 +81,58 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                     .Contains("PROJECTS"))?.Id;
 
             // Create new text channel under that category
-            var channel = await _context.Guild.CreateTextChannelAsync(project.Name, p =>
+            bool channelAlreadyCreated = false;
+            var channels = await _context.Guild.GetChannelsAsync();
+            ITextChannel channel = null;
+            if (channels.Count(c => c.Name.Contains(project.Name)) == 0)
             {
-                if (projCategoryId != null)
-                    p.CategoryId = projCategoryId;
-            });
+                channel = await _context.Guild.CreateTextChannelAsync(project.Name, p =>
+                {
+                    if (projCategoryId != null)
+                        p.CategoryId = projCategoryId;
+                });
+            }
+            else
+            {
+                channelAlreadyCreated = true;
+            }
 
             // Create new role
-            var role = await _context.Guild
-                .CreateRoleAsync($"project-{project.Name}", GuildPermissions.None, null, false, true);
+            var roleName = $"project-{project.Name}";
+            var roles = _context.Guild.Roles;
+            IRole role;
+            if (roles.Count(r => r.Name.Contains(roleName)) == 0)
+            {
+                role = await _context.Guild
+                    .CreateRoleAsync(roleName, GuildPermissions.None, null, false, true);
+            }
+            else
+            {
+                role = _context.Guild.Roles.FirstOrDefault(r => r.Name.Contains(roleName));
+            }
 
-            
             // Give every project member the role
             foreach (var member in project.Members)
             {
+                // todo: populate DiscordUserId based on the snowflake ID here.
+                // Causes a null refernece exception if it doesn't.
+
                 await _context.Guild
-                    .GetUserAsync(member.DiscordUserInfo.Id).Result
+                    .GetUserAsync(member.SnowflakeId).Result
                     .AddRoleAsync(role);
             }
-            
-            // Notify members in new channel
-            await channel.SendMessageAsync(embed: new EmbedBuilder()
-                .WithColor(Color.Purple)
-                .WithTitle("New Active Project")
-                .WithDescription($"A new project has gained enough members to become active!"
-                    + Environment.NewLine
-                    + project)
-                .Build());
+
+            if (!channelAlreadyCreated)
+            {
+                // Notify members in new channel
+                await channel.SendMessageAsync(embed: new EmbedBuilder()
+                    .WithColor(Color.Purple)
+                    .WithTitle("New Active Project")
+                    .WithDescription($"A new project has gained enough members to become active!"
+                                     + Environment.NewLine
+                                     + project)
+                    .Build());
+            }
         }
     }
 }

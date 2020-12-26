@@ -57,24 +57,26 @@ namespace Code2Gether_Discord_Bot.Library.Models
                     author = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId); // Update author
                 else
                     throw new Exception($"Failed to create new member: {author}!");
-
             }
             else // Author exists
             {
-                author = retrievedAuthor;     // Update local object for author
+                // Update local object for author
+                author = retrievedAuthor;     
             }
 
             var newProject = new Project(projectName, author);
 
-            newProject.Members.Add(author);
+            if (!await _projectRepository.CreateAsync(newProject))
+                throw new Exception($"Failed to create new project: {projectName}!");
+            // Retrieve project to add member to.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
+            await _projectRepository.AddMemberAsync(newProject, author);
 
-            if (await _projectRepository.CreateAsync(newProject)) // Create project with reference to author member
-            {
-                newProject = await _projectRepository.ReadAsync(newProject.Name);
-                return newProject;
-            }
+            // Retrieve project with added member.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
 
-            throw new Exception($"Failed to create new project: {projectName}!");
+            return newProject;
+
         }
 
         /// <summary>
@@ -86,42 +88,44 @@ namespace Code2Gether_Discord_Bot.Library.Models
         /// or false if the user is already in the project.</returns>
         public async Task<bool> JoinProjectAsync(string projectName, Member member)
         {
-            var retreivedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+            var retrievedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
 
-            // Get all projects and store matching one matching projectName
+            // If member isn't in db
+            if (retrievedMember == null)
+            {
+                // Create member
+                if (!await _memberRepository.CreateAsync(member))
+                    throw new Exception($"Failed to add member: {member}");
+
+                member = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+            }
+            else
+            {
+                member = retrievedMember;
+            }
+
+            // Get project matching projectName
             var project = await _projectRepository.ReadAsync(projectName);
 
             // If the given member by SnowflakeId does not exist in the project as a member
-            if (!project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+            // Add the member to the project.
+            if (project != null && !project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
             {
-                // If member isn't in db
-                if (retreivedMember == null)
-                {
-                    if (await _memberRepository.CreateAsync(member)) // Create member
-                        member = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
-                    else
-                    {
-                        throw new Exception($"Failed to add member: {member}");
-                    }
-                }
-                else // Will this ever be hit? Probably not. Don: "We can fix that logic later"
-                {
-                    member = retreivedMember;
-                }
-
-                project.Members.Add(member);
+                if (!await _projectRepository.AddMemberAsync(project, member))
+                    throw new Exception($"Failed to add member: {member}");
             }
             else
-                return false;   // Else they are already in the project
+            {
+                return false;   // Else they are already in the project or project doesn't exist
+            }
 
-            // Update the project with new member
-            var result = await _projectRepository.UpdateAsync(project);
-
-            // Get the updated repository
+            // Get the updated project with new member.
             project = await _projectRepository.ReadAsync(projectName);
 
-            // Compare if update was successful, and the project now contains the member
-            return result && project.Members.Contains(member);
+            // Check if project join is successful.
+            return project.Members
+                .Select(x => x.SnowflakeId)
+                .Contains(member.SnowflakeId);
         }
     }
 }

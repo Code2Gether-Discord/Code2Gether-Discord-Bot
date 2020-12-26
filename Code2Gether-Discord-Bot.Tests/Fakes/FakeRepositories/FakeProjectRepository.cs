@@ -48,5 +48,15 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories
         {
             return Task.FromResult(Projects.Remove(id, out _));
         }
+
+        public Task<bool> AddMemberAsync(Project project, Member member)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RemoveMemberAsync(Project project, Member member)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

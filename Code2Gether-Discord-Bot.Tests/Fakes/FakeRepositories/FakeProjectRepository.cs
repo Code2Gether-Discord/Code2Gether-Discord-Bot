@@ -51,7 +51,10 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories
 
         public Task<bool> AddMemberAsync(Project project, Member member)
         {
-            throw new NotImplementedException();
+            if (!project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+                project.Members.Add(member);
+
+            return Task.FromResult(project.Members.Any(m => m.SnowflakeId == member.SnowflakeId));
         }
 
         public Task<bool> RemoveMemberAsync(Project project, Member member)

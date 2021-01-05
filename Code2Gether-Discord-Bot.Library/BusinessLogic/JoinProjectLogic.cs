@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
+using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
 
@@ -18,78 +19,120 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _arguments = arguments;
         }
 
-        public override Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            JoinProject(out string title, out string description);
+            var embedContent = await JoinProjectAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle($"Join Project: {title}")
-                .WithDescription(description)
+                .WithTitle($"Join Project: {embedContent.Title}")
+                .WithDescription(embedContent.Description)
                 .WithAuthor(_context.User)
                 .Build();
-            return Task.FromResult(embed);
+
+            return embed;
         }
 
-        private void JoinProject(out string title, out string description)
+        private async Task<EmbedContent> JoinProjectAsync()
         {
-            var projectName = _arguments
-                .Trim()
-                .Split(' ')[0];
+            var embedContent = new EmbedContent();
 
-            _ = _projectManager.DoesProjectExist(projectName, out Project tProject);
+            var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
 
-            if (_projectManager.JoinProject(projectName, _context.User, out Project project))
+            var user = new Member(_context.User);   
+            
+            // Attempt to join the project
+            var result = await _projectManager.JoinProjectAsync(projectName, user);
+
+            // Get the updated project object
+            var project = await _projectManager.GetProjectAsync(projectName);
+            
+            // If joining was successful
+            if (result)
             {
-                title = "Success";
-                description = $"{_context.User} has successfully joined project **{projectName}**!"
-                              + Environment.NewLine
-                              + Environment.NewLine
-                              + $"{project}";
+                embedContent.Title = "Success";
+                embedContent.Description = $"{_context.User} has successfully joined project **{projectName}**!"
+                                         + Environment.NewLine
+                                         + Environment.NewLine
+                                         + project;
 
-                if (!tProject.IsActive && project.IsActive) // If project has become active from new user
+                // If project has become active from new user
+                if (project.IsActive) 
                     TransitionToActiveProject(project);
             }
             else
             {
-                title = "Failed";
-                description = $"{_context.User} failed to join project **{projectName}**!"
-                              + Environment.NewLine
-                              + Environment.NewLine
-                              + $"{project}";
+                embedContent.Title = "Failed";
+                embedContent.Description = $"{_context.User} failed to join project **{projectName}**!"
+                                           + Environment.NewLine
+                                           + Environment.NewLine
+                                           + project;
             }
+
+            return embedContent;
         }
 
         private async void TransitionToActiveProject(Project project)
         {
+            // Find a category in the guild called "PROJECTS"
             ulong? projCategoryId = _context.Guild
                 .GetCategoriesAsync().Result
                 .FirstOrDefault(c => c.Name
                     .Contains("PROJECTS"))?.Id;
 
-            var channel = await _context.Guild.CreateTextChannelAsync(project.Name, p =>
+            // Create new text channel under that category
+            bool channelAlreadyCreated = false;
+            var channels = await _context.Guild.GetChannelsAsync();
+            ITextChannel channel = null;
+            if (channels.Count(c => c.Name.Contains(project.Name)) == 0)
             {
-                if (projCategoryId != null)
-                    p.CategoryId = projCategoryId;
-            });
-
-            var role = await _context.Guild
-                .CreateRoleAsync($"project-{project.Name}", GuildPermissions.None, null, false, true);
-
-            foreach (var member in project.ProjectMembers)
+                channel = await _context.Guild.CreateTextChannelAsync(project.Name, p =>
+                {
+                    if (projCategoryId != null)
+                        p.CategoryId = projCategoryId;
+                });
+            }
+            else
             {
+                channelAlreadyCreated = true;
+            }
+
+            // Create new role
+            var roleName = $"project-{project.Name}";
+            var roles = _context.Guild.Roles;
+            IRole role;
+            if (roles.Count(r => r.Name.Contains(roleName)) == 0)
+            {
+                role = await _context.Guild
+                    .CreateRoleAsync(roleName, GuildPermissions.None, null, false, true);
+            }
+            else
+            {
+                role = _context.Guild.Roles.FirstOrDefault(r => r.Name.Contains(roleName));
+            }
+
+            // Give every project member the role
+            foreach (var member in project.Members)
+            {
+                // todo: populate DiscordUserId based on the snowflake ID here.
+                // Causes a null refernece exception if it doesn't.
+
                 await _context.Guild
-                    .GetUserAsync(member.Id).Result
+                    .GetUserAsync(member.SnowflakeId).Result
                     .AddRoleAsync(role);
             }
 
-            await channel.SendMessageAsync(embed: new EmbedBuilder()
-                .WithColor(Color.Purple)
-                .WithTitle("New Active Project")
-                .WithDescription($"A new project has gained enough members to become active!"
-                    + Environment.NewLine
-                    + project)
-                .Build());
+            if (!channelAlreadyCreated)
+            {
+                // Notify members in new channel
+                await channel.SendMessageAsync(embed: new EmbedBuilder()
+                    .WithColor(Color.Purple)
+                    .WithTitle("New Active Project")
+                    .WithDescription($"A new project has gained enough members to become active!"
+                                     + Environment.NewLine
+                                     + project)
+                    .Build());
+            }
         }
     }
 }

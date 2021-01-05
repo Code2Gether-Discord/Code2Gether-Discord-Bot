@@ -1,63 +1,131 @@
 ﻿using System;
 using System.Linq;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Discord;
+using System.Threading.Tasks;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 
 namespace Code2Gether_Discord_Bot.Library.Models
 {
     public class ProjectManager : IProjectManager
     {
+        private IMemberRepository _memberRepository;
         private IProjectRepository _projectRepository;
 
-        public ProjectManager(IProjectRepository projectRepository)
+        public ProjectManager(IMemberRepository memberRepository, IProjectRepository projectRepository)
         {
+            _memberRepository = memberRepository;
             _projectRepository = projectRepository;
         }
 
-        public bool DoesProjectExist(string projectName) =>
-            _projectRepository.Read(projectName) != null;
-
-        public bool DoesProjectExist(string projectName, out Project project)
+        /// <summary>
+        /// Checks if a project exists by a given <see cref="projectName"/>.
+        /// </summary>
+        /// <param name="projectName">Project name to check for</param>
+        /// <returns>true if the project exists. false if the project does not exist.</returns>
+        public async Task<bool> DoesProjectExistAsync(string projectName)
         {
-            project = _projectRepository.Read(projectName);
-            return project != null;
+            return await _projectRepository.ReadAsync(projectName) is not null;
         }
 
-        public Project CreateProject(string projectName, IUser author)
+        /// <summary>
+        /// Get a project by a given <see cref="projectName"/>
+        /// </summary>
+        /// <param name="projectName">Project name to search for</param>
+        /// <returns>a project if it is found or otherwise returns null</returns>
+        public Task<Project> GetProjectAsync(string projectName)
         {
-            var newId = GetNextId();
-            var newProject = new Project(newId, projectName, author);
-            if (_projectRepository.Create(newProject))
+            return _projectRepository.ReadAsync(projectName);
+        }
+
+        /// <summary>
+        /// Creates a new project with a given name and an given author.
+        /// The author is automatically added to the project.
+        /// </summary>
+        /// <param name="projectName">Name for new project</param>
+        /// <param name="author">Member that is requesting project be made</param>
+        /// <returns>A new project instance 
+        /// or throws an exception if project was not created
+        /// or author failed to join the project.</returns>
+        public async Task<Project> CreateProjectAsync(string projectName, Member author)
+        {
+            var retrievedAuthor = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId);
+
+            // If author doesn't exist
+            if (retrievedAuthor == null)
             {
-                JoinProject(projectName, author, out newProject);
-                return newProject;
+                // Create author member
+                if (await _memberRepository.CreateAsync(author))
+                    author = await _memberRepository.ReadFromSnowflakeAsync(author.SnowflakeId); // Update author
+                else
+                    throw new Exception($"Failed to create new member: {author}!");
             }
-            throw new Exception($"Failed to create new project: {newProject}!");
-        }
-
-        public bool JoinProject(string projectName, IUser user, out Project project)
-        {
-            project = _projectRepository.Read(projectName);
-
-            if (project == null) return false;  // Project must exist
-            if (project.ProjectMembers.Contains(user)) return false; // User may not already be in project
-
-            project.ProjectMembers.Add(user);
-
-            return _projectRepository.Update(project);
-        }
-
-        private int GetNextId()
-        {
-            int i = 0;
-
-            try
+            else // Author exists
             {
-                i = _projectRepository.ReadAll().Keys.Max() + 1;
+                // Update local object for author
+                author = retrievedAuthor;     
             }
-            catch (InvalidOperationException) { }    // No projects available yet
 
-            return i;
+            var newProject = new Project(projectName, author);
+
+            if (!await _projectRepository.CreateAsync(newProject))
+                throw new Exception($"Failed to create new project: {projectName}!");
+            // Retrieve project to add member to.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
+            await _projectRepository.AddMemberAsync(newProject, author);
+
+            // Retrieve project with added member.
+            newProject = await _projectRepository.ReadAsync(newProject.Name);
+
+            return newProject;
+
+        }
+
+        /// <summary>
+        /// Attempt to join a project by a given name with a given member.
+        /// </summary>
+        /// <param name="projectName">Project name to join</param>
+        /// <param name="member">Member to join a project</param>
+        /// <returns>true if update was successful and the new member is apart of the project
+        /// or false if the user is already in the project.</returns>
+        public async Task<bool> JoinProjectAsync(string projectName, Member member)
+        {
+            var retrievedMember = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+
+            // If member isn't in db
+            if (retrievedMember == null)
+            {
+                // Create member
+                if (!await _memberRepository.CreateAsync(member))
+                    throw new Exception($"Failed to add member: {member}");
+
+                member = await _memberRepository.ReadFromSnowflakeAsync(member.SnowflakeId);
+            }
+            else
+            {
+                member = retrievedMember;
+            }
+
+            // Get project matching projectName
+            var project = await _projectRepository.ReadAsync(projectName);
+
+            // If the given member by SnowflakeId does not exist in the project as a member
+            // Add the member to the project.
+            if (project != null && !project.Members.Any(m => m.SnowflakeId == member.SnowflakeId))
+            {
+                if (!await _projectRepository.AddMemberAsync(project, member))
+                    throw new Exception($"Failed to add member: {member}");
+            }
+            else
+            {
+                return false;   // Else they are already in the project or project doesn't exist
+            }
+
+            // Get the updated project with new member.
+            project = await _projectRepository.ReadAsync(projectName);
+
+            // Check if project join is successful.
+            return project.Members
+                .Select(x => x.SnowflakeId)
+                .Contains(member.SnowflakeId);
         }
     }
 }

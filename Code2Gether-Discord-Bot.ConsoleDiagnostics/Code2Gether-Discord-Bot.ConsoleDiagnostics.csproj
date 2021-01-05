@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Code2Gether_Discord_Bot.ConsoleDiagnostics</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Code2Gether-Discord-Bot.Library\Code2Gether-Discord-Bot.Library.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,11 +1,10 @@
-﻿using Discord;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using Discord;
 
-namespace Code2Gether_Discord_Bot.Tests.Fakes
+namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord
 {
     internal class FakeMessageChannel : IMessageChannel
     {

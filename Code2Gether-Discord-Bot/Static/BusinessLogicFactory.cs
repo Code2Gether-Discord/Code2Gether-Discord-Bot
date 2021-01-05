@@ -1,7 +1,7 @@
-﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
-using Code2Gether_Discord_Bot.Library.Static;
-using Discord.Commands;
+﻿using Discord.Commands;
 using System;
+using Code2Gether_Discord_Bot.Library.BusinessLogic;
+using Code2Gether_Discord_Bot.Library.Static;
 
 namespace Code2Gether_Discord_Bot.Static
 {

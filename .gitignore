@@ -1,9 +1,13 @@
-# Directories
-.vs/
-.usr/
+# Ignore user-specific settings, except GitHub workflow files
+.*
+!.github
+
+# Project directories should be ignored
 bin/
 obj/
 Properties/
 
-# File extensions
+# Some file extensions should be ignored
 *.json
+*.db
+*.bat

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Static;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -14,23 +16,26 @@ namespace Code2Gether_Discord_Bot.Tests
     internal class JoinProjectTests
     {
         private IBusinessLogic _logic;
-        private IProjectRepository _repo;
+        private IMemberRepository _memberRepository;
+        private IProjectRepository _projectRepository;
 
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var fakeuser = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
+            var user = new Member(fakeuser);
+
             var client = new FakeDiscordClient()
             {
                 FakeApplication = new FakeApplication()
                 {
-                    Owner = user
+                    Owner = fakeuser
                 }
             };
 
@@ -46,37 +51,57 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user
+                Author = fakeuser
             };
 
-            _repo = new FakeProjectRepository()
+            _memberRepository = new FakeMemberRepository();
+
+            _projectRepository = new FakeProjectRepository()
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "UnitTestProject", user)},
+                    {0, new Project("UnitTestProject", user)},
                 }
             };
 
-            _logic = new JoinProjectLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
+            _logic = new JoinProjectLogic(new Logger(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
                 Client = client,
                 Guild = guild,
                 Message = message,
-                User = user
-            }, new ProjectManager(_repo), "UnitTestProject");
+                User = fakeuser
+            }, new ProjectManager(_memberRepository, _projectRepository), "UnitTestProject");
         }
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
+        /// <summary>
+        /// Passes: If joining an existing project results in 1 member
+        /// Fails:  If joining an existing project results in 0 members
+        /// </summary>
         [Test]
-        public async Task ExecutionTest()
+        public async Task SingleExecutionTest()
         {
             await _logic.ExecuteAsync();
+            var project = await _projectRepository.ReadAsync(0);
+            Assert.AreEqual(1, project.Members.Count);
+        }
+
+        /// <summary>
+        /// Passes: If joining an existing project twice results in only 1 member
+        /// Fails:  If joining an existing project twice results 2 duplicate members
+        /// </summary>
+        [Test]
+        public async Task DoubleExecutionTest()
+        {
+            await _logic.ExecuteAsync();
+            await _logic.ExecuteAsync();
+            var project = await _projectRepository.ReadAsync(0);
             
-            Assert.IsTrue(_repo.Read(0).ProjectMembers.Count > 0);
+            Assert.AreEqual(1, project.Members.Count);
         }
     }
 }

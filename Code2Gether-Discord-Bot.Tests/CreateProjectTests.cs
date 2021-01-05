@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Static;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Code2Gether_Discord_Bot.Tests.Fakes;
-using Discord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -15,130 +17,89 @@ namespace Code2Gether_Discord_Bot.Tests
     internal class CreateProjectTests
     {
         private IBusinessLogic _logic;
-        private IProjectRepository _repo;
-        private IUser _user;
+        private IMemberRepository _memberRepository;
+        private IProjectRepository _projectRepository;
 
         [SetUp]
         public void Setup()
         {
-            _user = new FakeUser()
+            var fakeUser = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
-            _repo = new FakeProjectRepository()
+            var user = new Member(fakeUser);
+
+            var client = new FakeDiscordClient()
             {
-                Projects = new Dictionary<int, Project>()
+                FakeApplication = new FakeApplication()
+                {
+                    Owner = fakeUser
+                }
             };
+
+            var guild = new FakeGuild()
+            {
+
+            };
+
+            var messageChannel = new FakeMessageChannel()
+            {
+
+            };
+
+            var message = new FakeUserMessage()
+            {
+                Author = fakeUser
+            };
+
+            _memberRepository = new FakeMemberRepository();
+            _projectRepository = new FakeProjectRepository();
+
+            _logic = new CreateProjectLogic(new Logger(GetType()), new FakeCommandContext()
+            {
+                Channel = messageChannel,
+                Client = client,
+                Guild = guild,
+                Message = message,
+                User = fakeUser
+            }, new ProjectManager(_memberRepository, _projectRepository), "unittest");
         }
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
         /// <summary>
-        /// Executing should add a new one from a previously empty project list.
+        /// Passes: If when creating a new project, project repo contains an additional project
+        /// Fails:  If when creating a new project, project repo does not change
         /// </summary>
         [Test]
-        public async Task AddFromEmptyExecutionTest()
+        public async Task SingleExecutionTest()
         {
-            #region Arrange
-
-            var client = new FakeDiscordClient()
-            {
-                FakeApplication = new FakeApplication()
-                {
-                    Owner = _user
-                }
-            };
-
-            var message = new FakeUserMessage()
-            {
-                Author = _user
-            };
-
-            _logic = new CreateProjectLogic(
-                UtilityFactory.GetLogger(GetType()),
-                new FakeCommandContext()
-                {
-                    Channel = new FakeMessageChannel(),
-                    Client = client,
-                    Guild = new FakeGuild(),
-                    Message = message,
-                    User = _user
-                },
-                new ProjectManager(_repo),
-                "UnitTestProject"
-            );
-
-            #endregion
-
-            #region Act
-
+            var initialProjects = await _projectRepository.ReadAllAsync();
             await _logic.ExecuteAsync();
+            var finalProjects = await _projectRepository.ReadAllAsync();
 
-            #endregion
-
-            #region Assert
-
-            Assert.IsTrue(_repo.ReadAll().Count == 1);
-
-            #endregion
+            Assert.AreEqual(initialProjects.Count() + 1, finalProjects.Count());
         }
 
         /// <summary>
-        /// Since a project already exists in the repository. Executing again should add a new one.
+        /// Passes: If when creating a duplicate project, total projects do not change during second execution
+        /// Fails:  If when creating a duplicate project, an two additional projects now exist in project repo
         /// </summary>
         [Test]
-        public async Task AddAnotherProjectExecutionTest()
+        public async Task DoubleExecutionTest()
         {
-            #region Arrange
-
-            var client = new FakeDiscordClient()
-            {
-                FakeApplication = new FakeApplication()
-                {
-                    Owner = _user
-                }
-            };
-
-            var message = new FakeUserMessage()
-            {
-                Author = _user
-            };
-
-            var projectManager = new ProjectManager(_repo);
-            projectManager.CreateProject("UnitTestProject1", _user);
-
-            _logic = new CreateProjectLogic(
-                UtilityFactory.GetLogger(GetType()),
-                new FakeCommandContext()
-                {
-                    Channel = new FakeMessageChannel(),
-                    Client = client,
-                    Guild = new FakeGuild(),
-                    Message = message,
-                    User = _user
-                },
-                projectManager,
-                "UnitTestProject2"
-            );
-
-            #endregion
-
-            #region Act
-
+            await _logic.ExecuteAsync();
+            var intermediaryProjects = await _projectRepository.ReadAllAsync();
             await _logic.ExecuteAsync();
 
-            #endregion
+            var finalProjects = await _projectRepository.ReadAllAsync();
 
-            #region Assert
-
-            Assert.IsTrue(_repo.ReadAll().Count == 2);
-
-            #endregion
+            Assert.AreEqual(intermediaryProjects.Count(), finalProjects.Count());
         }
     }
 }

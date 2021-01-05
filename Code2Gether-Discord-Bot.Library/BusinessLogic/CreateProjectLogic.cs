@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
 using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
@@ -19,39 +18,48 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _arguments = arguments;
         }
 
-        public override Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            CreateInactiveProject(out string title, out string description);
+            var embedContent = await CreateInactiveProjectAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle($"Create Project: {title}")
-                .WithDescription(description)
+                .WithTitle($"Create Project: {embedContent.Title}")
+                .WithDescription(embedContent.Description)
                 .WithAuthor(_context.User)
                 .Build();
-            return Task.FromResult(embed);
+            return embed;
         }
 
-        private void CreateInactiveProject(out string title, out string description)
+        private async Task<EmbedContent> CreateInactiveProjectAsync()
         {
-            var projectName = _arguments
-                .Trim()
-                .Split(' ')[0];
+            var embedContent = new EmbedContent();
 
-            if (_projectManager.DoesProjectExist(projectName))
+            var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
+
+            // Check if a project exists before creating one (unique project names)
+            if (await _projectManager.DoesProjectExistAsync(projectName))
             {
-                title = "Failed";
-                description = $"Could not create new inactive project, **{projectName}** already exists!";
+                embedContent.Title = "Failed";
+                embedContent.Description = $"Could not create new inactive project, **{projectName}** already exists!";
             }
+
+            // If no project exists by that name
             else
             {
-                Project newProject = _projectManager.CreateProject(projectName, _context.User);
-                title = "Success";
-                description = $"Successfully created inactive project **{newProject.Name}**!"
-                              + Environment.NewLine
-                              + Environment.NewLine
-                              + $"{newProject}";
+                var user = new Member(_context.User);
+
+                // Create a new project
+                Project newProject = await _projectManager.CreateProjectAsync(projectName, user);
+
+                embedContent.Title = "Success";
+                embedContent.Description = $"Successfully created inactive project **{newProject.Name}**!"
+                                           + Environment.NewLine
+                                           + Environment.NewLine
+                                           + newProject;
             }
+
+            return embedContent;
         }
     }
 }

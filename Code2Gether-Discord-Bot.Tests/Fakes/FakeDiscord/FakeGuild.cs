@@ -1,13 +1,11 @@
-﻿using Discord;
-using Discord.Audio;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Audio;
 
-namespace Code2Gether_Discord_Bot.Tests.Fakes
+namespace Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord
 {
     internal class FakeGuild : IGuild
     {
@@ -129,11 +127,6 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
         public Task<ITextChannel> CreateTextChannelAsync(string name, Action<TextChannelProperties> func = null, RequestOptions options = null)
         {
             throw new NotImplementedException();
-            //var rng = new Random(DateTime.Now.Millisecond);
-            //return Task.Run(() =>
-            //{
-            //    _guildChannels.TryAdd((ulong) rng.Next(0, int.MaxValue));
-            //});
         }
 
         public Task<IVoiceChannel> CreateVoiceChannelAsync(string name, Action<VoiceChannelProperties> func = null, RequestOptions options = null)
@@ -257,7 +250,8 @@ namespace Code2Gether_Discord_Bot.Tests.Fakes
 
         public Task<IGuildUser> GetUserAsync(ulong id, CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)
         {
-            throw new NotImplementedException();
+            IGuildUser user = new FakeGuildUser(id);
+            return Task.FromResult(user);
         }
 
         public Task<IReadOnlyCollection<IGuildUser>> GetUsersAsync(CacheMode mode = CacheMode.AllowDownload, RequestOptions options = null)

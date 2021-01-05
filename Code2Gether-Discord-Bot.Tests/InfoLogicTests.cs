@@ -1,7 +1,7 @@
 ﻿using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -13,7 +13,7 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var user = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
@@ -43,7 +43,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _logic = BusinessLogicFactory.GetInfoLogic(GetType(), new FakeCommandContext()
+            _logic = new InfoLogic(new Logger(GetType()), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,
@@ -55,6 +55,6 @@ namespace Code2Gether_Discord_Bot.Tests
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
     }
 }

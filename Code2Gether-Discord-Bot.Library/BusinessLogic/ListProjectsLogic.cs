@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Discord;
 using Discord.Commands;
 
@@ -17,38 +18,52 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _projectRepository = projectRepository;
         }
 
-        public override Task<Embed> ExecuteAsync()
+        public override async Task<Embed> ExecuteAsync()
         {
-            ListProjects(out string title, out string description);
+            var embedContent = await ListProjectsAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle(title)
-                .WithDescription(description)
+                .WithTitle(embedContent.Title)
+                .WithDescription(embedContent.Description)
                 .WithAuthor(_context.User)
                 .Build();
-            return Task.FromResult(embed);
+
+            return embed;
         }
 
-        private void ListProjects(out string title, out string description)
+        private async Task<EmbedContent> ListProjectsAsync()
         {
+            var embedContent = new EmbedContent();
+
             var sb = new StringBuilder();
-            var projects = _projectRepository.ReadAll();
+
+            // Read all projects
+            var projects = await _projectRepository.ReadAllAsync();
 
             foreach (var project in projects)
             {
-                sb.Append(project.Value
+
+                // Get Discord User details for project's author
+                var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
+
+                sb.Append($"Project name: {project.Name}; Author: {authorUser.Username}#{authorUser.Discriminator}"
                           + Environment.NewLine
                           + "Current Members: ");
-                foreach (var member in project.Value.ProjectMembers)
+
+                foreach (var member in project.Members)
                 {
-                    sb.Append($"{member}; ");
+                    // Get the Discord user for each project's member
+                    var user = await _context.Guild.GetUserAsync(member.SnowflakeId);
+                    sb.Append($"{user}; ");
                 }
+
                 sb.Append(Environment.NewLine);
             }
 
-            title = $"List Projects ({projects.Values.Count})";
-            description = sb.ToString();
+            embedContent.Title = $"List Projects ({projects.Count()})"; // "List Projects (0)"
+            embedContent.Description = sb.ToString();   // "some-project ; Created by: SomeUser#1234 \r\n Current Members: SomeUser#1234 \r\n "
+            return embedContent;
         }
     }
 }

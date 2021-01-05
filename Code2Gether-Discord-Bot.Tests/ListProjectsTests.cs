@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Models.Repositories.ProjectRepository;
-using Code2Gether_Discord_Bot.Static;
+using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Code2Gether_Discord_Bot.Tests.Fakes;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
 
 namespace Code2Gether_Discord_Bot.Tests
@@ -19,18 +20,20 @@ namespace Code2Gether_Discord_Bot.Tests
         [SetUp]
         public void Setup()
         {
-            var user = new FakeUser()
+            var fakeUser = new FakeDiscordUser()
             {
                 Username = "UnitTest",
                 DiscriminatorValue = 1234,
                 Id = 123456789123456789
             };
 
+            var user = new Member(fakeUser);
+
             var client = new FakeDiscordClient()
             {
                 FakeApplication = new FakeApplication()
                 {
-                    Owner = user
+                    Owner = fakeUser
                 }
             };
 
@@ -46,43 +49,57 @@ namespace Code2Gether_Discord_Bot.Tests
 
             var message = new FakeUserMessage()
             {
-                Author = user
+                Author = fakeUser
             };
 
             _repo = new FakeProjectRepository()
             {
                 Projects = new Dictionary<int, Project>()
                 {
-                    {0, new Project(0, "unittest", user)},
+                    {0, new Project("unittest", user)},
                 }
             };
 
-            _logic = new ListProjectsLogic(UtilityFactory.GetLogger(GetType()), new FakeCommandContext()
+            _logic = new ListProjectsLogic(new Logger(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
                 Client = client,
                 Guild = guild,
                 Message = message,
-                User = user
+                User = fakeUser
             }, _repo);
         }
 
         [Test]
         public void InstantiationTest() =>
-            Assert.IsTrue(_logic != null);
+            Assert.IsNotNull(_logic);
 
         [Test]
-        public async Task ExecutionTest()
+        public async Task EmbedContainsEveryProjectNameExecutionTest()
         {
-            _ = await _logic.ExecuteAsync();
-            Assert.IsTrue(_repo.ReadAll().Count > 0);
+            var embed = await _logic.ExecuteAsync();
+            var projects = await _repo.ReadAllAsync();
+            var projectNames = projects.Select(p => p.Name);
+
+            bool hasEveryProjectName = true;
+            foreach (var projectName in projectNames)
+            {
+                if (!embed.Description.Contains(projectName))
+                {
+                    hasEveryProjectName = false;
+                }
+            }
+
+            Assert.IsTrue(hasEveryProjectName);
         }
 
         [Test]
-        public async Task EmbedExecutionTest()
+        public async Task EmbedContainsTotalProjectCountExecutionTest()
         {
             var embed = await _logic.ExecuteAsync();
-            Assert.IsTrue(embed.Description.Contains(_repo.Read(0).ToString()));
+            var projects = await _repo.ReadAllAsync();
+
+            Assert.IsTrue(embed.Title.Contains(projects.Count().ToString()));
         }
     }
 }

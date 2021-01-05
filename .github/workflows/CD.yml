@@ -21,7 +21,9 @@ jobs:
     - name: Stop Discord Bot Service
       env:
         SUDOER:  ${{ secrets.SUDO_CD }}
-      run: echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot stop
+      run: 
+        echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot stop
+        echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot-api stop
     
     - name: Publish
       run: dotnet publish -c "Release" -o "/home/ubuntu/Code2Gether-Discord-Bot/release"
@@ -29,4 +31,6 @@ jobs:
     - name: Start Discord Bot service
       env:
         SUDOER:  ${{ secrets.SUDO_CD }}
-      run: echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot restart
+      run:
+        echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot restart
+        echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot-api restart

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -21,24 +19,23 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var newChannel = await _context.Guild.CreateTextChannelAsync(_newChannelName);
 
-            var title = string.Empty;
-            var description = string.Empty;
+            var embedContent = new EmbedContent();
 
             if (newChannel is not null)
             {
-                title = $"Make Channel: {newChannel.Name}";
-                description = $"Successfully made new channel: <#{newChannel.Id}>";
+                embedContent.Title = $"Make Channel: {newChannel.Name}";
+                embedContent.Description = $"Successfully made new channel: <#{newChannel.Id}>";
             }
             else
             {
-                title = $"Make Channel: {newChannel.Name}";
-                description = $"Failed to make new channel: {newChannel.Name}";
+                embedContent.Title= $"Make Channel: {newChannel.Name}";
+                embedContent.Description = $"Failed to make new channel: {newChannel.Name}";
             }
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
-                .WithTitle(title)
-                .WithDescription(description)
+                .WithTitle(embedContent.Title)
+                .WithDescription(embedContent.Description)
                 .WithAuthor(_context.Message.Author)
                 .Build();
             return embed;

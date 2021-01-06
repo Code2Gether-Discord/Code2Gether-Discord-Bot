@@ -3,7 +3,9 @@ using Discord;
 using Discord.Commands;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -33,20 +35,20 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private string GetCommandText()
         {
-            string commandText = "";
+            var commandTextSb = new StringBuilder();
             foreach (var module in _modules)
             {
                 foreach (var command in module.Commands)
                 {
-                    string aliases = "";
+                    var aliasesSb = new StringBuilder();
                     foreach (var alias in command.Aliases)
                     {
-                        aliases += $"{alias};";
+                        aliasesSb.Append($"{alias};");
                     }
-                    commandText += $"{_prefix}{command.Name} ({aliases}) - {command.Summary}{Environment.NewLine}";
+                    commandTextSb.Append($"{_prefix}{command.Name} ({aliasesSb}) - {command.Summary}{Environment.NewLine}");
                 }
             }
-            return commandText;
+            return commandTextSb.ToString();
         }
     }
 }

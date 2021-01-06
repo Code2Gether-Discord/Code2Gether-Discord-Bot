@@ -1,11 +1,11 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {

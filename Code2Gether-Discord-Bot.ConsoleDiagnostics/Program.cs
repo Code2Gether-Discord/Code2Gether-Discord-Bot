@@ -11,8 +11,8 @@ namespace Code2Gether_Discord_Bot.ConsoleDiagnostics
         {
             var connectionString = "https://localhost:5001/";
 
-            var memberDal = new MemberDAL(connectionString);
-            var projectDal = new ProjectDAL(connectionString);
+            var memberDal = new MemberDataAccessLayer(connectionString);
+            var projectDal = new ProjectDataAccessLayer(connectionString);
 
             // Create a new member.
             var member = new Member

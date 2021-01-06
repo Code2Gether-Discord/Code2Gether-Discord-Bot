@@ -1,16 +1,14 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Models;
-using Code2Gether_Discord_Bot.Static;
+﻿using Code2Gether_Discord_Bot.Models;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Static;
+using Serilog;
 
 
 namespace Code2Gether_Discord_Bot
@@ -48,12 +46,12 @@ namespace Code2Gether_Discord_Bot
                     {
                         o += $"{c.Name}; ";
                     });
-                    _logger.Log(LogSeverity.Info, o);
+                    _logger.Information(o);
                 });
             }
             catch (Exception e)
             {
-                _logger.Log(LogSeverity.Critical, $"Failed to register commands! Exception: {e.Message}");
+                _logger.Error(e, "Failed to register commands!");
             }
         }
 
@@ -106,11 +104,29 @@ namespace Code2Gether_Discord_Bot
         {
             if (arg.Message != null)
             {
-                _logger.Log(arg.Severity, arg.Message);
+                switch (arg.Severity)
+                {
+                    case LogSeverity.Critical:
+                    case LogSeverity.Error:
+                        _logger.Error(arg.Message);
+                        break;
+                    case LogSeverity.Warning:
+                        _logger.Warning(arg.Message);
+                        break;
+                    case LogSeverity.Info:
+                        _logger.Information(arg.Message);
+                        break;
+                    case LogSeverity.Verbose:
+                        _logger.Verbose(arg.Message);
+                        break;
+                    case LogSeverity.Debug:
+                        _logger.Debug(arg.Message);
+                        break;
+                }
             }
             else if (arg.Exception != null)
             {
-                _logger.Log(arg.Severity, "Discord Log Event", arg.Exception);
+                _logger.Error(arg.Exception, "Discord Log Event");
             }
             return Task.CompletedTask;
         }
@@ -171,7 +187,7 @@ namespace Code2Gether_Discord_Bot
             }
             catch (Exception e)
             {
-                _logger.Log(LogSeverity.Error, $"Failed to parse incoming message", e);
+                _logger.Error(e, "Failed to parse incoming message");
             }
 
             // Don't respond to bots or system messages
@@ -179,7 +195,7 @@ namespace Code2Gether_Discord_Bot
             if (msg.Author.IsWebhook) return;
 
             // If msg has this bot's prefix
-            int argPos = 0;
+            var argPos = 0;
             if (!(msg.HasMentionPrefix(_client.CurrentUser, ref argPos)    // If mention the bot in msg
                 || msg.HasStringPrefix(_config.Prefix.ToLower(), ref argPos)    // Or lowercase prefix
                 || msg.HasStringPrefix(_config.Prefix.ToUpper(), ref argPos)))  // Or uppercase prefix
@@ -187,8 +203,8 @@ namespace Code2Gether_Discord_Bot
             
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             
-            if (result.Error.HasValue)
-                _logger.Log(LogSeverity.Debug, $"Message: {msg} returned: {result.Error.Value}");
+            if (!result.IsSuccess || result.Error.HasValue)
+                _logger.Warning("Execution of command returned an error", msg, result.ErrorReason);
             #endregion
         }
     }

@@ -1,6 +1,5 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Models;
-using System;
+﻿using Code2Gether_Discord_Bot.Models;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Static
 {
@@ -10,11 +9,8 @@ namespace Code2Gether_Discord_Bot.Static
     /// </summary>
     public static class UtilityFactory
     {
-        public static ILogger GetLogger(Type classContext) =>
-            new Logger(classContext);
-
         public static IBot GetBot() =>
-            new Bot(GetLogger(typeof(Bot)), GetConfig());
+            new Bot(Log.Logger, GetConfig());
 
         public static IConfig GetConfig()
             => ConfigProvider.GetConfig();

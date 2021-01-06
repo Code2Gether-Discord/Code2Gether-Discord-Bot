@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
@@ -40,7 +40,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var sb = new StringBuilder();
 
             // Read all projects
-            var projects = await _projectRepository.ReadAllAsync();
+            var projects = new List<Project>();
+            projects.AddRange(await _projectRepository.ReadAllAsync());
 
             foreach (var project in projects)
             {
@@ -62,7 +63,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 sb.Append(Environment.NewLine);
             }
 
-            embedContent.Title = $"List Projects ({projects.Count()})"; // "List Projects (0)"
+            embedContent.Title = $"List Projects ({projects.Count})"; // "List Projects (0)"
             embedContent.Description = sb.ToString();   // "some-project ; Created by: SomeUser#1234 \r\n Current Members: SomeUser#1234 \r\n "
             return embedContent;
         }

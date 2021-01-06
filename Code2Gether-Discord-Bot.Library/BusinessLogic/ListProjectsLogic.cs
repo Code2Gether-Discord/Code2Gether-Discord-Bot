@@ -43,24 +43,11 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var projects = new List<Project>();
             projects.AddRange(await _projectRepository.ReadAllAsync());
 
-            foreach (var project in projects)
+            for (var i = 0; i < projects.Count; i++)
             {
-
-                // Get Discord User details for project's author
-                var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
-
-                sb.Append($"Project name: {project.Name}; Author: {authorUser.Username}#{authorUser.Discriminator}"
+                sb.Append($"[{i+1}/{projects.Count}]" + projects[i]
                           + Environment.NewLine
-                          + "Current Members: ");
-
-                foreach (var member in project.Members)
-                {
-                    // Get the Discord user for each project's member
-                    var user = await _context.Guild.GetUserAsync(member.SnowflakeId);
-                    sb.Append($"{user}; ");
-                }
-
-                sb.Append(Environment.NewLine);
+                          + Environment.NewLine);
             }
 
             embedContent.Title = $"List Projects ({projects.Count})"; // "List Projects (0)"

@@ -37,6 +37,7 @@ namespace Code2Gether_Discord_Bot.WebApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://*:5000", "https://*:5001");
                 });
     }
 }

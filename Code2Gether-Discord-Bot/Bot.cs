@@ -148,6 +148,7 @@ namespace Code2Gether_Discord_Bot
         /// <returns></returns>
         private Task UserJoinedHandler(SocketGuildUser arg)
         {
+            
             return Task.CompletedTask;
         }
 

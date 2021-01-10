@@ -10,12 +10,12 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     public class CreateProjectLogic : BaseLogic
     {
         private IProjectManager _projectManager;
-        private string _arguments;
+        private string _projectName;
 
-        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string arguments) : base(logger, context)
+        public CreateProjectLogic(ILogger logger, ICommandContext context, IProjectManager projectManager, string projectName) : base(logger, context)
         {
             _projectManager = projectManager;
-            _arguments = arguments;
+            _projectName = projectName;
         }
 
         public override async Task<Embed> ExecuteAsync()
@@ -35,7 +35,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent();
 
-            var projectName = ParseCommandArguments.ParseBy(' ', _arguments)[0];
+            var projectName = ParseCommandArguments.ParseBy(' ', _projectName)[0];
 
             // Check if a project exists before creating one (unique project names)
             if (await _projectManager.DoesProjectExistAsync(projectName))

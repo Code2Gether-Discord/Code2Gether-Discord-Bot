@@ -26,11 +26,11 @@ namespace Code2Gether_Discord_Bot.Static
         public static IBusinessLogic ExcuseGeneratorLogic(Type classContext, ICommandContext context) =>
             new ExcuseGeneratorLogic(UtilityFactory.GetLogger(classContext), context);
         
-        public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string arguments) =>
-            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), arguments);
+        public static IBusinessLogic GetCreateProjectLogic(Type classContext, ICommandContext context, string projectName) =>
+            new CreateProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), projectName);
 
-        public static IBusinessLogic GetJoinProjectLogic(Type classContext, ICommandContext context, string arguments) =>
-            new JoinProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), arguments);
+        public static IBusinessLogic GetJoinProjectLogic(Type classContext, ICommandContext context, string projectName) =>
+            new JoinProjectLogic(UtilityFactory.GetLogger(classContext), context, ManagerFactory.GetProjectManager(), projectName);
 
         public static IBusinessLogic GetListProjectsLogic(Type classContext, ICommandContext context) =>
             new ListProjectsLogic(UtilityFactory.GetLogger(classContext), context, RepositoryFactory.GetProjectRepository());
@@ -40,5 +40,8 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic GetLeetAnsLogic(Type classContext, ICommandContext context, string answer) =>
             new LeetAnsLogic(UtilityFactory.GetLogger(classContext), context, answer);
+
+        public static IBusinessLogic GetGitHubJoinLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+            new GitHubJoinLogic(UtilityFactory.GetLogger(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, gitHubEmail);
     }
 }

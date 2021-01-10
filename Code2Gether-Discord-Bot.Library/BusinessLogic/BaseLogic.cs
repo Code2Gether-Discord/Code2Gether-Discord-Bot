@@ -9,7 +9,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
     {
         internal ILogger _logger;
         internal ICommandContext _context;
-
+        
         public BaseLogic(ILogger logger, ICommandContext context)
         {
             _logger = logger;

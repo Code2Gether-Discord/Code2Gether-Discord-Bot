@@ -5,12 +5,13 @@ using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.CustomExceptions;
 using Discord;
 using Discord.Commands;
+using GitHubApiWrapper;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class GitHubJoinLogic : BaseLogic
     {
-        private const string GITHUB_ENDPOINT = "https://api.github.com/orgs/Code2Gether-Discord/invitations";
+        private const string GITHUB_ORG_NAME = "Code2Gether-Discord";
         private readonly string _githubAuthToken;
         private readonly string _userGitHubEmail;
 
@@ -41,17 +42,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private async Task<EmbedContent> JoinGitHubOrganization()
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Code2Gether-Bot", "1"));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _githubAuthToken);
-
-            var content = new StringContent($"{{\"email\": \"{_userGitHubEmail}\"}}");
-            content.Headers.ContentType.MediaType = "application/json";
-
-            var response = await client.PostAsync(GITHUB_ENDPOINT, content);
-            
+            var githubClient = new GitHubClient(_githubAuthToken);
+            var response = await githubClient.InviteViaEmailToOrganizationAsync(GITHUB_ORG_NAME, _userGitHubEmail);
             return ParseHttpResponseToEmbedContent(response, _context.User.Mention);
         }
 

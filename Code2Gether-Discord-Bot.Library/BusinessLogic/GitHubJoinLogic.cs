@@ -14,10 +14,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private readonly string _githubAuthToken;
         private readonly string _userGitHubEmail;
 
-        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string args) : base(logger, context)
+        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string userGitHubEmail) : base(logger, context)
         {
             _githubAuthToken = githubAuthToken;
-            _userGitHubEmail = args.Trim();
+            _userGitHubEmail = userGitHubEmail.Trim();
 
             if (!HttpHelper.IsValidEmail(_userGitHubEmail))
             {
@@ -42,12 +42,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> JoinGitHubOrganization()
         {
             var client = new HttpClient();
-
-            client.DefaultRequestHeaders.Accept.Add(
-                MediaTypeWithQualityHeaderValue.Parse("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(_githubAuthToken);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Code2Gether-Bot", "1"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _githubAuthToken);
 
             var content = new StringContent($"{{\"email\": \"{_userGitHubEmail}\"}}");
+            content.Headers.ContentType.MediaType = "application/json";
 
             var response = await client.PostAsync(GITHUB_ENDPOINT, content);
             
@@ -58,7 +59,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent
             {
-                Title = "GitHub Join"
+                Title = "GitHub Join: "
             };
 
             if (response.IsSuccessStatusCode)
@@ -69,7 +70,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             else
             {
                 embedContent.Title += "Failed";
-                embedContent.Description = $"There was an error requesting to join the organization! {response.ReasonPhrase}";
+                embedContent.Description = $"There was an error requesting to join the organization! GitHub's reason was: {response.ReasonPhrase}";
             }
 
             return embedContent;

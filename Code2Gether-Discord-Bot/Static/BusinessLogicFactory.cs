@@ -43,5 +43,8 @@ namespace Code2Gether_Discord_Bot.Static
 
         public static IBusinessLogic GetGitHubJoinLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
             new GitHubJoinLogic(UtilityFactory.GetLogger(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, gitHubEmail);
+
+        public static IBusinessLogic GetGitHubJoinTeamLogic(Type classContext, SocketCommandContext context, string args) =>
+            new GitHubJoinTeamLogic(UtilityFactory.GetLogger(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, args);
     }
 }

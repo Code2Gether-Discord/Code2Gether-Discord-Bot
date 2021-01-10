@@ -15,7 +15,7 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
 
         [Command("github join-team",
             RunMode = RunMode.Async)]
-        [Summary("Join the a GitHub Team in the Organization at https://github.com/Code2Gether-Discord. Usage: github join team [team slug] [username]")]
+        [Summary("Join the a GitHub Team in the Organization at https://github.com/Code2Gether-Discord. Usage: github join team [team name] [username]")]
         public async Task GitHubJoinTeamAsync([Remainder] string args = "") =>
             await ReplyAsync(embed: await BusinessLogicFactory.GetGitHubJoinTeamLogic(GetType(), Context, args).ExecuteAsync());
     }

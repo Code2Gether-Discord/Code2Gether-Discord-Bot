@@ -33,6 +33,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 .AddField("Guilds", $"{guilds.Count}")
                 .AddField("Channels", $"{guilds.Sum(g => g.GetChannelsAsync().Result.Count)}")
                 .Build();
+
             return Task.FromResult(embed);
         }
 

@@ -107,6 +107,8 @@ namespace Code2Gether_Discord_Bot
                 switch (arg.Severity)
                 {
                     case LogSeverity.Critical:
+                        _logger.Fatal(arg.Message);
+                        break;
                     case LogSeverity.Error:
                         _logger.Error(arg.Message);
                         break;

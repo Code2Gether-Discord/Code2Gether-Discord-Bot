@@ -11,3 +11,4 @@ Properties/
 *.json
 *.db
 *.bat
+*.user

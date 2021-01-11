@@ -8,6 +8,8 @@ namespace Code2Gether_Discord_Bot.Models
         string Prefix { get; set; }
         bool Debug { get; set; }
         string ConnectionString { get; set; }
+        string GitHubAuthToken { get; set; }
+        string GitHubOrganizationName { get; set; }
     }
 
     public class Config : IConfig
@@ -24,14 +26,22 @@ namespace Code2Gether_Discord_Bot.Models
         [JsonProperty("connectionString")]
         public string ConnectionString { get; set; }
 
+        [JsonProperty("githubAuthToken")]
+        public string GitHubAuthToken { get; set; }
+
+        [JsonProperty("githubOrganizationName")]
+        public string GitHubOrganizationName { get; set; }
+
         public Config() { }
 
-        public Config(string prefix, string token, bool debug, string connectionString)
+        public Config(string prefix, string token, bool debug, string connectionString, string gitHubAuthToken, string githubOrganizationName)
         {
             Prefix = prefix;
             DiscordToken = token;
             Debug = debug;
             ConnectionString = connectionString;
+            GitHubAuthToken = gitHubAuthToken;
+            GitHubOrganizationName = githubOrganizationName;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Summary("Joins a project.")]
         [RequireBotPermission(ChannelPermission.ManageChannels, ErrorMessage = "Missing permission to Manage Channels")]
         [RequireBotPermission(ChannelPermission.ManageRoles, ErrorMessage = "Missing permission to Manage Roles")]
-        public async Task JoinProjectAsync([Remainder] string arguments) =>
-            await ReplyAsync(embed: await BusinessLogicFactory.GetJoinProjectLogic(GetType(), Context, arguments).ExecuteAsync());
+        public async Task JoinProjectAsync([Remainder] string projectName) =>
+            await ReplyAsync(embed: await BusinessLogicFactory.GetJoinProjectLogic(GetType(), Context, projectName).ExecuteAsync());
     }
 }

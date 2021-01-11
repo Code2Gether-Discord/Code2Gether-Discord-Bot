@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.WebApi", "Code2Gether-Discord-Bot.WebApi\Code2Gether-Discord-Bot.WebApi.csproj", "{08CDB4A5-BD9F-466F-98F6-2DFEF259FCCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Code2Gether-Discord-Bot.ConsoleDiagnostics", "Code2Gether-Discord-Bot.ConsoleDiagnostics\Code2Gether-Discord-Bot.ConsoleDiagnostics.csproj", "{47604C05-CF23-46C1-8C5C-38EA4E5E9C22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code2Gether-Discord-Bot.ConsoleDiagnostics", "Code2Gether-Discord-Bot.ConsoleDiagnostics\Code2Gether-Discord-Bot.ConsoleDiagnostics.csproj", "{47604C05-CF23-46C1-8C5C-38EA4E5E9C22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubApiWrapper", "GitHubApiWrapper\GitHubApiWrapper.csproj", "{E8F47330-9890-48D4-8498-3600959ED79A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{47604C05-CF23-46C1-8C5C-38EA4E5E9C22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47604C05-CF23-46C1-8C5C-38EA4E5E9C22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47604C05-CF23-46C1-8C5C-38EA4E5E9C22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8F47330-9890-48D4-8498-3600959ED79A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8F47330-9890-48D4-8498-3600959ED79A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8F47330-9890-48D4-8498-3600959ED79A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8F47330-9890-48D4-8498-3600959ED79A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

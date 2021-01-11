@@ -2,11 +2,18 @@
 A Discord bot for the Code2Gether server
 
 # Commands
-- c!get_excuse (get_excuse;getexcuse;) - Gets a random excuse.
-- c!help (help;) - Returns this!
-- c!info (info;about;whoami;owner;uptime;library;author;stats;) - Replies with a wealth of information regarding the bot's environment
-- c!ping (ping;pong;) - Replies with an embed containing the bot's websocket latency
-- c!makechannel (makechannel;) - Creates a new text channel
+- c!createproject (createproject; create; ) - Creates an inactive project that other users can join.
+- c!getexcuse (getexcuse; excuse; ) - Gets a random excuse.
+- c!github join-org (github join-org; join-organization; ) - Join the GitHub Organization at https://github.com/Code2Gether-Discord with your GitHub Account's Email
+- c!github join-team (github join-team; ) - Join the a GitHub Team in the Organization at https://github.com/Code2Gether-Discord. Usage: github join-team [team name] [username]
+- c!help (help; ) - Returns this!
+- c!info (info; about; whoami; owner; uptime; library; author; stats; ) - Replies with a wealth of information regarding the bot's environment.
+- c!joinproject (joinproject; join; ) - Joins a project.
+- c!leet (leet; ) - Reply with a question from leetcode.com with a given title.
+- c!leetans (leetans; leetanswer; ) - Provide an answer for an open leet question.
+- c!listprojects (listprojects; list; ) - Lists all projects that users can join.
+- c!ping (ping; pong; ) - Replies with an embed containing the bot's websocket latency.
+- c!makechannel (makechannel; ) - Creates a new text channel.
 
 # How to add a new Command (as of commit e88286a)
 - Say you want to add a command called `c!MyCommand`

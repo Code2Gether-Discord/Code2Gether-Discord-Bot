@@ -49,12 +49,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 foreach (var command in module.Commands)
                 {
-                    var aliasesSb = new StringBuilder();
+                    var commandAliasStringBuilder = new StringBuilder();
+
                     foreach (var alias in command.Aliases)
                     {
-                        aliasesSb.Append(alias);
+                        commandAliasStringBuilder.Append(alias);
                     }
-                    moduleStringBuilder.Append($"{_prefix}{command.Name} ({aliasesSb}) - {command.Summary}{Environment.NewLine}");
+
+                    moduleStringBuilder.Append($"{_prefix}{command.Name} ({commandAliasStringBuilder}) - {command.Summary}{Environment.NewLine}");
                 }
 
                 commandTexts.Add(moduleStringBuilder.ToString());

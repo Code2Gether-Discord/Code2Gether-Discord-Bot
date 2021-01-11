@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Static;
 using Discord.Commands;

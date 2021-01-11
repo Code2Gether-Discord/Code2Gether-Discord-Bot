@@ -10,8 +10,8 @@ namespace Code2Gether_Discord_Bot.Static
         private static FileInfo _configFile = new FileInfo("config.json");
         public static IConfig GetConfig()
         {
-            // Default value - Do not change
-            IConfig config = new Config("c!", "PLACEHOLDER", true, "https://localhost:5001", "PLACEHOLDER");
+            // Default values - Do not change
+            IConfig config = new Config("c!", "PLACEHOLDER", true, "https://localhost:5001", "PLACEHOLDER", "Code2Gether-Discord");
 
             try
             {

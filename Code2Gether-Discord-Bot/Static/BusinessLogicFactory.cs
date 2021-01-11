@@ -2,6 +2,7 @@
 using System;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Static;
+using GitHubApiWrapper.Models;
 using Serilog;
 
 namespace Code2Gether_Discord_Bot.Static
@@ -43,9 +44,9 @@ namespace Code2Gether_Discord_Bot.Static
             new LeetAnsLogic(Log.Logger.ForContext(classContext), context, answer);
 
         public static IBusinessLogic GetGitHubJoinLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
-            new GitHubJoinLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, gitHubEmail);
+            new GitHubJoinLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName, gitHubEmail);
 
         public static IBusinessLogic GetGitHubJoinTeamLogic(Type classContext, SocketCommandContext context, string args) =>
-            new GitHubJoinTeamLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, args);
+            new GitHubJoinTeamLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName, args);
     }
 }

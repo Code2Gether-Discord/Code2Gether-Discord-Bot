@@ -13,14 +13,15 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class GitHubJoinTeamLogic : BaseLogic
     {
-        private const string GITHUB_ORG_NAME = "Code2Gether-Discord";
         private readonly string _githubAuthToken;
+        private readonly string _githubOrganizationName;
         private readonly string _teamSlug;
         private readonly string _username;
 
-        public GitHubJoinTeamLogic(ILogger logger, ICommandContext context, string githubAuthToken, string args) : base(logger, context)
+        public GitHubJoinTeamLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string args) : base(logger, context)
         {
             _githubAuthToken = githubAuthToken;
+            _githubOrganizationName = githubOrganizationName;
 
             var parsedArguments = ParseCommandArguments.ParseBy(' ', args);
             _teamSlug = parsedArguments.FirstOrDefault();
@@ -44,7 +45,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> JoinGitHubTeam()
         {
             var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.AddOrUpdateTeamMembershipForUserAsync(GITHUB_ORG_NAME, _teamSlug, _username, Team.Role.member);
+            var response = await githubClient.AddOrUpdateTeamMembershipForUserAsync(_githubOrganizationName, _teamSlug, _username, Team.Role.member);
             return ParseHttpResponseToEmbedContent(response);
         }
 

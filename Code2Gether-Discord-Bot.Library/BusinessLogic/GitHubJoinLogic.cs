@@ -11,13 +11,14 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class GitHubJoinLogic : BaseLogic
     {
-        private const string GITHUB_ORG_NAME = "Code2Gether-Discord";
         private readonly string _githubAuthToken;
+        private readonly string _githubOrganizationName;
         private readonly string _userGitHubEmail;
 
-        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string userGitHubEmail) : base(logger, context)
+        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string userGitHubEmail) : base(logger, context)
         {
             _githubAuthToken = githubAuthToken;
+            _githubOrganizationName = githubOrganizationName;
             _userGitHubEmail = userGitHubEmail.Trim();
 
             if (!HttpHelper.IsValidEmail(_userGitHubEmail))
@@ -43,7 +44,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<EmbedContent> JoinGitHubOrganization()
         {
             var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.InviteViaEmailToOrganizationAsync(GITHUB_ORG_NAME, _userGitHubEmail);
+            var response = await githubClient.InviteViaEmailToOrganizationAsync(_githubOrganizationName, _userGitHubEmail);
             return ParseHttpResponseToEmbedContent(response);
         }
 

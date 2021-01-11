@@ -3,6 +3,7 @@ using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using NUnit.Framework;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
@@ -44,7 +45,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Content = "debug!makechannel make-me"
             };
 
-            _logic = new MakeChannelLogic( new Logger(GetType()), new FakeCommandContext()
+            _logic = new MakeChannelLogic(Log.Logger.ForContext(GetType()), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,

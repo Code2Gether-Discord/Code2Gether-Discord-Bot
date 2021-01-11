@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
@@ -10,6 +7,7 @@ using Code2Gether_Discord_Bot.Tests.Fakes;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
@@ -64,7 +62,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 }
             };
 
-            _logic = new JoinProjectLogic(new Logger(GetType()), new FakeCommandContext()
+            _logic = new JoinProjectLogic(Log.Logger.ForContext(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
                 Client = client,

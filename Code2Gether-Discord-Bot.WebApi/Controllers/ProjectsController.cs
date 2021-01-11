@@ -165,6 +165,7 @@ namespace Code2Gether_Discord_Bot.WebApi.Controllers
 
             var member = await _dbContext.ProjectMembers
                 .AsAsyncEnumerable()
+                .Where(x => x.ProjectID == projectId)
                 .FirstOrDefaultAsync(x => x.MemberID == memberId);
 
             if (member != null)

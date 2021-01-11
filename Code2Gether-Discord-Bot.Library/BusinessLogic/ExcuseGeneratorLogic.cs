@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -55,7 +56,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
             catch(Exception e)
             {
-                _logger.Log(LogSeverity.Error, e.Message);
+                _logger.Error(e, "Fragile HTML scraping failed!");
                 return "Because I'm not working";
             }
         }

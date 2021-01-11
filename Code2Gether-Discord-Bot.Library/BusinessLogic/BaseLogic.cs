@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -15,7 +15,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             _logger = logger;
             _context = context;
 
-            _logger.Log(GetType(), _context);
+            _logger.Information($"{GetType()} executed by {context.Message.Author} on {context.Guild} #{context.Channel}: {context.Message}");
         }
 
         public abstract Task<Embed> ExecuteAsync();

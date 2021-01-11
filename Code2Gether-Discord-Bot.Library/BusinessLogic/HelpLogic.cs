@@ -10,8 +10,8 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
     public class HelpLogic : BaseLogic
     {
-        private IEnumerable<ModuleInfo> _modules;
-        private string _prefix;
+        private readonly IEnumerable<ModuleInfo> _modules;
+        private readonly string _prefix;
 
         public HelpLogic(ILogger logger, ICommandContext context, IEnumerable<ModuleInfo> modules, string prefix) : base(logger, context)
         {

@@ -53,7 +53,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                     foreach (var alias in command.Aliases)
                     {
-                        commandAliasStringBuilder.Append(alias);
+                        commandAliasStringBuilder.Append($"{alias}; ");
                     }
 
                     moduleStringBuilder.Append($"{_prefix}{command.Name} ({commandAliasStringBuilder}) - {command.Summary}{Environment.NewLine}");

@@ -2,11 +2,11 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.LeetModels;
 using Discord;
 using Discord.Commands;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {

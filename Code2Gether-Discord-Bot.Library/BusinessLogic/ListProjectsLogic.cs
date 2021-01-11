@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.Repositories;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -39,29 +40,17 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             var sb = new StringBuilder();
 
             // Read all projects
-            var projects = await _projectRepository.ReadAllAsync();
+            var projects = new List<Project>();
+            projects.AddRange(await _projectRepository.ReadAllAsync());
 
-            foreach (var project in projects)
+            for (var i = 0; i < projects.Count; i++)
             {
-
-                // Get Discord User details for project's author
-                var authorUser = await _context.Guild.GetUserAsync(project.Author.SnowflakeId);
-
-                sb.Append($"Project name: {project.Name}; Author: {authorUser.Username}#{authorUser.Discriminator}"
+                sb.Append($"[{i+1}/{projects.Count}]" + projects[i]
                           + Environment.NewLine
-                          + "Current Members: ");
-
-                foreach (var member in project.Members)
-                {
-                    // Get the Discord user for each project's member
-                    var user = await _context.Guild.GetUserAsync(member.SnowflakeId);
-                    sb.Append($"{user}; ");
-                }
-
-                sb.Append(Environment.NewLine);
+                          + Environment.NewLine);
             }
 
-            embedContent.Title = $"List Projects ({projects.Count()})"; // "List Projects (0)"
+            embedContent.Title = $"List Projects ({projects.Count})"; // "List Projects (0)"
             embedContent.Description = sb.ToString();   // "some-project ; Created by: SomeUser#1234 \r\n Current Members: SomeUser#1234 \r\n "
             return embedContent;
         }

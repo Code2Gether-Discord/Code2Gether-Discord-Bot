@@ -33,7 +33,7 @@ namespace Code2Gether_Discord_Bot.Library.Models
         #endregion
 
         #region Methods
-        public override string ToString() => $"{SnowflakeId}";
+        public override string ToString() => $"<@{SnowflakeId}>";
         #endregion
     }
 }

@@ -2,7 +2,7 @@
 using Discord;
 using Code2Gether_Discord_Bot.Static;
 using Code2Gether_Discord_Bot.Models;
-using Code2Gether_Discord_Bot.Library.Models;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot
 {
@@ -10,8 +10,11 @@ namespace Code2Gether_Discord_Bot
     {
         static void Main(string[] args)
         {
-            ILogger logger = UtilityFactory.GetLogger(typeof(Program));
-            IBot bot = UtilityFactory.GetBot();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            var bot = UtilityFactory.GetBot();
 
             try
             {
@@ -19,7 +22,7 @@ namespace Code2Gether_Discord_Bot
             }
             catch (Exception e)
             {
-                logger.Log(LogSeverity.Critical, $"Main process terminated! Exception: {e.Message}");
+                Log.Error(e, "Main process terminated!");
             }
         }
     }

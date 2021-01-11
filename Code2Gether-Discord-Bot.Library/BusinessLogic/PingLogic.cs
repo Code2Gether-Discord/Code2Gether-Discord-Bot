@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Code2Gether_Discord_Bot.Library.Models;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -43,7 +42,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
             catch (Exception e)
             {
-                _logger.Log(LogSeverity.Error, e);
+                _logger.Error(e, "Failed to use preferred method for pinging!");
 
                 embed = new EmbedBuilder()
                     .WithColor(Color.Purple)

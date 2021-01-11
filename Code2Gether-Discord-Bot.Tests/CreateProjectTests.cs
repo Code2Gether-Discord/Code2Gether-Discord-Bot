@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Models;
@@ -11,6 +7,7 @@ using Code2Gether_Discord_Bot.Tests.Fakes;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeRepositories;
 using NUnit.Framework;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
@@ -58,7 +55,7 @@ namespace Code2Gether_Discord_Bot.Tests
             _memberRepository = new FakeMemberRepository();
             _projectRepository = new FakeProjectRepository();
 
-            _logic = new CreateProjectLogic(new Logger(GetType()), new FakeCommandContext()
+            _logic = new CreateProjectLogic(Log.Logger.ForContext(GetType()), new FakeCommandContext()
             {
                 Channel = messageChannel,
                 Client = client,

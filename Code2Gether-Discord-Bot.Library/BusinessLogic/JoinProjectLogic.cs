@@ -5,6 +5,7 @@ using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {

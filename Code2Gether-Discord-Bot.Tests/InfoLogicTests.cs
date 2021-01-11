@@ -2,7 +2,9 @@
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Tests.Fakes;
 using Code2Gether_Discord_Bot.Tests.Fakes.FakeDiscord;
+
 using NUnit.Framework;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Tests
 {
@@ -43,7 +45,7 @@ namespace Code2Gether_Discord_Bot.Tests
                 Author = user
             };
 
-            _logic = new InfoLogic(new Logger(GetType()), new FakeCommandContext()
+            _logic = new InfoLogic(Log.Logger.ForContext(GetType()), new FakeCommandContext()
             {
                 Client = client,
                 Guild = guild,

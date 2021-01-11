@@ -7,6 +7,7 @@ using Discord;
 using Discord.Commands;
 using GitHubApiWrapper;
 using GitHubApiWrapper.Models;
+using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
@@ -61,8 +62,13 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             }
             else
             {
+                var errMsg =
+                    $"There was an error requesting to join the team! GitHub's reason was: {response.ReasonPhrase}";
+
+                _logger.Error(errMsg);
+
                 embedContent.Title += "Failed";
-                embedContent.Description = $"There was an error requesting to join the team! GitHub's reason was: {response.ReasonPhrase}";
+                embedContent.Description = errMsg;
             }
 
             return embedContent;

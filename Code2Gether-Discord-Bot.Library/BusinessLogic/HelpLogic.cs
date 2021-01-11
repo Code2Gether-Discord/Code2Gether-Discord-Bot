@@ -23,33 +23,25 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public override Task<Embed> ExecuteAsync()
         {
-            try
+            var commandText = GetCommandText();
+
+            var embedBuilder = new EmbedBuilder()
+                .WithColor(Color.Purple)
+                .WithTitle("Help")
+                .WithDescription("Contains information on how to access this bot's command modules")
+                .WithAuthor(_context.Message.Author);
+
+            for (var i = 0; i < commandText.Count; i++)
             {
-                var commandText = GetCommandText();
-
-                var embedBuilder = new EmbedBuilder()
-                    .WithColor(Color.Purple)
-                    .WithTitle("Help")
-                    .WithDescription("Contains information on how to access this bot's command modules")
-                    .WithAuthor(_context.Message.Author);
-
-                for (var i = 0; i < commandText.Length; i++)
-                {
-                    embedBuilder.AddField($"Command {i + 1} of {commandText.Length}", commandText[i]);
-                }
-
-                var embed = embedBuilder.Build();
-
-                return Task.FromResult(embed);
+                embedBuilder.AddField($"Command {i + 1} of {commandText.Count}", commandText[i]);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+
+            var embed = embedBuilder.Build();
+
+            return Task.FromResult(embed);
         }
 
-        private string[] GetCommandText()
+        private List<string> GetCommandText()
         {
             var commandTexts = new List<string>();
 
@@ -69,7 +61,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 commandTexts.Add(moduleStringBuilder.ToString());
             }
-            return commandTexts.ToArray();
+            return commandTexts;
         }
     }
 }

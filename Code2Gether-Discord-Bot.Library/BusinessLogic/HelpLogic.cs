@@ -1,9 +1,7 @@
-﻿using Code2Gether_Discord_Bot.Library.Models;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;

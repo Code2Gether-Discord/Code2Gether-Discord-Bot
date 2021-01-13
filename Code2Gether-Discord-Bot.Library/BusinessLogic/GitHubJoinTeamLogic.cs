@@ -30,7 +30,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = await JoinGitHubTeam();
+            var result = await JoinGitHubTeamAsync();
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -42,10 +42,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             return embed;
         }
 
-        private async Task<EmbedContent> JoinGitHubTeam()
+        private async Task<EmbedContent> JoinGitHubTeamAsync()
         {
             var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.AddOrUpdateTeamMembershipForUserAsync(_githubOrganizationName, _teamSlug, _username, Team.Role.member);
+            var response = await githubClient.AddOrUpdateTeamMembershipForUserAsync(_githubOrganizationName, _teamSlug, _username, "member");
             return ParseHttpResponseToEmbedContent(response);
         }
 

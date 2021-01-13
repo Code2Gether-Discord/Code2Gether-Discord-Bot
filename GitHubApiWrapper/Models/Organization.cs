@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace GitHubApiWrapper.Models
 {
@@ -7,21 +6,16 @@ namespace GitHubApiWrapper.Models
     {
         public string Name { get; }
         
-        public List<Team> Teams { get; } = new List<Team>();
-
-        public Uri BaseEndpoint
+        private Uri _baseEndpoint
         {
             get => new Uri($"https://api.github.com/orgs/{Name}");
-        }
-
-        public Uri InvitationsEndpoint
-        {
-            get => new Uri($"{BaseEndpoint}/invitations");
         }
 
         public Organization(string organizationName)
         {
             Name = organizationName;
         }
+
+        public Uri GetEndpoint(string endpointName = "") => new Uri($"{_baseEndpoint}/{endpointName}");
     }
 }

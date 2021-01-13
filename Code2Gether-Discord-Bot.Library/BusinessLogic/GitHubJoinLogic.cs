@@ -29,7 +29,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = await JoinGitHubOrganization();
+            var result = ParseHttpResponseToEmbedContent(await PostNewInviteToOrganization());
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -41,11 +41,15 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             return embed;
         }
 
-        private async Task<EmbedContent> JoinGitHubOrganization()
+        private async Task<HttpResponseMessage> PostNewInviteToOrganization()
         {
-            var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.InviteViaEmailToOrganizationAsync(_githubOrganizationName, _userGitHubEmail);
-            return ParseHttpResponseToEmbedContent(response);
+            var githubClient = new GitHubClient(_githubAuthToken, _githubOrganizationName);
+
+            var json = $"{{\"email\":\"{_userGitHubEmail}\"}}";
+            var content = new StringContent(json);
+            var response = await githubClient.Client.PutAsync($"invitations", content);
+
+            return response;
         }
 
         public EmbedContent ParseHttpResponseToEmbedContent(HttpResponseMessage response)

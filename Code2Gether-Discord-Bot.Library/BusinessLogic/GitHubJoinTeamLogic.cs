@@ -30,7 +30,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = await JoinGitHubTeamAsync();
+            var result = ParseHttpResponseToEmbedContent(await PutNewMemberToTeamAsync());
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -42,11 +42,15 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             return embed;
         }
 
-        private async Task<EmbedContent> JoinGitHubTeamAsync()
+        private async Task<HttpResponseMessage> PutNewMemberToTeamAsync()
         {
-            var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.AddOrUpdateTeamMembershipForUserAsync(_githubOrganizationName, _teamSlug, _username, "member");
-            return ParseHttpResponseToEmbedContent(response);
+            var githubClient = new GitHubClient(_githubAuthToken, _githubOrganizationName);
+
+            const string json = "{\"role\":\"member\"}";
+            var content = new StringContent(json);
+            var response = await githubClient.Client.PutAsync($"teams/{_teamSlug}/members/{_username}", content);
+
+            return response;
         }
 
         public EmbedContent ParseHttpResponseToEmbedContent(HttpResponseMessage response)

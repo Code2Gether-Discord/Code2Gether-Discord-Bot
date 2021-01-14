@@ -1,32 +1,27 @@
-﻿using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
-using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
 using Discord.Commands;
 using GitHubApiWrapper;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class GitHubJoinTeamLogic : BaseLogic
+    public class GitHubListOrgLogic : BaseLogic
     {
         private readonly GitHubClient _client;
-        private readonly string _teamSlug;
-        private readonly string _username;
 
-        public GitHubJoinTeamLogic(ILogger logger, ICommandContext context, GitHubClient client, string args) : base(logger, context)
+        public GitHubListOrgLogic(ILogger logger, ICommandContext context, GitHubClient client) : base(logger, context)
         {
             _client = client;
-            var parsedArguments = ParseCommandArguments.ParseBy(' ', args);
-            _teamSlug = parsedArguments.FirstOrDefault();
-            _username = parsedArguments.LastOrDefault();
         }
 
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = ParseHttpResponseToEmbedContent(await PutNewMemberToTeamAsync());
+            var result = ParseHttpResponseToEmbedContent(await GetOrganizationMembersAsync());
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -38,11 +33,9 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             return embed;
         }
 
-        private async Task<HttpResponseMessage> PutNewMemberToTeamAsync()
+        private async Task<HttpResponseMessage> GetOrganizationMembersAsync()
         {
-            const string json = "{\"role\":\"member\"}";
-            var content = new StringContent(json);
-            var response = await _client.Client.PutAsync($"teams/{_teamSlug}/members/{_username}", content);
+            var response = await _client.Client.GetAsync("members");
 
             return response;
         }
@@ -51,18 +44,21 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent
             {
-                Title = "GitHub Join Team: "
+                Title = "GitHub List Organization Members: "
             };
 
             if (response.IsSuccessStatusCode)
             {
+                var descriptionSb = new StringBuilder();
+                var orgMembersJObject = new JObject(response.Content);
+
                 embedContent.Title += "Successful";
-                embedContent.Description = $"Welcome to Team {_teamSlug}, {_context.User.Mention}!";
+                embedContent.Description = descriptionSb.ToString();
             }
             else
             {
                 var errMsg =
-                    $"There was an error requesting to join the team! GitHub's reason was: {response.ReasonPhrase}";
+                    $"There was an error requesting to join the organization! GitHub's reason was: {response.ReasonPhrase}";
 
                 _logger.Error(errMsg);
 

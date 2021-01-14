@@ -2,7 +2,7 @@
 using System;
 using Code2Gether_Discord_Bot.Library.BusinessLogic;
 using Code2Gether_Discord_Bot.Library.Static;
-using GitHubApiWrapper.Models;
+using GitHubApiWrapper;
 using Serilog;
 
 namespace Code2Gether_Discord_Bot.Static
@@ -43,10 +43,16 @@ namespace Code2Gether_Discord_Bot.Static
         public static IBusinessLogic GetLeetAnsLogic(Type classContext, ICommandContext context, string answer) =>
             new LeetAnsLogic(Log.Logger.ForContext(classContext), context, answer);
 
-        public static IBusinessLogic GetGitHubJoinLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
-            new GitHubJoinLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName, gitHubEmail);
+        public static IBusinessLogic GetGitHubJoinOrgLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+            new GitHubJoinOrgLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName, gitHubEmail);
 
-        public static IBusinessLogic GetGitHubJoinTeamLogic(Type classContext, SocketCommandContext context, string args) =>
-            new GitHubJoinTeamLogic(Log.Logger.ForContext(classContext), context, UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName, args);
+        public static IBusinessLogic GetGitHubJoinTeamLogic(Type classContext, ICommandContext context, string args) =>
+            new GitHubJoinTeamLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName), args);
+
+        public static IBusinessLogic GetGitHubListOrgLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+            new GitHubListOrgLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName));
+
+        public static IBusinessLogic GetGitHubListTeamsLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+            new GitHubListTeamsLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName));
     }
 }

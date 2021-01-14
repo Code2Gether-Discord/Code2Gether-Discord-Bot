@@ -9,13 +9,13 @@ using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class GitHubJoinLogic : BaseLogic
+    public class GitHubJoinOrgLogic : BaseLogic
     {
         private readonly string _githubAuthToken;
         private readonly string _githubOrganizationName;
         private readonly string _userGitHubEmail;
 
-        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string userGitHubEmail) : base(logger, context)
+        public GitHubJoinOrgLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string userGitHubEmail) : base(logger, context)
         {
             _githubAuthToken = githubAuthToken;
             _githubOrganizationName = githubOrganizationName;

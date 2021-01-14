@@ -70,7 +70,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             else
             {
                 var errMsg =
-                    $"There was an error requesting to join the organization! GitHub's reason was: {response.ReasonPhrase}";
+                    $"There was an error requesting to list the Organization's Teams! GitHub's reason was: {response.ReasonPhrase}";
 
                 _logger.Error(errMsg);
 

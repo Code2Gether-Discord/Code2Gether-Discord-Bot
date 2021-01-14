@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
@@ -21,7 +23,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = ParseHttpResponseToEmbedContent(await GetOrganizationMembersAsync());
+            var result = await ParseHttpResponseToEmbedContentAsync(await GetOrganizationMembersAsync());
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -36,11 +38,10 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         private async Task<HttpResponseMessage> GetOrganizationMembersAsync()
         {
             var response = await _client.Client.GetAsync("members");
-
             return response;
         }
 
-        public EmbedContent ParseHttpResponseToEmbedContent(HttpResponseMessage response)
+        public async Task<EmbedContent> ParseHttpResponseToEmbedContentAsync(HttpResponseMessage response)
         {
             var embedContent = new EmbedContent
             {
@@ -50,7 +51,16 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             if (response.IsSuccessStatusCode)
             {
                 var descriptionSb = new StringBuilder();
-                var orgMembersJObject = new JObject(response.Content);
+                var json = await response.Content.ReadAsStringAsync();
+                var orgMembersJToken = JToken.Parse(json);
+                var count = orgMembersJToken.Count();
+
+                descriptionSb.Append($"**Total Members in Organization: {count}**{Environment.NewLine}");
+
+                for (var i = 0; i < count; i++)
+                {
+                    descriptionSb.Append($"{i + 1}: {orgMembersJToken[i]["login"]} ({orgMembersJToken[i]["url"]}){Environment.NewLine}");
+                }
 
                 embedContent.Title += "Successful";
                 embedContent.Description = descriptionSb.ToString();
@@ -58,7 +68,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             else
             {
                 var errMsg =
-                    $"There was an error requesting to join the organization! GitHub's reason was: {response.ReasonPhrase}";
+                    $"There was an error requesting to list the Organization's Members! GitHub's reason was: {response.ReasonPhrase}";
 
                 _logger.Error(errMsg);
 

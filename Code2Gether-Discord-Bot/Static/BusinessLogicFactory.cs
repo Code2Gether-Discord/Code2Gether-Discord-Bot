@@ -49,10 +49,13 @@ namespace Code2Gether_Discord_Bot.Static
         public static IBusinessLogic GetGitHubJoinTeamLogic(Type classContext, ICommandContext context, string args) =>
             new GitHubJoinTeamLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName), args);
 
-        public static IBusinessLogic GetGitHubListOrgLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+        public static IBusinessLogic GetGitHubListOrgLogic(Type classContext, ICommandContext context) =>
             new GitHubListOrgLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName));
 
-        public static IBusinessLogic GetGitHubListTeamsLogic(Type classContext, ICommandContext context, string gitHubEmail) =>
+        public static IBusinessLogic GetGitHubListTeamsLogic(Type classContext, ICommandContext context) =>
             new GitHubListTeamsLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName));
+
+        public static IBusinessLogic GetGitHubListTeamMembersLogic(Type classContext, ICommandContext context, string gitHubTeamSlug) =>
+            new GitHubListTeamMembersLogic(Log.Logger.ForContext(classContext), context, new GitHubClient(UtilityFactory.GetConfig().GitHubAuthToken, UtilityFactory.GetConfig().GitHubOrganizationName), gitHubTeamSlug);
     }
 }

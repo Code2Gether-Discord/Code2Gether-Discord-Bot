@@ -79,7 +79,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             ulong? projCategoryId = _context.Guild
                 .GetCategoriesAsync().Result
                 .FirstOrDefault(c => c.Name
-                    .Contains("PROJECTS"))?.Id;
+                    .Contains("PROJECTS", StringComparison.CurrentCultureIgnoreCase))?.Id;
 
             // Create new text channel under that category
             bool channelAlreadyCreated = false;

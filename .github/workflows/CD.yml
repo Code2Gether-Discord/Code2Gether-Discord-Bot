@@ -33,4 +33,4 @@ jobs:
         SUDOER:  ${{ secrets.SUDO_CD }}
       run:
         echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot restart
-        echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot-api restart
+        #echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot-api restart

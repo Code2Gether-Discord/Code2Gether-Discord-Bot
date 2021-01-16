@@ -37,7 +37,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private async Task<HttpResponseMessage> GetOrganizationMembersAsync()
         {
-            var response = await _client.Client.GetAsync("members");
+            var response = await _client.GetAsync("members");
             return response;
         }
 

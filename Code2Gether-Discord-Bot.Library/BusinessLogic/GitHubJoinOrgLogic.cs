@@ -53,7 +53,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             };
 
             var content = new StringContent(JsonSerializer.Serialize(userData));
-            var response = await githubClient.Client.PutAsync($"invitations", content);
+            var response = await githubClient.PutAsync($"invitations", content);
 
             return response;
         }

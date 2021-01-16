@@ -48,7 +48,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             };
 
             var content = new StringContent(JsonSerializer.Serialize(defaultRole));
-            var response = await _client.Client.PutAsync($"teams/{_teamSlug}/members/{_username}", content);
+            var response = await _client.PutAsync($"teams/{_teamSlug}/members/{_username}", content);
 
             return response;
         }

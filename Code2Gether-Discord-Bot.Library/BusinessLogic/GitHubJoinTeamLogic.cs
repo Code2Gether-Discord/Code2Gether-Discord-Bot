@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Static;
 using Discord;
@@ -40,8 +42,12 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
         private async Task<HttpResponseMessage> PutNewMemberToTeamAsync()
         {
-            const string json = "{\"role\":\"member\"}";
-            var content = new StringContent(json);
+            var defaultRole = new Dictionary<string, string>
+            {
+                ["role"] = "member"
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(defaultRole));
             var response = await _client.Client.PutAsync($"teams/{_teamSlug}/members/{_username}", content);
 
             return response;

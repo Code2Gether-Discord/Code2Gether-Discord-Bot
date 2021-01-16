@@ -47,7 +47,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent
             {
-                Title = "GitHub List Teams: "
+                Title = "GitHub List Teams"
             };
 
             if (response.IsSuccessStatusCode)
@@ -63,8 +63,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 {
                     descriptionSb.Append($"{i+1}: {teamsJToken[i]["slug"]}{Environment.NewLine}");
                 }
-
-                embedContent.Title += "Successful";
+                
                 embedContent.Description = descriptionSb.ToString();
             }
             else
@@ -74,7 +73,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 _logger.Error(errMsg);
 
-                embedContent.Title += "Failed";
+                embedContent.Title += ": Failed";
                 embedContent.Description = errMsg;
             }
 

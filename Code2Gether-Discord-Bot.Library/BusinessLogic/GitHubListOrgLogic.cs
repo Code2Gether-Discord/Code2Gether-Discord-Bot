@@ -45,7 +45,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent
             {
-                Title = "GitHub List Organization Members: "
+                Title = "GitHub List Organization Members"
             };
 
             if (response.IsSuccessStatusCode)
@@ -61,8 +61,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
                 {
                     descriptionSb.Append($"{i + 1}: {orgMembersJToken[i]["login"]} ({orgMembersJToken[i]["url"]}){Environment.NewLine}");
                 }
-
-                embedContent.Title += "Successful";
+                
                 embedContent.Description = descriptionSb.ToString();
             }
             else
@@ -72,7 +71,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 _logger.Error(errMsg);
 
-                embedContent.Title += "Failed";
+                embedContent.Title += ": Failed";
                 embedContent.Description = errMsg;
             }
 

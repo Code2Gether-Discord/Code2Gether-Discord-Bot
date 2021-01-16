@@ -47,7 +47,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var embedContent = new EmbedContent
             {
-                Title = "GitHub List Team Members: "
+                Title = "GitHub List Team Members"
             };
 
             if (response.IsSuccessStatusCode)
@@ -74,7 +74,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 _logger.Error(errMsg);
 
-                embedContent.Title += "Failed";
+                embedContent.Title += ": Failed";
                 embedContent.Description = errMsg;
             }
 

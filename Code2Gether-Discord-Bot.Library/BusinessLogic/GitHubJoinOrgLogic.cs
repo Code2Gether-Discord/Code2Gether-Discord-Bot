@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.CustomExceptions;
@@ -45,8 +48,12 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         {
             var githubClient = new GitHubClient(_githubAuthToken, _githubOrganizationName);
 
-            var json = $"{{\"email\":\"{_userGitHubEmail}\"}}";
-            var content = new StringContent(json);
+            var userData = new Dictionary<string, string>
+            {
+                ["email"] = _userGitHubEmail
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(userData));
             var response = await githubClient.Client.PutAsync($"invitations", content);
 
             return response;

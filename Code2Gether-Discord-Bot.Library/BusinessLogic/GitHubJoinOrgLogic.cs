@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Code2Gether_Discord_Bot.Library.Models;
 using Code2Gether_Discord_Bot.Library.Models.CustomExceptions;
@@ -9,13 +11,13 @@ using Serilog;
 
 namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 {
-    public class GitHubJoinLogic : BaseLogic
+    public class GitHubJoinOrgLogic : BaseLogic
     {
         private readonly string _githubAuthToken;
         private readonly string _githubOrganizationName;
         private readonly string _userGitHubEmail;
 
-        public GitHubJoinLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string userGitHubEmail) : base(logger, context)
+        public GitHubJoinOrgLogic(ILogger logger, ICommandContext context, string githubAuthToken, string githubOrganizationName, string userGitHubEmail) : base(logger, context)
         {
             _githubAuthToken = githubAuthToken;
             _githubOrganizationName = githubOrganizationName;
@@ -29,7 +31,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
         
         public override async Task<Embed> ExecuteAsync()
         {
-            var result = await JoinGitHubOrganization();
+            var result = ParseHttpResponseToEmbedContent(await PostNewInviteToOrganization());
 
             var embed = new EmbedBuilder()
                 .WithColor(Color.Purple)
@@ -41,11 +43,19 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             return embed;
         }
 
-        private async Task<EmbedContent> JoinGitHubOrganization()
+        private async Task<HttpResponseMessage> PostNewInviteToOrganization()
         {
-            var githubClient = new GitHubClient(_githubAuthToken);
-            var response = await githubClient.InviteViaEmailToOrganizationAsync(_githubOrganizationName, _userGitHubEmail);
-            return ParseHttpResponseToEmbedContent(response);
+            var githubClient = new GitHubClient(_githubAuthToken, _githubOrganizationName);
+
+            var userData = new Dictionary<string, string>
+            {
+                ["email"] = _userGitHubEmail
+            };
+
+            var content = new StringContent(JsonSerializer.Serialize(userData));
+            var response = await githubClient.PutAsync($"invitations", content);
+
+            return response;
         }
 
         public EmbedContent ParseHttpResponseToEmbedContent(HttpResponseMessage response)
@@ -63,7 +73,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
             else
             {
                 var errMsg =
-                    $"There was an error requesting to join the organization! GitHub's reason was: {response.ReasonPhrase}";
+                    $"There was an error requesting to join the Organization! GitHub's reason was: {response.ReasonPhrase}";
 
                 _logger.Error(errMsg);
 

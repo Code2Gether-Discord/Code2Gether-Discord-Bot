@@ -36,5 +36,6 @@ jobs:
         #echo "$SUDOER" | xargs sudo -S service code2gether-discord-bot-api restart
         
     - name: Clean Bash History
+      continue-on-error: true
       run:
         rm ~/.bash_history

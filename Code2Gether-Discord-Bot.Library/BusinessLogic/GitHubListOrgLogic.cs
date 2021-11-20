@@ -59,7 +59,7 @@ namespace Code2Gether_Discord_Bot.Library.BusinessLogic
 
                 for (var i = 0; i < count; i++)
                 {
-                    descriptionSb.Append($"{i + 1}: {orgMembersJToken[i]["login"]} ({orgMembersJToken[i]["url"]}){Environment.NewLine}");
+                    descriptionSb.Append($"{i + 1}: {orgMembersJToken[i]["login"]} ({orgMembersJToken[i]["html_url"]}){Environment.NewLine}");
                 }
                 
                 embedContent.Description = descriptionSb.ToString();

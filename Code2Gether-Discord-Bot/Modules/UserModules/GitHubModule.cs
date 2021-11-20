@@ -36,7 +36,7 @@ namespace Code2Gether_Discord_Bot.Modules.UserModules
         [Command("github join-org",
             RunMode = RunMode.Async)]
         [Alias("github jo", "github join-organization")]
-        [Summary("Join the GitHub Organization at https://github.com/Code2Gether-Discord. Usage: github join-org [email")]
+        [Summary("Join the GitHub Organization at https://github.com/Code2Gether-Discord. Usage: github join-org [email]")]
         public async Task GitHubJoinOrgAsync([Remainder] string gitHubEmail = "") =>
             await ReplyAsync(embed: await BusinessLogicFactory.GetGitHubJoinOrgLogic(GetType(), Context, gitHubEmail).ExecuteAsync());
 
